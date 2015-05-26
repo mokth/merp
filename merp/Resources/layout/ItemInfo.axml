@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <TextView
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/txtitem_desc"
+            android:editable="false"
+            android:textColor="#ff140000"
+            android:paddingLeft="5dp"
+            android:background="@android:drawable/edit_text" />
+        <TableLayout
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tableLayout1">
+            <TableRow
+                android:id="@+id/tableRow1">
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:text="ITEM CODE"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:paddingLeft="5dp"
+                    android:background="@android:drawable/edit_text" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:id="@+id/txtitem_code"
+                    android:editable="false"
+                    android:textColor="#ff140000"
+                    android:paddingLeft="5dp"
+                    android:background="@android:drawable/edit_text" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow1">
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:paddingLeft="5dp"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:background="@android:drawable/edit_text"
+                    android:text="UNIT PRICE" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtitem_price"
+                    android:editable="false"
+                    android:textColor="#ff140000"
+                    android:paddingLeft="5dp"
+                    android:background="@android:drawable/edit_text" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow1">
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:paddingLeft="5dp"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:background="@android:drawable/edit_text"
+                    android:text="TAX GROUP" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtitem_taxgrop"
+                    android:editable="false"
+                    android:textColor="#ff140000"
+                    android:paddingLeft="5dp"
+                    android:background="@android:drawable/edit_text" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow1">
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:paddingLeft="5dp"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:background="@android:drawable/edit_text"
+                    android:text="TAX (%)" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtitem_tax"
+                    android:editable="false"
+                    android:textColor="#ff140000"
+                    android:paddingLeft="5dp"
+                    android:background="@android:drawable/edit_text" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow1">
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:paddingLeft="5dp"
+                    android:background="@android:drawable/edit_text"
+                    android:text="INCLUSIVE" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtitem_incl"
+                    android:editable="false"
+                    android:textColor="#ff140000"
+                    android:paddingLeft="5dp"
+                    android:background="@android:drawable/edit_text" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow2">
+                <Button
+                    android:text="OK"
+                    android:layout_column="0"
+                    android:id="@+id/btnItem_OK" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</ScrollView>

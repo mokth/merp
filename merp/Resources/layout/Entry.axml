@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:drawable/editbox_dropdown_light_frame">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/alert_light_frame">
+            <TextView
+                android:text="INVOICE NO"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lbinvno"
+                android:textColor="@android:color/black"
+                android:paddingLeft="5dp" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtInvnp"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:text="CUSTOMER"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lbinvno"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/black" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtInvcust"
+                android:editable="false"
+                android:paddingLeft="5dp"
+                android:textColor="#ff140000"
+                android:background="@android:drawable/edit_text" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/alert_light_frame">
+            <TextView
+                android:text="ITEM CODE"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ff093bf6"
+                android:paddingLeft="5dp"
+                android:id="@+id/textView1" />
+            <Spinner
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcode"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:text="DESCRITION"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ff093bf6"
+                android:paddingLeft="5dp"
+                android:id="@+id/textView2" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/txtdesc"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text"
+                android:editable="false" />
+            <TableLayout
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tableLayout1">
+                <TableRow
+                    android:id="@+id/tableRow1">
+                    <TextView
+                        android:text="TAX GRP"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ff093bf6"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/textView5" />
+                    <TextView
+                        android:text="TAX PER"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ff093bf6"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/textView5" />
+                    <TextView
+                        android:text="INCLUSIVE"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ff093bf6"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/textView5" />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/tableRow1">
+                    <TextView
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txttax"
+                        android:textColor="#ff140000"
+                        android:paddingLeft="5dp"
+                        android:background="@android:drawable/edit_text"
+                        android:selectAllOnFocus="false"
+                        android:editable="false" />
+                    <EditText
+                        android:inputType="numberDecimal"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ff093bf6"
+                        android:background="@android:drawable/edit_text"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/txtinvtaxper"
+                        android:editable="false"
+                        android:enabled="false" />
+                    <CheckBox
+                        android:text="CheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:drawable/edit_text"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:id="@+id/txtinvisincl"
+                        android:textColor="@android:color/background_light"
+                        android:editable="false"
+                        android:enabled="false"
+                        android:textIsSelectable="false" />
+                </TableRow>
+            </TableLayout>
+            <TableLayout
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tableLayout1">
+                <TableRow
+                    android:id="@+id/tableRow1">
+                    <TextView
+                        android:text="QTY"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ff093bf6"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/textView4"
+                        android:width="100dp" />
+                    <TextView
+                        android:text="UNIT PTICE"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ff093bf6"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/textView5"
+                        android:width="120dp" />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/tableRow1">
+                    <EditText
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtqty"
+                        android:paddingLeft="5dp"
+                        android:textColor="#ff140000"
+                        android:background="@android:drawable/edit_text" />
+                    <EditText
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtprice"
+                        android:textColor="#ff140000"
+                        android:paddingLeft="5dp"
+                        android:background="@android:drawable/edit_text" />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/tableRow1">
+                    <TextView
+                        android:text="TAX"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ff093bf6"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/textView5"
+                        android:width="80dp" />
+                    <TextView
+                        android:text="AMOUNT"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ff093bf6"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/textView5"
+                        android:width="150dp" />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/tableRow1">
+                    <EditText
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txttaxamt"
+                        android:textColor="#ff140000"
+                        android:paddingLeft="5dp"
+                        android:background="@android:drawable/edit_text"
+                        android:editable="false"
+                        android:enabled="false" />
+                    <EditText
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtamount"
+                        android:textColor="#ff140000"
+                        android:paddingLeft="5dp"
+                        android:background="@android:drawable/edit_text"
+                        android:editable="false"
+                        android:enabled="false" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+        <TableLayout
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tableLayout1">
+            <TableRow
+                android:id="@+id/tableRow1">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:typeface="sans"
+                    android:id="@+id/Save"
+                    android:text="ADD"
+                    android:drawableLeft="@drawable/add"
+                    android:width="120dp" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:typeface="sans"
+                    android:text="BACK"
+                    android:id="@+id/Cancel"
+                    android:drawableLeft="@drawable/left"
+                    android:width="120dp" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow2" />
+        </TableLayout>
+    </LinearLayout>
+</ScrollView>

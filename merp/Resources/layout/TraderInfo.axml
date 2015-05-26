@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:drawable/editbox_dropdown_light_frame">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/alert_light_frame">
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_code"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_name"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_addr1"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_addr2"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_addr3"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_addr4"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_tel"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_fax"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcust_gst"
+                android:editable="false"
+                android:textColor="#ff140000"
+                android:paddingLeft="5dp"
+                android:background="@android:drawable/edit_text" />
+        </LinearLayout>
+        <TableLayout
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tableLayout1">
+            <TableRow
+                android:id="@+id/tableRow1">
+                <Button
+                    android:text="OK"
+                    android:layout_column="0"
+                    android:id="@+id/btnTrd_OK" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow2">
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</ScrollView>

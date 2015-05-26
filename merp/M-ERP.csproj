@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{EB850900-9E8C-4190-9FC8-D3A86DF34E44}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>wincom.mobile.erp</RootNamespace>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <AssemblyName>test3</AssemblyName>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DebugSymbols>true</DebugSymbols>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <AndroidSupportedAbis>armeabi-v7a</AndroidSupportedAbis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLite.cs" />
+    <Compile Include="CusotmListAdapter.cs" />
+    <Compile Include="Service1.cs" />
+    <Compile Include="GenericAdapter.cs" />
+    <Compile Include="Activities\CustomerActivity.cs" />
+    <Compile Include="Activities\EntryActivity.cs" />
+    <Compile Include="Activities\InvItemActivity.cs" />
+    <Compile Include="Activities\InvoiceActivity.cs" />
+    <Compile Include="Activities\LoginActivity.cs" />
+    <Compile Include="Activities\MainActivity.cs" />
+    <Compile Include="Activities\MasterItemActivity.cs" />
+    <Compile Include="Activities\CreateInvoice.cs" />
+    <Compile Include="globalvars.cs" />
+    <Compile Include="Entity\Item.cs" />
+    <Compile Include="Entity\Invoice.cs" />
+    <Compile Include="Entity\Trader.cs" />
+    <Compile Include="Entity\Company.cs" />
+    <Compile Include="Entity\AdUser.cs" />
+    <Compile Include="Helper\DataHelper.cs" />
+    <Compile Include="Entity\AdPara.cs" />
+    <Compile Include="Activities\SettingActivity.cs" />
+    <Compile Include="Helper\PhoneTool.cs" />
+    <Compile Include="Activities\TraderActivity.cs" />
+    <Compile Include="Activities\ItemActivity.cs" />
+    <Compile Include="Helper\PrintInvHelper.cs" />
+    <Compile Include="Activities\InvoiceAllActivity.cs" />
+    <Compile Include="Activities\InvItemHisActivity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Assets\AboutAssets.txt" />
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Main.axml" />
+    <AndroidResource Include="Resources\values\Strings.xml" />
+    <AndroidResource Include="Resources\drawable-hdpi\Icon.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\Icon.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\Icon.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\Icon.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\Icon.png" />
+    <AndroidResource Include="Resources\layout\Second.axml" />
+    <AndroidResource Include="Resources\layout\ListView.axml" />
+    <AndroidResource Include="Resources\layout\ListItemRow.axml" />
+    <AndroidResource Include="Resources\menu\menu.xml" />
+    <AndroidResource Include="Resources\layout\Entry.axml" />
+    <AndroidResource Include="Resources\layout\InvDtlItemView.axml" />
+    <AndroidResource Include="Resources\layout\InvDtlView.axml" />
+    <AndroidResource Include="Resources\menu\popupItem.xml" />
+    <AndroidResource Include="Resources\menu\popupInv.xml" />
+    <AndroidResource Include="Resources\layout\ItemCodeList.axml" />
+    <AndroidResource Include="Resources\layout\ItemCodeDtlList.axml" />
+    <AndroidResource Include="Resources\layout\ListCustView.axml" />
+    <AndroidResource Include="Resources\layout\ListCustDtlView.axml" />
+    <AndroidResource Include="Resources\layout\spinner_item.axml" />
+    <AndroidResource Include="Resources\layout-large-port\Entry.axml" />
+    <AndroidResource Include="Resources\layout\CreateInvoice.axml" />
+    <AndroidResource Include="Resources\layout\SignIn.axml" />
+    <AndroidResource Include="Resources\layout\AdPara.axml" />
+    <AndroidResource Include="Resources\layout\ItemCodeEntry.axml" />
+    <AndroidResource Include="Resources\values\themes.xml" />
+    <AndroidResource Include="Resources\values\Colors.xml" />
+    <AndroidResource Include="Resources\drawable\ab_background.xml" />
+    <AndroidResource Include="Resources\drawable\btn_bg.xml" />
+    <AndroidResource Include="Resources\drawable\btn_bg_inactive.xml" />
+    <AndroidResource Include="Resources\drawable\btn_bg_normal.xml" />
+    <AndroidResource Include="Resources\drawable\btn_bg_pressed.xml" />
+    <AndroidResource Include="Resources\drawable\discrete_shadow.xml" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\drawable\ic_action_logo.png" />
+    <AndroidResource Include="Resources\drawable\wrench.png" />
+    <AndroidResource Include="Resources\drawable\even_row.xml" />
+    <AndroidResource Include="Resources\drawable\listview_selector_even.xml" />
+    <AndroidResource Include="Resources\drawable\odd_row.xml" />
+    <AndroidResource Include="Resources\drawable\listview_selector_odd.xml" />
+    <AndroidResource Include="Resources\layout\TraderInfo.axml" />
+    <AndroidResource Include="Resources\layout\ItemInfo.axml" />
+    <AndroidResource Include="Resources\menu\MainMenu.xml" />
+    <AndroidResource Include="Resources\layout-large-port\InvDtlItemView.axml" />
+    <AndroidResource Include="Resources\layout-large-port\InvDtlView.axml" />
+    <AndroidResource Include="Resources\layout-large-port\ListItemRow.axml" />
+    <AndroidResource Include="Resources\layout-large-port\ListCustDtlView.axml" />
+    <AndroidResource Include="Resources\layout-large-port\ItemCodeDtlList.axml" />
+    <AndroidResource Include="Resources\layout-large-port\Main.axml" />
+    <AndroidResource Include="Resources\layout-large-port\SignIn.axml" />
+    <AndroidResource Include="Resources\layout\About.axml" />
+    <AndroidResource Include="Resources\layout-large-port\About.axml" />
+    <AndroidResource Include="Resources\drawable-hdpi\about.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\download.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\exit.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\item.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\left.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\shop.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\shoplist.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\trader.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\upload.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\about.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\download.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\exit.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\item.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\left.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\shop.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\shoplist.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\trader.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\upload.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\about.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\download.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\exit.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\item.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\left.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\shop.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\shoplist.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\trader.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\upload.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\about.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\download.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\exit.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\item.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\left.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\shop.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\shoplist.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\trader.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\upload.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\about.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\download.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\exit.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\item.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\left.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\shop.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\shoplist.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\trader.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\upload.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\create.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\create.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\create.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\create.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\create.png" />
+    <AndroidResource Include="Resources\layout-large-port\ListView.axml" />
+    <AndroidResource Include="Resources\drawable-hdpi\add.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\add.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\add.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\add.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\add.png" />
+    <AndroidResource Include="Resources\layout-large-port\ListCustView.axml" />
+    <AndroidResource Include="Resources\layout-large-port\ItemCodeList.axml" />
+    <AndroidResource Include="Resources\layout-large-port\CreateInvoice.axml" />
+    <AndroidResource Include="Resources\drawable-hdpi\ok.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ok.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ok.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ok.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ok.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Resources\menu\" />
+    <Folder Include="Activities\" />
+    <Folder Include="Entity\" />
+    <Folder Include="Helper\" />
+    <Folder Include="Resources\drawable\" />
+  </ItemGroup>
+</Project>
