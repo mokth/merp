@@ -18,9 +18,9 @@ using Android.Util;
 namespace wincom.mobile.erp
 {
 	[Activity (Label = "M-ERP", MainLauncher = true,NoHistory=true, Theme="@style/android:Theme.Holo.Light.NoActionBar" )]			
-	public class LoginActivity : Activity
+	public class LoginActivity : Activity,IEventListener
 	{
-		public static readonly EndpointAddress EndPoint = new EndpointAddress("http://www.wincomcloud.com/Wfc/Service1.svc");
+		//public static readonly EndpointAddress EndPoint = new EndpointAddress("http://www.wincomcloud.com/Wfc/Service1.svc");
 		private Service1Client _client;
 		string pathToDatabase;
 
@@ -29,6 +29,7 @@ namespace wincom.mobile.erp
 			base.OnCreate (bundle);
 			SetContentView (Resource.Layout.SignIn);
 			// Create your application here
+			EventManagerFacade.Instance.GetEventManager().AddListener(this);
 
 			Button login = FindViewById<Button>(Resource.Id.login);
 			Button bexit = FindViewById<Button>(Resource.Id.exit);
@@ -37,7 +38,7 @@ namespace wincom.mobile.erp
 				Finish();
 				Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
 			};
-			InitializeServiceClient();
+			//InitializeServiceClient();
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 
 			//SQLiteConnection...CreateFile(pathToDatabase);
@@ -104,8 +105,21 @@ namespace wincom.mobile.erp
 			Button login = FindViewById<Button>(Resource.Id.login);
 			login.Enabled = false;
 			login.Text = "Please wait...";
-			_client.LoginAsync (userid.Text, passw.Text, code.Text);
+			//_client.LoginAsync (userid.Text, passw.Text, code.Text);
+			DownloadHelper download= new DownloadHelper();
+			download.Downloadhandle = LoginDoneDlg; 
+			download.CallingActivity = this;
+			download.startLogin(userid.Text, passw.Text, code.Text);
 		}
+
+		private void LoginDoneDlg(Activity callingAct,int count,string msg)
+		{
+			Button login = FindViewById<Button>(Resource.Id.login);
+			login.Enabled = true;
+			login.Text = "LOGIN";
+			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
+		}
+
 
 		private void LoginLocal(AdUser user)
 		{
@@ -124,94 +138,19 @@ namespace wincom.mobile.erp
 
 		}
 
+		void DownloadCOmpleted (string msg)
+		{
+			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
+			Button login = FindViewById<Button> (Resource.Id.login);
+			login.Enabled = true;
+			login.Text = "LOGIN";
+		}
+
 		void UpdateLogin(AdUser user)
 		{
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 				db.Update (user);
 			}
-		}
-		private void ClientOnLoginCompleted(object sender, LoginCompletedEventArgs e)
-		{
-			string msg = null;
-			bool success = true;
-			if ( e.Error != null)
-			{
-				msg =  e.Error.Message;
-				Log.Error ("Login",e.Error.Message);
-				Log.Error ("Login",e.Error.StackTrace);
-				success = false;
-			}
-			else if ( e.Cancelled)
-			{
-				msg = "Request was cancelled.";
-				success = false;
-			}
-			else
-			{
-				
-				RunOnUiThread (() => InsertItemIntoDb (e.Result.ToString()));
-			}
-			if (!success) {
-				RunOnUiThread (() => DownloadCOmpleted (msg));
-			}
-		}
-
-		private void ClientOnCompProfCompleted(object sender,GetCompProfileCompletedEventArgs e)
-		{
-			string msg = null;
-			bool success = true;
-			if ( e.Error != null)
-			{
-				msg =  e.Error.Message;
-				Log.Error ("Login",e.Error.Message);
-				Log.Error ("Login",e.Error.StackTrace);
-				success = false;
-			}
-			else if ( e.Cancelled)
-			{
-				msg = "Request was cancelled.";
-				success = false;
-			}
-			else
-			{
-				CompanyProfile pro = (CompanyProfile)e.Result;
-				RunOnUiThread (() => InsertCompProfIntoDb( pro));
-			}
-			if (!success) {
-				RunOnUiThread (() => DownloadCOmpleted (msg));
-			}
-		}
-		private void InitializeServiceClient()
-		{
-			BasicHttpBinding binding = CreateBasicHttp();
-
-			_client = new Service1Client(binding, EndPoint);
-			_client.LoginCompleted+= ClientOnLoginCompleted;
-			_client.GetCompProfileCompleted+=ClientOnCompProfCompleted;
-
-		}
-
-		private static BasicHttpBinding CreateBasicHttp()
-		{
-			BasicHttpBinding binding = new BasicHttpBinding
-			{
-				Name = "basicHttpBinding",
-				MaxBufferSize = 2147483647,
-				MaxReceivedMessageSize = 2147483647
-			};
-			TimeSpan timeout = new TimeSpan(0, 0, 30);
-			binding.SendTimeout = timeout;
-			binding.OpenTimeout = timeout;
-			binding.ReceiveTimeout = timeout;
-			return binding;
-		}
-
-		void DownloadCOmpleted (string msg)
-		{
-			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
-			Button login = FindViewById<Button>(Resource.Id.login);
-			login.Enabled = true;
-			login.Text = "LOGIN";
 		}
 
 		void ShowMainActivity (string comp,string bran)
@@ -225,42 +164,35 @@ namespace wincom.mobile.erp
 			StartActivity (intent);
 		}
 
-		private void InsertItemIntoDb(string result)
+		public event nsEventHandler eventHandler;
+	
+		public void FireEvent(object sender,EventParam eventArgs)
 		{
-			string[] para = result.Split (new char[]{ '|' });
-			if (para [0] != "OK") {
-				DownloadCOmpleted ("Fail to logon.");
-				return;
-			}
-			EditText passw = FindViewById<EditText> (Resource.Id.login_password);
-			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
-			{
-				var list2 = db.Table<AdUser>().ToList<AdUser>();
-				list2.RemoveAll (x => x.UserID == para[1]);
-				AdUser user = new AdUser ();
-				user.BranchCode = para [3];
-				user.CompCode = para [2];
-				user.Islogon = true;
-				user.Password = passw.Text;
-				user.UserID = para [1];
-				db.Insert (user);
-			}
-			((GlobalvarsApp)this.Application).USERID_CODE = para [1];
-			((GlobalvarsApp)this.Application).COMPANY_CODE = para [2];
-			((GlobalvarsApp)this.Application).BRANCH_CODE = para [3];
-			DownloadCOmpleted ("Successfully Logon.");
-			_client.GetCompProfileAsync(para[2],para[3],para [1]);
-
+			if (eventHandler != null)
+				eventHandler (sender, eventArgs);
 		}
 
-		private void InsertCompProfIntoDb(CompanyProfile pro)
+
+		public void PerformEvent(object sender, EventParam e)
 		{
-			DataHelper.InsertCompProfIntoDb (pro, pathToDatabase);
-			DownloadCOmpleted ("Successfully Download Company Profile.");
-			string comp =((GlobalvarsApp)this.Application).COMPANY_CODE;
-			string bran = ((GlobalvarsApp)this.Application).BRANCH_CODE;
-			ShowMainActivity (comp,bran);
+			
+			switch (e.EventID) {
+			case 2:
+				string comp =((GlobalvarsApp)this.Application).COMPANY_CODE;
+				string bran = ((GlobalvarsApp)this.Application).BRANCH_CODE;
+				ShowMainActivity (comp,bran);
+				break;
+			case 1:
+				DownloadHelper download = new DownloadHelper ();
+				download.Downloadhandle = LoginDoneDlg; 
+				download.CallingActivity = this;
+				download.startDownloadCompInfoEx ();
+				break;
+			}
 		}
+
+
+
 	}
 }
 

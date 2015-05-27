@@ -82,6 +82,14 @@
     <Compile Include="Helper\PrintInvHelper.cs" />
     <Compile Include="Activities\InvoiceAllActivity.cs" />
     <Compile Include="Activities\InvItemHisActivity.cs" />
+    <Compile Include="Helper\UploadHelper.cs" />
+    <Compile Include="Helper\WCFHelper.cs" />
+    <Compile Include="Helper\DownloadHelper.cs" />
+    <Compile Include="EventManager\IEventHandle.cs" />
+    <Compile Include="EventManager\EventManager.cs" />
+    <Compile Include="EventManager\EventManagerFacade.cs" />
+    <Compile Include="EventManager\EventParam.cs" />
+    <Compile Include="EventManager\EventID.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -214,5 +222,6 @@
     <Folder Include="Entity\" />
     <Folder Include="Helper\" />
     <Folder Include="Resources\drawable\" />
+    <Folder Include="EventManager\" />
   </ItemGroup>
 </Project>
