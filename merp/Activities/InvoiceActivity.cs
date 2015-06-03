@@ -66,9 +66,12 @@ namespace wincom.mobile.erp
 			Invoice item = (Invoice)clsobj;
 			view.FindViewById<TextView> (Resource.Id.invdate).Text = item.invdate.ToString ("dd-MM-yy");
 			view.FindViewById<TextView> (Resource.Id.invno).Text = item.invno;
+			view.FindViewById<TextView> (Resource.Id.trxtype).Text = item.trxtype;
 			view.FindViewById<TextView>(Resource.Id.invcust).Text = item.description;
-			view.FindViewById<TextView> (Resource.Id.Amount).Text = item.amount.ToString("n2");
-
+			//view.FindViewById<TextView> (Resource.Id.Amount).Text = item.amount.ToString("n2");
+			view.FindViewById<TextView> (Resource.Id.TaxAmount).Text = item.taxamt.ToString("n2");
+			double ttl = item.amount + item.taxamt;
+			view.FindViewById<TextView> (Resource.Id.TtlAmount).Text =ttl.ToString("n2");
 		}
 
 		protected override void OnResume()
@@ -104,7 +107,10 @@ namespace wincom.mobile.erp
 					CreateNewInvoice();
 				}else if (arg1.Item.TitleFormatted.ToString().ToLower()=="print")
 				{
-					PrintInv(item);	
+					PrintInv(item,1);	
+				}else if (arg1.Item.TitleFormatted.ToString().ToLower()=="print 2 copy")
+				{
+					PrintInv(item,2);	
 				} else if (arg1.Item.TitleFormatted.ToString().ToLower()=="delete")
 				{
 					Delete(item);
@@ -165,7 +171,7 @@ namespace wincom.mobile.erp
 			StartActivity(intent);
 		}
 
-		void PrintInv(Invoice inv)
+		void PrintInv(Invoice inv,int noofcopy)
 		{
 			Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
 			InvoiceDtls[] list;
@@ -177,15 +183,15 @@ namespace wincom.mobile.erp
 			mmDevice = null;
 			findBTPrinter ();
 			if (mmDevice != null) {
-				StartPrint (inv, list);
+				StartPrint (inv, list,noofcopy);
 			}
 		}
 
-		void StartPrint(Invoice inv,InvoiceDtls[] list )
+		void StartPrint(Invoice inv,InvoiceDtls[] list,int noofcopy )
 		{
 			string userid = ((GlobalvarsApp)this.Application).USERID_CODE;
 			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid);
-			string msg =prnHelp.OpenBTAndPrint (mmSocket, mmDevice, inv, list);
+			string msg =prnHelp.OpenBTAndPrint (mmSocket, mmDevice, inv, list,noofcopy);
 			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 		}
 

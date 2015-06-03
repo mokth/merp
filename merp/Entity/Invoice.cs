@@ -5,11 +5,13 @@ namespace wincom.mobile.erp
 {
 	public class Invoice
 	{
-		public DateTime invdate  { get; set; }
-		public DateTime created  { get; set; }
 		[PrimaryKey] 
 		public string invno  { get; set; }
+		public string trxtype  { get; set; }
+		public DateTime invdate  { get; set; }
+		public DateTime created  { get; set; }
 		public double amount { get; set; }
+		public double taxamt { get; set; }
 		public string custcode { get; set; }
 		public string description { get; set; }
 		public DateTime uploaded  { get; set; }

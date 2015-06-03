@@ -6,5 +6,7 @@
           android:title="DELETE" />  
     <item android:id="@+id/popInvprint"
           android:title="PRINT" />   
+    <item android:id="@+id/popInvprint2"
+          android:title="PRINT 2 COPY" />   
 </menu>
 

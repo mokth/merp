@@ -260,10 +260,13 @@ namespace wincom.mobile.erp
 		{
 			string invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-			   double ttlamt= db.Table<InvoiceDtls> ().Where (x => x.invno == invno).Sum (x => x.netamount);
+				var itemlist = db.Table<InvoiceDtls> ().Where (x => x.invno == invno);	
+				double ttlamt= itemlist.Sum (x => x.netamount);
+				double ttltax= itemlist.Sum (x => x.tax);
 			   var invlist =db.Table<Invoice> ().Where (x => x.invno == invno).ToList<Invoice> ();
 				if (invlist.Count > 0) {
 					invlist [0].amount = ttlamt;
+					invlist [0].taxamt = ttltax;
 					db.Update (invlist [0]);
 				}
 			}

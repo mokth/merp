@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lbinvno"
-            android:textColor="@android:color/black"
+            android:textColor="#ff1131f0"
+            android:textSize="24sp"
             android:paddingLeft="5dp" />
         <EditText
             android:inputType="date"
@@ -23,6 +24,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:background="@android:drawable/edit_text"
             android:id="@+id/newinv_date"
+            android:textSize="24sp"
             android:drawableRight="@android:drawable/ic_menu_today"
             android:textColor="@android:color/black" />
         <TextView
@@ -31,7 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lbinvno"
-            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textColor="#ff1131f0"
             android:paddingLeft="5dp" />
         <TextView
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -40,7 +43,25 @@
             android:id="@+id/newinv_no"
             android:editable="false"
             android:paddingLeft="5dp"
+            android:textSize="24sp"
             android:textColor="#ff140000"
+            android:background="@android:drawable/edit_text" />
+        <TextView
+            android:text="TRANSACTION TYPE"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lbinvnotype"
+            android:textSize="24sp"
+            android:textColor="#ff1131f0"
+            android:paddingLeft="5dp" />
+        <Spinner
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newinv_type"
+            android:paddingLeft="5dp"
+            android:textSize="24sp"
             android:background="@android:drawable/edit_text" />
         <TextView
             android:text="CUSTOMER"
@@ -48,13 +69,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lbinvno"
-            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textColor="#ff1131f0"
             android:paddingLeft="5dp" />
         <Spinner
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/newinv_custcode"
+            android:textSize="24sp"
             android:paddingLeft="5dp"
             android:background="@android:drawable/edit_text" />
         <TextView
@@ -64,6 +87,7 @@
             android:id="@+id/newinv_custname"
             android:editable="false"
             android:paddingLeft="5dp"
+            android:textSize="24sp"
             android:textColor="#ff140000"
             android:background="@android:drawable/edit_text" />
     </LinearLayout>

@@ -29,6 +29,16 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ffffff" />
         <TextView
+            android:id="@+id/trxtype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/invno"
+            android:gravity="left"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff" />
+        <TextView
             android:id="@+id/invcust"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -42,7 +52,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:singleLine="true" />
     </RelativeLayout>
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:minWidth="25px"
         android:minHeight="25px"
@@ -51,14 +61,27 @@
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout1">
         <TextView
-            android:id="@+id/Amount"
-            android:layout_width="wrap_content"
+            android:id="@+id/TtlAmount"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:layout_toRightOf="@id/invcust"
+            android:layout_gravity="center"
+            android:gravity="end|center"
+            android:paddingRight="15dp"
             android:paddingTop="5dp"
             android:textColor="#fff"
-            android:gravity="right"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-    </LinearLayout>
+        <TextView
+            android:id="@+id/TaxAmount"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="end|center"
+            android:paddingRight="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/TtlAmount"
+            android:paddingTop="5dp"
+            android:textColor="#fff"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
 </LinearLayout>

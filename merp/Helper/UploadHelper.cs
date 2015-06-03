@@ -107,6 +107,7 @@ namespace wincom.mobile.erp
 						bill.TaxGrp = invdtl.taxgrp;
 						bill.UPrice = invdtl.price;
 						bill.Qty = invdtl.qty;
+						bill.TrxType = inv.trxtype;
 						bills.Add (bill);
 					}
 				}

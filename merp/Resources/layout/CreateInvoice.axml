@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lbinvno"
-            android:textColor="@android:color/black"
+            android:textColor="#ff1131f0"
             android:paddingLeft="5dp" />
         <EditText
             android:inputType="date"
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lbinvno"
-            android:textColor="@android:color/black"
+            android:textColor="#ff1131f0"
             android:paddingLeft="5dp" />
         <TextView
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -43,12 +43,27 @@
             android:textColor="#ff140000"
             android:background="@android:drawable/edit_text" />
         <TextView
+            android:text="TRANSACTION TYPE"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lbinvnotype"
+            android:textColor="#ff1131f0"
+            android:paddingLeft="5dp" />
+        <Spinner
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newinv_type"
+            android:paddingLeft="5dp"
+            android:background="@android:drawable/edit_text" />
+        <TextView
             android:text="CUSTOMER"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lbinvno"
-            android:textColor="@android:color/black"
+            android:textColor="#ff1131f0"
             android:paddingLeft="5dp" />
         <Spinner
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -95,6 +110,7 @@
                 android:text="CANCEL" />
         </TableRow>
         <TableRow
-            android:id="@+id/tableRow2" />
+            android:id="@+id/tableRow2">
+        </TableRow>
     </TableLayout>
 </LinearLayout>

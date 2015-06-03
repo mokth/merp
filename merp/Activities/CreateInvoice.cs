@@ -20,6 +20,7 @@ namespace wincom.mobile.erp
 		string pathToDatabase;
 		List<Trader> items = null;
 		ArrayAdapter<String> dataAdapter;
+		ArrayAdapter dataAdapter2;
 		DateTime _date ;
 		AdPara apara = null;
 
@@ -33,6 +34,7 @@ namespace wincom.mobile.erp
 			// Create your application here
 			_date = DateTime.Today;
 			Spinner spinner = FindViewById<Spinner> (Resource.Id.newinv_custcode);
+			Spinner spinnerType = FindViewById<Spinner> (Resource.Id.newinv_type);
 			Button but = FindViewById<Button> (Resource.Id.newinv_bsave);
 			Button but2 = FindViewById<Button> (Resource.Id.newinv_cancel);
 			spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs> (spinner_ItemSelected);
@@ -60,12 +62,16 @@ namespace wincom.mobile.erp
 			}
 
 			dataAdapter = new ArrayAdapter<String>(this,Resource.Layout.spinner_item, icodes);
+			dataAdapter2 =ArrayAdapter.CreateFromResource (
+							this, Resource.Array.trxtype, Resource.Layout.spinner_item);
 
 			// Drop down layout style - list view with radio button
 			dataAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+			dataAdapter2.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
 
 			// attaching data adapter to spinner
 			spinner.Adapter =dataAdapter;
+			spinnerType.Adapter =dataAdapter2;
 		}
 
 		public override void OnBackPressed() {
@@ -153,6 +159,7 @@ namespace wincom.mobile.erp
 			DateTime tmr = invdate.AddDays (1);
 			AdNumDate adNum= DataHelper.GetNumDate (pathToDatabase, invdate);
 			Spinner spinner = FindViewById<Spinner> (Resource.Id.newinv_custcode);
+			Spinner spinner2 = FindViewById<Spinner> (Resource.Id.newinv_type);
 			TextView txtinvno =FindViewById<TextView> (Resource.Id.newinv_no);
 			TextView custname = FindViewById<TextView> (Resource.Id.newinv_custname);
 			string prefix = apara.Prefix.Trim ().ToUpper ();
@@ -182,6 +189,7 @@ namespace wincom.mobile.erp
 				invno =prefix + invdate.ToString("yyMM") + runno.ToString().PadLeft (4, '0');
 				txtinvno.Text= invno;
 				inv.invdate = invdate;
+				inv.trxtype = spinner2.SelectedItem.ToString ();
 				inv.created = DateTime.Now;
 				inv.invno = invno;
 				inv.description = custname.Text;

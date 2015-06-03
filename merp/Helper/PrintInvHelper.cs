@@ -19,7 +19,7 @@ namespace wincom.mobile.erp
 			USERID = userid;
 		}
 
-		public string OpenBTAndPrint(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list )
+		public string OpenBTAndPrint(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list,int noofcopy )
 		{
 			string msg = "";
 			Stream mmOutputStream;
@@ -69,11 +69,15 @@ namespace wincom.mobile.erp
 					PrintTotal (ref test,ttlAmt,ttltax);
 
 					PrintTaxSumm(ref test,list );
+					PrintFooter (ref test);
 					test += "\nTHANK YOU\n\n\n\n";
 					byte[] cc = Encoding.ASCII.GetBytes (test);
-					mmOutputStream.Write (cc, 0, cc.Length);
-					mmOutputStream.Flush ();
-					Thread.Sleep (300);
+					for (int i=0; i<noofcopy;i++)
+					{
+						mmOutputStream.Write (cc, 0, cc.Length);
+						mmOutputStream.Flush ();
+						Thread.Sleep (300);
+					}
 					mmOutputStream.Close ();
 					//mmInputStream.Close();
 					mmSocket.Close ();
@@ -190,7 +194,14 @@ namespace wincom.mobile.erp
 			test += "GST NO:" + gst+"\n";
 			test += "------------------------------------------\n";
 		}
+		void PrintFooter (ref string test)
+		{
+			test += "\n\n\n\n";
+			test += "------------------------------------------\n";
+			test += "     RECEIVED BY (COMPANY CHOP AND SIGN)  \n";
 
+		
+		}
 		void PrintHeader (ref string test,Invoice inv)
 		{
 			string userid = USERID;

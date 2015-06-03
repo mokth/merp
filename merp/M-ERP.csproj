@@ -90,6 +90,7 @@
     <Compile Include="EventManager\EventManagerFacade.cs" />
     <Compile Include="EventManager\EventParam.cs" />
     <Compile Include="EventManager\EventID.cs" />
+    <Compile Include="Model\InvoiceOrdersRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -223,5 +224,6 @@
     <Folder Include="Helper\" />
     <Folder Include="Resources\drawable\" />
     <Folder Include="EventManager\" />
+    <Folder Include="Model\" />
   </ItemGroup>
 </Project>

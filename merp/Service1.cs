@@ -646,6 +646,8 @@ namespace WcfServiceItem
         
         private string TaxGrpField;
         
+        private string TrxTypeField;
+        
         private double UPriceField;
         
         private string UserIDField;
@@ -816,6 +818,19 @@ namespace WcfServiceItem
             set
             {
                 this.TaxGrpField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string TrxType
+        {
+            get
+            {
+                return this.TrxTypeField;
+            }
+            set
+            {
+                this.TrxTypeField = value;
             }
         }
         
