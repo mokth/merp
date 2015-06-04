@@ -65,13 +65,39 @@
             android:id="@+id/lbinvno"
             android:textColor="#ff1131f0"
             android:paddingLeft="5dp" />
-        <Spinner
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/newinv_custcode"
-            android:paddingLeft="5dp"
-            android:background="@android:drawable/edit_text" />
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="3">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:padding="2dip">
+                <Spinner
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newinv_custcode"
+                    android:paddingLeft="5dp"
+                    android:background="@android:drawable/edit_text" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:paddingLeft="5dip">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:id="@+id/newinv_bfind"
+                    android:background="@android:drawable/ic_search_category_default" />
+            </LinearLayout>
+        </LinearLayout>
         <TextView
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"

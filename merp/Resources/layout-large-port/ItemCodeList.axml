@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tableLayoutItem">
         <TableRow
+            android:layout_width="fill_parent"
             android:id="@+id/tableRow1">
             <Button
                 android:layout_width="wrap_content"
@@ -20,6 +21,17 @@
                 android:drawableLeft="@drawable/left"
                 android:width="120dp"
                 android:text="BACK" />
+            <EditText
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="0dp"
+                android:layout_weight="0.8"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtSearch"
+                android:paddingLeft="5dp"
+                android:textColor="#ff140000"
+                android:background="@android:drawable/edit_text"
+                android:width="300dp"
+                android:hint="@android:string/search_go" />
         </TableRow>
     </TableLayout>
     <ListView

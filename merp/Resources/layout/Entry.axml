@@ -60,30 +60,39 @@
                 android:textColor="#ff093bf6"
                 android:paddingLeft="5dp"
                 android:id="@+id/textView1" />
-            <Spinner
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtcode"
-                android:paddingLeft="5dp"
-                android:background="@android:drawable/edit_text" />
-            <TextView
-                android:text="DESCRITION"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#ff093bf6"
-                android:paddingLeft="5dp"
-                android:id="@+id/textView2" />
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/txtdesc"
-                android:textColor="#ff140000"
-                android:paddingLeft="5dp"
-                android:background="@android:drawable/edit_text"
-                android:editable="false" />
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:weightSum="3">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:padding="2dip">
+                    <Spinner
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtcode"
+                        android:paddingLeft="5dp"
+                        android:background="@android:drawable/edit_text" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:paddingLeft="5dip">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:id="@+id/newinv_bfind"
+                        android:background="@android:drawable/ic_search_category_default" />
+                </LinearLayout>
+            </LinearLayout>
             <TableLayout
                 android:minWidth="25px"
                 android:minHeight="25px"
@@ -277,7 +286,8 @@
                     android:width="120dp" />
             </TableRow>
             <TableRow
-                android:id="@+id/tableRow2" />
+                android:id="@+id/tableRow2">
+            </TableRow>
         </TableLayout>
     </LinearLayout>
 </ScrollView>

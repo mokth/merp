@@ -20,7 +20,9 @@ namespace wincom.mobile.erp
 		ListView listView ;
 		List<Item> listData = new List<Item> ();
 		string pathToDatabase;
-
+		GenericListAdapter<Item> adapter; 
+		EditText  txtSearch;
+		SetViewDlg viewdlg;
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -30,27 +32,43 @@ namespace wincom.mobile.erp
 			SetContentView (Resource.Layout.ItemCodeList);
 			populate (listData);
 			listView = FindViewById<ListView> (Resource.Id.ICodeList);
+			txtSearch= FindViewById<EditText > (Resource.Id.txtSearch);
 
 			Button butInvBack= FindViewById<Button> (Resource.Id.butICodeBack); 
 			butInvBack.Click += (object sender, EventArgs e) => {
 				base.OnBackPressed();
 			};
-			SetViewDlg viewdlg = SetViewDelegate;
+			viewdlg = SetViewDelegate;
+			//PerformFilteringDlg filterDlg=PerformFiltering;
 			//listView.Adapter = new CusotmMasterItemListAdapter(this, listData);
 
-			listView.Adapter = new GenericListAdapter<Item> (this, listData, Resource.Layout.ItemCodeDtlList, viewdlg);
+			adapter = new GenericListAdapter<Item> (this, listData, Resource.Layout.ItemCodeDtlList, viewdlg);
+		    listView.Adapter = adapter;
 			listView.ItemClick+= ListView_Click;
+			txtSearch.TextChanged+= TxtSearch_TextChanged;
+		}
+
+		void FindItemByText ()
+		{
+			List<Item> found = PerformSearch (txtSearch.Text);
+			adapter = new GenericListAdapter<Item> (this, found, Resource.Layout.ItemCodeDtlList, viewdlg);
+			listView.Adapter = adapter;
+		}
+
+		void TxtSearch_TextChanged (object sender, Android.Text.TextChangedEventArgs e)
+		{
+			FindItemByText ();
 		}
 
 		void ListView_Click (object sender, AdapterView.ItemClickEventArgs e)
 		{
-			Item itm = listData.ElementAt (e.Position);
+			
+			Item itm = adapter[e.Position];// listData.ElementAt (e.Position);
 			var intent = new Intent (this, typeof(ItemActivity));
 			intent.PutExtra ("icode", itm.ICode);
 			StartActivity (intent);
 		}
 
-		
 		private void SetViewDelegate(View view,object clsobj)
 	    {
 			Item item = (Item)clsobj;
@@ -64,6 +82,10 @@ namespace wincom.mobile.erp
 		protected override void OnResume()
 		{
 			base.OnResume();
+			if (txtSearch.Text != "") {
+				FindItemByText ();
+				return;
+			}
 			listData = new List<Item> ();
 			populate (listData);
 			listView = FindViewById<ListView> (Resource.Id.ICodeList);
@@ -85,9 +107,71 @@ namespace wincom.mobile.erp
 				{
 					list.Add(item);
 				}
-
 			}
 		}
+
+		List<Item> PerformSearch (string constraint)
+		{
+			List<Item>  results = new List<Item>();
+			if (constraint != null) {
+				var searchFor = constraint.ToString ().ToUpper();
+				Console.WriteLine ("searchFor:" + searchFor);
+
+				foreach(Item itm in listData)
+				{
+					if (itm.ICode.ToUpper().IndexOf (searchFor) >= 0) {
+						results.Add (itm);
+						continue;
+					}
+
+					if (itm.IDesc.ToUpper().IndexOf (searchFor) >= 0) {
+						results.Add (itm);
+						continue;
+					}
+				}
+
+
+			}
+			return results;
+		}
+
+//		List<object> PerformFiltering (string constraint)
+//		{
+//			List<object>  results = new List<object>();
+//			if (constraint != null) {
+//				var searchFor = constraint.ToString ().ToUpper();
+//				Console.WriteLine ("searchFor:" + searchFor);
+//				var matchList = new List<Item>();
+//
+//				foreach(Item itm in listData)
+//				{
+//					if (itm.ICode.ToUpper().IndexOf (searchFor) >= 0) {
+//						results.Add (itm);
+//						continue;
+//					}
+//
+//					if (itm.IDesc.ToUpper().IndexOf (searchFor) >= 0) {
+//						results.Add (itm);
+//						continue;
+//					}
+//				}
+//
+////				//a.MatchItems = matchList.ToArray ();
+////				//Console.WriteLine ("resultCount:" + matchList.Count);
+////
+////				Java.Lang.Object[] matchObjects;
+////				matchObjects = new Java.Lang.Object[matchList.Count];
+////				for (int i = 0; i < matchList.Count; i++) {
+////					matchObjects[i] = new JavaObject<Item>(matchList[i]);
+////				}
+////
+////				results.Values = matchObjects;
+////				results.Count = matchList.Count;
+//			}
+//			return results;
+//		}
+
+	
 	}
 }
 

@@ -15,7 +15,7 @@ using System.IO;
 namespace wincom.mobile.erp
 {
 	[Activity (Label = "NEW INVOICE")]			
-	public class CreateInvoice : Activity
+	public class CreateInvoice : Activity,IEventListener
 	{
 		string pathToDatabase;
 		List<Trader> items = null;
@@ -23,6 +23,7 @@ namespace wincom.mobile.erp
 		ArrayAdapter dataAdapter2;
 		DateTime _date ;
 		AdPara apara = null;
+		Spinner spinner;
 
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -31,21 +32,27 @@ namespace wincom.mobile.erp
 				Finish ();
 			}
 			SetContentView (Resource.Layout.CreateInvoice);
+			EventManagerFacade.Instance.GetEventManager().AddListener(this);
+
 			// Create your application here
 			_date = DateTime.Today;
-			Spinner spinner = FindViewById<Spinner> (Resource.Id.newinv_custcode);
+			spinner = FindViewById<Spinner> (Resource.Id.newinv_custcode);
 			Spinner spinnerType = FindViewById<Spinner> (Resource.Id.newinv_type);
-			Button but = FindViewById<Button> (Resource.Id.newinv_bsave);
-			Button but2 = FindViewById<Button> (Resource.Id.newinv_cancel);
+			Button butSave = FindViewById<Button> (Resource.Id.newinv_bsave);
+			Button butNew = FindViewById<Button> (Resource.Id.newinv_cancel);
+			Button butFind = FindViewById<Button> (Resource.Id.newinv_bfind);
 			spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs> (spinner_ItemSelected);
-			but.Click += butSaveClick;
-			but2.Click += butCancelClick;
+			butSave.Click += butSaveClick;
+			butNew.Click += butCancelClick;
 			TextView invno =  FindViewById<TextView> (Resource.Id.newinv_no);
 			invno.Text = "AUTO";
 			EditText trxdate =  FindViewById<EditText> (Resource.Id.newinv_date);
 			trxdate.Text = _date.ToString ("dd-MM-yyyy");
 			trxdate.Click += delegate(object sender, EventArgs e) {
 				ShowDialog (0);
+			};
+			butFind.Click+= (object sender, EventArgs e) => {
+				ShowCustLookUp();
 			};
 
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
@@ -205,7 +212,35 @@ namespace wincom.mobile.erp
 			}
 
 			ShowItemEntry (inv, codes);
+		}
 
+		void ShowCustLookUp()
+		{
+			var dialog = TraderDialog.NewInstance();
+			dialog.Show(FragmentManager, "dialog");
+		}
+
+		void SetSelectedItem(string text)
+		{
+			int position=dataAdapter.GetPosition (text);
+			spinner.SetSelection (position);
+		}
+
+		public event nsEventHandler eventHandler;
+
+		public void FireEvent(object sender,EventParam eventArgs)
+		{
+			if (eventHandler != null)
+				eventHandler (sender, eventArgs);
+		}
+
+		public void PerformEvent(object sender, EventParam e)
+		{
+			switch (e.EventID) {
+			case 101:
+				RunOnUiThread (() => SetSelectedItem(e.Param["SELECTED"].ToString()));
+				break;
+			}
 		}
 	}
 }

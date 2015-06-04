@@ -91,6 +91,8 @@
     <Compile Include="EventManager\EventParam.cs" />
     <Compile Include="EventManager\EventID.cs" />
     <Compile Include="Model\InvoiceOrdersRepository.cs" />
+    <Compile Include="ItemDialog.cs" />
+    <Compile Include="TraderDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -16,7 +16,7 @@ using Android.Views.InputMethods;
 namespace wincom.mobile.erp
 {
 	[Activity (Label = "INVOICE ITEM ENTRY")]			
-	public class EntryActivity : Activity
+	public class EntryActivity : Activity,IEventListener
 	{
 		string pathToDatabase;
 		List<Item> items = null;
@@ -26,6 +26,7 @@ namespace wincom.mobile.erp
 		string ITEMUID ="";
 		string INVOICENO="";
 		string FIRSTLOAD="";
+		Spinner spinner;
 		ArrayAdapter<String> dataAdapter;
 
 		protected override void OnCreate (Bundle bundle)
@@ -35,6 +36,8 @@ namespace wincom.mobile.erp
 				Finish ();
 			}
 
+			EventManagerFacade.Instance.GetEventManager().AddListener(this);
+
 			INVOICENO = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			ITEMUID = Intent.GetStringExtra ("itemuid") ?? "AUTO";
 			EDITMODE = Intent.GetStringExtra ("editmode") ?? "AUTO";
@@ -42,11 +45,12 @@ namespace wincom.mobile.erp
 			CUSTCODE= Intent.GetStringExtra ("custcode") ?? "AUTO";
 			// Create your application here
 			SetContentView (Resource.Layout.Entry);
-			Spinner spinner = FindViewById<Spinner> (Resource.Id.txtcode);
+			spinner = FindViewById<Spinner> (Resource.Id.txtcode);
 			EditText qty = FindViewById<EditText> (Resource.Id.txtqty);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
 			TextView txtInvNo =  FindViewById<TextView> (Resource.Id.txtInvnp);
 			TextView txtcust =  FindViewById<TextView> (Resource.Id.txtInvcust);
+			Button butFind = FindViewById<Button> (Resource.Id.newinv_bfind);
 			txtInvNo.Text = INVOICENO;
 			txtcust.Text = CUSTOMER;
 			Button but = FindViewById<Button> (Resource.Id.Save);
@@ -54,7 +58,9 @@ namespace wincom.mobile.erp
 			spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs> (spinner_ItemSelected);
 			but.Click += butSaveClick;
 			but2.Click += butCancelClick;
-
+			butFind.Click+= (object sender, EventArgs e) => {
+				ShowItemLookUp();
+			};
 			qty.EditorAction += HandleEditorAction;
 			price.EditorAction += HandleEditorAction; 
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
@@ -133,7 +139,7 @@ namespace wincom.mobile.erp
 			TextView txtInvNo =  FindViewById<TextView> (Resource.Id.txtInvnp);
 			Spinner spinner = FindViewById<Spinner> (Resource.Id.txtcode);
 			EditText qty = FindViewById<EditText> (Resource.Id.txtqty);
-			TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
+			//TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
 			EditText amount = FindViewById<EditText> (Resource.Id.txtamount);
 			EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
@@ -169,7 +175,7 @@ namespace wincom.mobile.erp
 			TextView txtInvNo =  FindViewById<TextView> (Resource.Id.txtInvnp);
 			Spinner spinner = FindViewById<Spinner> (Resource.Id.txtcode);
 			EditText qty = FindViewById<EditText> (Resource.Id.txtqty);
-			TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
+		//	TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
 			EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
 			CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
@@ -213,7 +219,7 @@ namespace wincom.mobile.erp
 			string[] codedesc = spinner.SelectedItem.ToString ().Split (new char[]{ '|' });
 			inv.invno = txtInvNo.Text;
 			inv.amount = amount;
-			inv.description = desc.Text;
+			inv.description = codedesc [1].Trim();
 			inv.icode = codedesc [0].Trim();// spinner.SelectedItem.ToString ();
 			inv.price = uprice;
 			inv.qty = stqQty;
@@ -237,8 +243,8 @@ namespace wincom.mobile.erp
 					invItem.netamount = netamount;
 					invItem.tax = taxamt;
 					invItem.taxgrp = txttax.Text;
-					invItem.description = desc.Text;
-					invItem.icode = spinner.SelectedItem.ToString ();
+					invItem.description =  codedesc [1].Trim();
+					invItem.icode =  codedesc [0].Trim(); //spinner.SelectedItem.ToString ();
 					invItem.price = uprice;
 					invItem.qty = stqQty;
 					db.Update (invItem);
@@ -286,13 +292,13 @@ namespace wincom.mobile.erp
 
 			//string toast = string.Format ("The planet is {0}", spinner.GetItemAtPosition (e.Position));
 			//Toast.MakeText (this, toast, ToastLength.Long).Show ();
-			TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
+			//TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
 			TextView tax =  FindViewById<TextView> (Resource.Id.txttax);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
 			EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
 			CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
 			EditText qty = FindViewById<EditText> (Resource.Id.txtqty);
-			desc.Text = item.IDesc;
+		//	desc.Text = item.IDesc;
 			if (FIRSTLOAD=="")
 				price.Text = item.Price.ToString ();
 			else FIRSTLOAD="";
@@ -301,6 +307,35 @@ namespace wincom.mobile.erp
 			isincl.Checked = item.isincludesive;
 			qty.RequestFocus ();
 
+		}
+
+		void ShowItemLookUp()
+		{
+			var dialog = ItemDialog.NewInstance();
+			dialog.Show(FragmentManager, "dialog");
+		}
+
+		void SetSelectedItem(string text)
+		{
+			int position=dataAdapter.GetPosition (text);
+			spinner.SetSelection (position);
+		}
+
+		public event nsEventHandler eventHandler;
+
+		public void FireEvent(object sender,EventParam eventArgs)
+		{
+			if (eventHandler != null)
+				eventHandler (sender, eventArgs);
+		}
+
+		public void PerformEvent(object sender, EventParam e)
+		{
+			switch (e.EventID) {
+			case 102:
+				RunOnUiThread (() => SetSelectedItem(e.Param["SELECTED"].ToString()));
+				break;
+			}
 		}
 	}
 }

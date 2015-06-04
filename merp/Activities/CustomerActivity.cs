@@ -22,7 +22,9 @@ namespace wincom.mobile.erp
 		List<Trader> listData = new List<Trader> ();
 		ListView listView ;
 		string pathToDatabase;
-
+		GenericListAdapter<Trader> adapter; 
+		EditText  txtSearch;
+		SetViewDlg viewdlg;
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -34,17 +36,31 @@ namespace wincom.mobile.erp
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			populate (listData);
 			listView = FindViewById<ListView> (Resource.Id.CustList);
-			int cc =listView.ChildCount;
 
 			Button butInvBack= FindViewById<Button> (Resource.Id.butCustBack); 
+			txtSearch= FindViewById<EditText > (Resource.Id.txtSearch);
 			butInvBack.Click += (object sender, EventArgs e) => {
 				base.OnBackPressed();
 			};
 
 			listView.ItemClick+= ListView_ItemClick; ;
 		    //istView.Adapter = new CusotmCustomerListAdapter(this, listData);
-			SetViewDlg viewdlg = SetViewDelegate;
-			listView.Adapter = new GenericListAdapter<Trader> (this, listData, Resource.Layout.ListCustDtlView, viewdlg);
+			viewdlg = SetViewDelegate;
+			adapter = new GenericListAdapter<Trader> (this, listData, Resource.Layout.ListCustDtlView, viewdlg);
+			listView.Adapter = adapter;
+			txtSearch.TextChanged+= TxtSearch_TextChanged;
+		}
+
+		void FindItemByText ()
+		{
+			List<Trader> found = PerformSearch (txtSearch.Text);
+			adapter = new GenericListAdapter<Trader> (this, found, Resource.Layout.ListCustDtlView, viewdlg);
+			listView.Adapter = adapter;
+		}
+
+		void TxtSearch_TextChanged (object sender, Android.Text.TextChangedEventArgs e)
+		{
+			FindItemByText ();
 		}
 
 		void ListView_ItemClick (object sender, AdapterView.ItemClickEventArgs e)
@@ -64,6 +80,10 @@ namespace wincom.mobile.erp
 		protected override void OnResume()
 		{
 			base.OnResume();
+			if (txtSearch.Text != "") {
+				FindItemByText ();
+				return;
+			}
 			listData = new List<Trader> ();
 			populate (listData);
 			SetViewDlg viewdlg = SetViewDelegate;
@@ -84,6 +104,32 @@ namespace wincom.mobile.erp
 				}
 
 			}
+		}
+
+
+		List<Trader> PerformSearch (string constraint)
+		{
+			List<Trader>  results = new List<Trader>();
+			if (constraint != null) {
+				var searchFor = constraint.ToString ().ToUpper();
+				Console.WriteLine ("searchFor:" + searchFor);
+
+				foreach(Trader itm in listData)
+				{
+					if (itm.CustCode.ToUpper().IndexOf (searchFor) >= 0) {
+						results.Add (itm);
+						continue;
+					}
+
+					if (itm.CustName.ToUpper().IndexOf (searchFor) >= 0) {
+						results.Add (itm);
+						continue;
+					}
+				}
+
+
+			}
+			return results;
 		}
 
 	}
