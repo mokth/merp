@@ -6,6 +6,7 @@ using System.Threading;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace wincom.mobile.erp
 {
@@ -13,13 +14,145 @@ namespace wincom.mobile.erp
 	{
 		string pathToDatabase;
 		string USERID;
+		AdPara apara;
+		string msg;
 		public PrintInvHelper (string adpathToDatabase,string userid)
 		{
 			pathToDatabase = adpathToDatabase;
 			USERID = userid;
+			apara =  DataHelper.GetAdPara (pathToDatabase);
+		}
+
+		private void PrintLine(string text,Stream mmOutputStream)
+		{
+			byte[] cc = Encoding.ASCII.GetBytes (text);
+			mmOutputStream.Write (cc, 0, cc.Length);
 		}
 
 		public string OpenBTAndPrint(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list,int noofcopy )
+		{string msg = "";
+//			if (apara.PrinterName.ToUpper().Contains ("PT-I")) {
+//				msg =BlueToothPT(mmSocket, mmDevice, inv, list, noofcopy);
+//			} 
+//			if (apara.PrinterName.ToUpper().Contains ("BLUETOOTH"))  {
+//				msg =BluetoothMini (mmSocket, mmDevice, inv, list, noofcopy);
+//			}
+
+			BluetoothMini (mmSocket, mmDevice, inv, list, noofcopy);
+
+			return msg;
+		}
+
+		//Bluetooth Printer -Mini Bluetooth Printer
+		public void BluetoothMini(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list,int noofcopy)
+		{
+			msg = "";
+			Stream mmOutputStream;
+			//TextView txtv = FindViewById<TextView> (Resource.Id.textView2);
+			try {
+				UUID uuid = UUID.FromString ("00001101-0000-1000-8000-00805F9B34FB");
+
+				mmSocket = mmDevice.CreateInsecureRfcommSocketToServiceRecord (uuid);
+				if (mmSocket == null) {
+					//txtv.Text = "Error creating sockect";
+					msg =  "Error creating sockect";
+					return;
+				}
+				//txtv.Text = mmDevice.BondState.ToString ();
+				if (mmDevice.BondState == Bond.Bonded) {
+					mmSocket.Connect ();
+					Thread.Sleep (300);
+					//mmInputStream = mmSocket.InputStream;
+					mmOutputStream = mmSocket.OutputStream;
+					byte[] charfont;
+					if (apara.PaperSize=="58mm")
+					{
+						charfont = new Byte[] { 27, 33, 1 }; //Char font 9x17
+						mmOutputStream.Write(charfont, 0, charfont.Length);
+					}
+
+					if (apara.PaperSize=="80mm")
+					{
+						charfont = new Byte[] { 27, 33, 0 }; //Char font 12x24
+						mmOutputStream.Write(charfont, 0, charfont.Length);
+					}
+
+					string test = "";
+
+					PrintCompHeader (ref test);
+					PrintCustomer (ref test,inv.custcode);
+					PrintHeader (ref test,inv);
+					string dline="";
+					double ttlAmt =0;
+					double ttltax =0;
+					int count =0;
+					foreach(InvoiceDtls itm in list)
+					{
+						count+=1;
+						dline =dline+PrintDetail (itm,count);
+						ttlAmt = ttlAmt+ itm.netamount;
+						ttltax = ttltax+itm.tax;
+					}
+					test += dline;
+					PrintTotal (ref test,ttlAmt,ttltax);
+
+					PrintTaxSumm(ref test,list );
+					PrintFooter (ref test);
+					test += "\nTHANK YOU\n\n\n\n";
+					byte[] cc =ASCIIEncoding.ASCII.GetBytes(test);
+
+					for (int i=0; i<noofcopy;i++)
+					{
+//						int reminder;
+//						int x = Math.DivRem(cc.Length, 256, out reminder);
+//						int pos =0;
+//						for(int n=0;n<x;n++)
+//						{
+//							mmOutputStream.Write(cc,pos,256);
+//							Thread.Sleep (100);
+//							pos = pos+256;
+//						}
+//						if (reminder>0)
+//							mmOutputStream.Write(cc,cc.Length-reminder-1,reminder);
+
+						int nwait=0;
+						while(true)
+						{
+							if (mmOutputStream.CanWrite)
+								break;
+							else 
+							{
+								nwait+=1;
+								if (nwait>10)
+									break;
+							}
+							Thread.Sleep (300);
+						}
+						//mmOutputStream.BeginWrite(cc,0,cc.Length,
+						mmOutputStream.Write (cc, 0, cc.Length);
+						Thread.Sleep (3000);
+						//mmOutputStream.Flush ();
+					}
+					Thread.Sleep (300);
+					mmOutputStream.Close ();
+					//mmInputStream.Close();
+					mmSocket.Close ();
+					msg ="Printing....";
+				} else {
+					//txtv.Text = "Device not connected";
+					msg= "Device not connected";	
+				}
+
+
+			} catch (Exception ex) {
+				msg = ex.Message;
+			}
+
+		//	return msg;
+		}
+
+		//Bluetooth Printer -PT-II and PT-III
+		public string BlueToothPT(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list,int noofcopy )
 		{
 			string msg = "";
 			Stream mmOutputStream;
@@ -39,16 +172,15 @@ namespace wincom.mobile.erp
 					Thread.Sleep (300);
 					//mmInputStream = mmSocket.InputStream;
 					mmOutputStream = mmSocket.OutputStream;
-					byte[] charLarge = { 0x1d, 0x21, 0x10 };//this command for T9
-
-					mmOutputStream.Write (charLarge, 0, charLarge.Length);
-					byte[] charLarge3 = { 0x1b, 0x61, 0x01 };//this command for T9
-					mmOutputStream.Write (charLarge3, 0, charLarge3.Length);
-					//mmOutputStream.Write (bb, 0, bb.Length);
-					byte[] charLarge4 = { 0x1b, 0x61, 0x00 };//this command for T9
-					mmOutputStream.Write (charLarge4, 0, charLarge4.Length);
-					byte[] charLarge1 = { 0x1d, 0x21, 0 };//this command for T9
-					mmOutputStream.Write (charLarge1, 0, charLarge1.Length);
+//					byte[] charLarge = { 0x1d, 0x21, 0x10 };//this command for T9
+//					mmOutputStream.Write (charLarge, 0, charLarge.Length);
+//					byte[] charLarge3 = { 0x1b, 0x61, 0x01 };//aligment left
+//					mmOutputStream.Write (charLarge3, 0, charLarge3.Length);
+//					//mmOutputStream.Write (bb, 0, bb.Length);
+//					byte[] charLarge4 = { 0x1b, 0x61, 0x00 };//this command for T9
+//					mmOutputStream.Write (charLarge4, 0, charLarge4.Length);
+//					byte[] charLarge1 = { 0x1d, 0x21, 0 };//this command for T9
+//					mmOutputStream.Write (charLarge1, 0, charLarge1.Length);
 					string test = "";
 
 					PrintCompHeader (ref test);

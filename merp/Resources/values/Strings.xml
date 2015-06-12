@@ -7,4 +7,8 @@
         <item>CASH</item>
         <item>INVOICE</item>
     </string-array>
+     <string-array name="papersize_array">
+        <item>58mm</item>
+        <item>80mm</item>
+    </string-array>
    </resources>

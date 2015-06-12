@@ -10,14 +10,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/lbinvno"
-        android:textColor="@android:color/black"
+        android:textSize="17sp"
+        android:textColor="#ff093bf6"
         android:paddingLeft="5dp" />
+    <Spinner
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtprinters"
+        android:textSize="20sp"
+        android:textColor="#ff140000"
+        android:paddingLeft="5dp"
+        android:background="@android:drawable/spinner_background"
+        style="@android:style/Widget.DeviceDefault.DropDownItem" />
     <EditText
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtad_printer"
         android:textColor="#ff140000"
+        android:textSize="17sp"
+        android:paddingLeft="5dp"
+        android:background="@android:drawable/edit_text"
+        android:hint="Bluetooth printer name" />
+    <TextView
+        android:text="PAPER WIDTH"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lbPaper"
+        android:textSize="17sp"
+        android:textColor="#ff093bf6"
+        android:paddingLeft="5dp" />
+    <Spinner
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtSize"
+        android:textSize="17sp"
         android:paddingLeft="5dp"
         android:background="@android:drawable/edit_text" />
     <TextView
@@ -26,13 +56,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/lbinvno"
+        android:textSize="17sp"
         android:paddingLeft="5dp"
-        android:textColor="@android:color/black" />
+        android:textColor="#ff093bf6" />
     <EditText
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtad_prefix"
+        android:textSize="17sp"
         android:paddingLeft="5dp"
         android:textColor="#ff140000"
         android:background="@android:drawable/edit_text" />

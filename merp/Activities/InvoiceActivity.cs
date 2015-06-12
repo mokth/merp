@@ -182,9 +182,11 @@ namespace wincom.mobile.erp
 			}
 			mmDevice = null;
 			findBTPrinter ();
+
 			if (mmDevice != null) {
 				StartPrint (inv, list,noofcopy);
 			}
+		
 		}
 
 		void StartPrint(Invoice inv,InvoiceDtls[] list,int noofcopy )
@@ -213,7 +215,7 @@ namespace wincom.mobile.erp
 					foreach (BluetoothDevice dev in pair) {
 						Console.WriteLine (dev.Name);
 						txt = txt+","+dev.Name;
-						if (dev.Name.IndexOf(printername) >= 0)
+						if (dev.Name.ToUpper().IndexOf(printername) >= 0)
 						{
 							mmDevice = dev;
 							break;

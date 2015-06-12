@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lbinvno"
+            android:textSize="24sp"
             android:textColor="@android:color/black"
             android:paddingLeft="5dp" />
         <TextView
@@ -33,6 +34,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/lbinvno"
             android:paddingLeft="5dp"
+            android:textSize="24sp"
             android:textColor="@android:color/black" />
         <TextView
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -56,6 +58,7 @@
             android:layout_height="wrap_content"
             android:textColor="#ff093bf6"
             android:paddingLeft="5dp"
+            android:textSize="24sp"
             android:id="@+id/textView1" />
         <LinearLayout
             android:layout_width="fill_parent"
@@ -74,6 +77,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/txtcode"
                     android:paddingLeft="5dp"
+                    android:textSize="24sp"
                     android:background="@android:drawable/edit_text" />
             </LinearLayout>
             <LinearLayout
@@ -105,12 +109,14 @@
                     android:layout_height="wrap_content"
                     android:textColor="#ff093bf6"
                     android:paddingLeft="5dp"
+                    android:textSize="24sp"
                     android:id="@+id/textView5" />
                 <TextView
                     android:text="TAX PERCENT"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="24sp"
                     android:textColor="#ff093bf6"
                     android:paddingLeft="5dp"
                     android:id="@+id/textView5" />
@@ -119,6 +125,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="24sp"
                     android:textColor="#ff093bf6"
                     android:paddingLeft="5dp"
                     android:id="@+id/textView5" />
@@ -132,6 +139,7 @@
                     android:id="@+id/txttax"
                     android:textColor="#ff140000"
                     android:paddingLeft="5dp"
+                    android:textSize="24sp"
                     android:background="@android:drawable/edit_text"
                     android:selectAllOnFocus="false"
                     android:editable="false" />
@@ -143,6 +151,7 @@
                     android:textColor="#ff093bf6"
                     android:background="@android:drawable/edit_text"
                     android:paddingLeft="5dp"
+                    android:textSize="24sp"
                     android:id="@+id/txtinvtaxper"
                     android:editable="false"
                     android:enabled="false" />
@@ -174,8 +183,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="#ff093bf6"
                     android:paddingLeft="5dp"
+                    android:textSize="24sp"
                     android:id="@+id/textView4"
-                    android:width="100dp" />
+                    android:width="120dp" />
                 <TextView
                     android:text="UNIT PTICE"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -183,8 +193,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="#ff093bf6"
                     android:paddingLeft="5dp"
+                    android:textSize="24sp"
                     android:id="@+id/textView5"
-                    android:width="100dp" />
+                    android:width="140dp" />
                 <TextView
                     android:text="TAX"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -192,6 +203,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="#ff093bf6"
                     android:paddingLeft="5dp"
+                    android:textSize="24sp"
                     android:id="@+id/textView5"
                     android:width="100dp" />
                 <TextView
@@ -201,6 +213,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="#ff093bf6"
                     android:paddingLeft="5dp"
+                    android:textSize="24sp"
                     android:id="@+id/textView5"
                     android:width="150dp" />
             </TableRow>
@@ -212,6 +225,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtqty"
+                    android:textSize="24sp"
                     android:paddingLeft="5dp"
                     android:textColor="#ff140000"
                     android:background="@android:drawable/edit_text" />
@@ -221,6 +235,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtprice"
+                    android:textSize="24sp"
                     android:textColor="#ff140000"
                     android:paddingLeft="5dp"
                     android:background="@android:drawable/edit_text" />
@@ -231,6 +246,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/txttaxamt"
                     android:textColor="#ff140000"
+                    android:textSize="24sp"
                     android:paddingLeft="5dp"
                     android:background="@android:drawable/edit_text"
                     android:editable="false" />
@@ -240,6 +256,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtamount"
+                    android:textSize="24sp"
                     android:textColor="#ff140000"
                     android:paddingLeft="5dp"
                     android:background="@android:drawable/edit_text"

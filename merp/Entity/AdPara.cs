@@ -9,6 +9,7 @@ namespace wincom.mobile.erp
 		public int ID { get; set; }
 		public string PrinterName{ get; set;}
 		public string Prefix{ get; set;}
+		public string PaperSize{ get; set;}
 		public string Warehouse{ get; set;}
 		public int RunNo{ get; set;}
 
