@@ -164,7 +164,7 @@ namespace wincom.mobile.erp
 					foreach (BluetoothDevice dev in pair) {
 						Console.WriteLine (dev.Name);
 						txt = txt+","+dev.Name;
-						if (dev.Name.IndexOf(printername) >= 0)
+						if (dev.Name.ToUpper()==printername)
 						{
 							mmDevice = dev;
 							break;

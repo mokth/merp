@@ -1,9 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -31,6 +29,11 @@ namespace wincom.mobile.erp
 			// Create your application here
 			EventManagerFacade.Instance.GetEventManager().AddListener(this);
 
+			//Button import = FindViewById<Button>(Resource.Id.logimport);
+
+			//import.Click+= (object sender, EventArgs e) => {
+			//	ImportDatabase();
+			//};	
 			Button login = FindViewById<Button>(Resource.Id.login);
 			Button bexit = FindViewById<Button>(Resource.Id.exit);
 			EditText txtcode = FindViewById<EditText> (Resource.Id.login_code);
@@ -73,6 +76,13 @@ namespace wincom.mobile.erp
 				};
 			}
 
+		}
+
+		void ImportDatabase ()
+		{
+			var sdcard = Path.Combine (Android.OS.Environment.ExternalStorageDirectory.Path, "erpdata");
+			string filename = Path.Combine (sdcard,"erplite.db");
+			File.Copy(filename, pathToDatabase, true);
 		}
 
 		void ExitApp ()

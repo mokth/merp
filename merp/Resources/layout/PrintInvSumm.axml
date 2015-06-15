@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/alert_light_frame">
+        <TextView
+            android:text="TRANSACTION DATE FROM"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lbinvno"
+            android:textColor="#ff1131f0"
+            android:paddingLeft="5dp" />
+        <EditText
+            android:inputType="date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="@android:drawable/edit_text"
+            android:id="@+id/trxdatefr"
+            android:drawableRight="@android:drawable/ic_menu_today"
+            android:textColor="@android:color/black" />
+        <TextView
+            android:text="TRANSACTION DATE TO"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lbinvno"
+            android:textColor="#ff1131f0"
+            android:paddingLeft="5dp" />
+        <EditText
+            android:inputType="date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="@android:drawable/edit_text"
+            android:id="@+id/trxdateto"
+            android:drawableRight="@android:drawable/ic_menu_today"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+    <TableLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tableLayout1">
+        <TableRow
+            android:id="@+id/tableRow1">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:layout_column="0"
+                android:id="@+id/printsumm"
+                android:width="130dp"
+                android:text="PRINT"
+                android:drawableLeft="@drawable/print" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:layout_column="1"
+                android:id="@+id/printsumm_cancel"
+                android:drawableLeft="@drawable/left"
+                android:width="130dp"
+                android:text="CANCEL" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow2">
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

@@ -58,6 +58,10 @@ namespace wincom.mobile.erp
 			Button butupload = FindViewById<Button> (Resource.Id.butupload);
 			butupload.Click += butUploadBills;
 			//Button butExitOnly = FindViewById<Button> (Resource.Id.butExitOnly);
+			Button butsumm = FindViewById<Button> (Resource.Id.butInvsumm);
+			butsumm.Click+= (object sender, EventArgs e) => {
+				StartActivity(typeof(PrintSumm));
+			};
 		}
 
 		void ButAbt_Click (object sender, EventArgs e)
@@ -182,6 +186,8 @@ namespace wincom.mobile.erp
 				File.Copy (pathToDatabase, filename, true);
 			}
 		}
+
+	
 
 		void butBackUpDb(object sender,EventArgs e)
 		{

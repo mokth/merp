@@ -47,7 +47,7 @@ namespace wincom.mobile.erp
 			TextView invno =  FindViewById<TextView> (Resource.Id.newinv_no);
 			invno.Text = "AUTO";
 			EditText trxdate =  FindViewById<EditText> (Resource.Id.newinv_date);
-			trxdate.Text = _date.ToString ("dd-MM-yyyy");
+ 			trxdate.Text = _date.ToString ("dd-MM-yyyy");
 			trxdate.Click += delegate(object sender, EventArgs e) {
 				ShowDialog (0);
 			};
@@ -133,20 +133,6 @@ namespace wincom.mobile.erp
 			trxdate.Text = _date.ToString ("dd-MM-yyyy");
 		}
 
-		private DateTime ConvertToDate(string sdate)
-		{
-			DateTime date = DateTime.Today;  
-			string[] para = sdate.Split(new char[]{'-'});
-			if (para.Length > 2) {
-				int yy = Convert.ToInt32 (para [2]);
-				int mm = Convert.ToInt32 (para [1]);
-				int dd = Convert.ToInt32 (para [0]);
-
-				date = new DateTime (yy, mm, dd);
-			}
-
-			return date;
-		}
 
 		void ShowItemEntry (Invoice inv, string[] codes)
 		{
@@ -162,7 +148,7 @@ namespace wincom.mobile.erp
 		{
 			Invoice inv = new Invoice ();
 			EditText trxdate =  FindViewById<EditText> (Resource.Id.newinv_date);
-			DateTime invdate = ConvertToDate (trxdate.Text);
+			DateTime invdate = Utility.ConvertToDate (trxdate.Text);
 			DateTime tmr = invdate.AddDays (1);
 			AdNumDate adNum= DataHelper.GetNumDate (pathToDatabase, invdate);
 			Spinner spinner = FindViewById<Spinner> (Resource.Id.newinv_custcode);

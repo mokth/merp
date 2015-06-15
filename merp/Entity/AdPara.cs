@@ -12,7 +12,7 @@ namespace wincom.mobile.erp
 		public string PaperSize{ get; set;}
 		public string Warehouse{ get; set;}
 		public int RunNo{ get; set;}
-
+		public string ReceiptTitle{ get; set;}
 	}
 
 	public class AdNumDate

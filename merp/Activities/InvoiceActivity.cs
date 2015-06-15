@@ -111,6 +111,7 @@ namespace wincom.mobile.erp
 				}else if (arg1.Item.TitleFormatted.ToString().ToLower()=="print 2 copy")
 				{
 					PrintInv(item,2);	
+
 				} else if (arg1.Item.TitleFormatted.ToString().ToLower()=="delete")
 				{
 					Delete(item);
@@ -171,6 +172,20 @@ namespace wincom.mobile.erp
 			StartActivity(intent);
 		}
 
+//		void PrintInvSumm(DateTime printdate1,DateTime printdate2)
+//		{
+//			mmDevice = null;
+//			findBTPrinter ();
+//
+//			if (mmDevice == null)
+//				return;
+//			
+//			string userid = ((GlobalvarsApp)this.Application).USERID_CODE;
+//			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid);
+//			string msg = prnHelp.PrintInvSumm(mmSocket, mmDevice,printdate1,printdate2);
+//			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
+//
+//		}
 		void PrintInv(Invoice inv,int noofcopy)
 		{
 			Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
@@ -197,8 +212,37 @@ namespace wincom.mobile.erp
 			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 		}
 
+		string getBTAddrFile(string printername)
+		{
+			var documents = System.Environment.GetFolderPath (System.Environment.SpecialFolder.Personal);
+			string filename = Path.Combine (documents, printername+".baddr");
+			return filename;
+		}
+
+		bool tryConnectBtAddr(string btAddrfile)
+		{
+			bool found = false;
+			if (!File.Exists (btAddrfile))
+				return false;
+			try{
+			mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+			mmDevice = mBluetoothAdapter.GetRemoteDevice (File.ReadAllBytes (btAddrfile));
+			if (mmDevice != null) {
+				found = true;
+			}
+			
+			}catch(Exception ex) {
+			
+			}
+			return found;
+	     }
+
 		void findBTPrinter(){
 			string printername = apara.PrinterName.Trim ().ToUpper ();
+//			string addrfile = getBTAddrFile(printername);
+//			if (tryConnectBtAddr(addrfile))
+//				return;
+			
 			try{
 				mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 
@@ -215,9 +259,10 @@ namespace wincom.mobile.erp
 					foreach (BluetoothDevice dev in pair) {
 						Console.WriteLine (dev.Name);
 						txt = txt+","+dev.Name;
-						if (dev.Name.ToUpper().IndexOf(printername) >= 0)
+						if (dev.Name.ToUpper()==printername)
 						{
 							mmDevice = dev;
+//							File.WriteAllText(addrfile,dev.Address);
 							break;
 						}
 					}

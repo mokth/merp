@@ -93,6 +93,8 @@
     <Compile Include="Model\InvoiceOrdersRepository.cs" />
     <Compile Include="ItemDialog.cs" />
     <Compile Include="TraderDialog.cs" />
+    <Compile Include="Activities\PrintSumm.cs" />
+    <Compile Include="Helper\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -217,6 +219,13 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\ok.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\ok.png" />
     <AndroidResource Include="Resources\layout\AdPara.axml" />
+    <AndroidResource Include="Resources\layout\PrintInvSumm.axml" />
+    <AndroidResource Include="Resources\layout-large-port\PrintInvSumm.axml" />
+    <AndroidResource Include="Resources\drawable-hdpi\print.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\print.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\print.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\print.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\print.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

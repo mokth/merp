@@ -18,11 +18,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtprinters"
-        android:textSize="20sp"
-        android:textColor="#ff140000"
+        android:textSize="17sp"
         android:paddingLeft="5dp"
-        android:background="@android:drawable/spinner_background"
-        style="@android:style/Widget.DeviceDefault.DropDownItem" />
+        android:background="@android:drawable/spinner_dropdown_background"
+        android:fitsSystemWindows="false" />
     <EditText
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
@@ -49,7 +48,8 @@
         android:id="@+id/txtSize"
         android:textSize="17sp"
         android:paddingLeft="5dp"
-        android:background="@android:drawable/edit_text" />
+        android:background="@android:drawable/spinner_dropdown_background"
+        android:fitsSystemWindows="false" />
     <TextView
         android:text="INVOICE PREFIX"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -64,6 +64,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtad_prefix"
+        android:textSize="17sp"
+        android:paddingLeft="5dp"
+        android:textColor="#ff140000"
+        android:background="@android:drawable/edit_text" />
+    <TextView
+        android:text="RECEIPT TITLE"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lbinvno"
+        android:textSize="17sp"
+        android:paddingLeft="5dp"
+        android:textColor="#ff093bf6" />
+    <EditText
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtad_title"
         android:textSize="17sp"
         android:paddingLeft="5dp"
         android:textColor="#ff140000"

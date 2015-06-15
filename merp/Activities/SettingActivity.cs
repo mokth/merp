@@ -66,6 +66,8 @@ namespace wincom.mobile.erp
 		{
 			TextView txtprinter =FindViewById<TextView> (Resource.Id.txtad_printer);
 			TextView txtprefix =FindViewById<TextView> (Resource.Id.txtad_prefix);
+			TextView txttitle =FindViewById<TextView> (Resource.Id.txtad_title);
+
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			AdPara apra = new AdPara ();
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
@@ -75,6 +77,10 @@ namespace wincom.mobile.erp
 					apra = list [0];
 					txtprefix.Text = apra.Prefix;
 					txtprinter.Text = apra.PrinterName;
+					txttitle.Text = apra.ReceiptTitle;
+					int prnpos = adapterBT.GetPosition (apra.PrinterName);
+					if (prnpos>0)
+						spinBt.SetSelection (prnpos);
 					int position=adapter.GetPosition (apra.PaperSize);
 					if (position>0)
 						spinner.SetSelection (position);
@@ -82,6 +88,7 @@ namespace wincom.mobile.erp
 				} else {
 					txtprefix.Text = "CS";
 					txtprinter.Text = "PT-II";
+					txttitle.Text = "TAX INVOICE";
 				}
 			}
 		}
@@ -89,7 +96,7 @@ namespace wincom.mobile.erp
 		{
 			TextView txtprinter =FindViewById<TextView> (Resource.Id.txtad_printer);
 			TextView txtprefix =FindViewById<TextView> (Resource.Id.txtad_prefix);
-
+			TextView txttitle =FindViewById<TextView> (Resource.Id.txtad_title);
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			AdPara apra = new AdPara ();
 			apra.Prefix = txtprefix.Text.ToUpper();
@@ -104,6 +111,7 @@ namespace wincom.mobile.erp
 					apra.Prefix = txtprefix.Text.ToUpper();
 					apra.PrinterName = txtprinter.Text.ToUpper();
 					apra.PaperSize = spinner.SelectedItem.ToString ();
+					apra.ReceiptTitle =txttitle.Text.ToUpper();
 					db.Update (apra);
 				}
 			}

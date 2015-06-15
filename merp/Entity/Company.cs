@@ -20,6 +20,7 @@ namespace wincom.mobile.erp
 		public int SalesTaxDec{ get; set;}
 		public bool  AllowEdit { get; set;}
 		public bool  AllowDelete { get; set;}
+		public bool  ShowTime { get; set;}
 		public string WCFUrl { get ; set;}
 		public string SupportContat { get; set;}
 	}

@@ -28,7 +28,8 @@ namespace wincom.mobile.erp
 		string FIRSTLOAD="";
 		Spinner spinner;
 		ArrayAdapter<String> dataAdapter;
-
+		double taxper;
+		bool isInclusive;
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -108,16 +109,16 @@ namespace wincom.mobile.erp
 			EditText ttltax = FindViewById<EditText> (Resource.Id.txttaxamt);
 			EditText qty = FindViewById<EditText> (Resource.Id.txtqty);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
-			EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
-			CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
+			//EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
+			//CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
 			TextView txttax =  FindViewById<TextView> (Resource.Id.txttax);
 			try{
-			double taxval = Convert.ToDouble(taxper.Text);
+				double taxval = taxper;// Convert.ToDouble(taxper.Text);
 			double stqQty = Convert.ToDouble(qty.Text);
 			double uprice = Convert.ToDouble(price.Text);
 			double amount = Math.Round((stqQty * uprice),2);
 			double netamount = amount;
-			bool taxinclusice = isincl.Checked;
+				bool taxinclusice =  isInclusive;// isincl.Checked;
 			double taxamt = 0;
 			if (taxinclusice) {
 				double percent = (taxval/100) + 1;
@@ -142,9 +143,9 @@ namespace wincom.mobile.erp
 			//TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
 			EditText amount = FindViewById<EditText> (Resource.Id.txtamount);
-			EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
+			//EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
 			EditText taxamt = FindViewById<EditText> (Resource.Id.txttaxamt);
-			CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
+			//CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
 			TextView tax =  FindViewById<TextView> (Resource.Id.txttax);
 
 			int id = Convert.ToInt32 (uid);
@@ -161,8 +162,10 @@ namespace wincom.mobile.erp
 					taxamt.Text = invItem.tax.ToString ();
 
 					tax.Text = item.taxgrp;
-					taxper.Text = item.tax.ToString ();
-					isincl.Checked = item.isincludesive;
+					taxper = item.tax;
+					isInclusive = item.isincludesive;
+					//taxper.Text = item.tax.ToString ();
+				//	isincl.Checked = item.isincludesive;
 					amount.Text = invItem.amount.ToString ();
 					price.Text = invItem.price.ToString ();
 				}
@@ -177,8 +180,8 @@ namespace wincom.mobile.erp
 			EditText qty = FindViewById<EditText> (Resource.Id.txtqty);
 		//	TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
-			EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
-			CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
+			//EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
+			//CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
 			TextView txttax =  FindViewById<TextView> (Resource.Id.txttax);
 			EditText ttlamt = FindViewById<EditText> (Resource.Id.txtamount);
 			EditText ttltax = FindViewById<EditText> (Resource.Id.txttaxamt);
@@ -200,10 +203,10 @@ namespace wincom.mobile.erp
 			}
 			double stqQty = Convert.ToDouble(qty.Text);
 			double uprice = Convert.ToDouble(price.Text);
-			double taxval = Convert.ToDouble(taxper.Text);
+			double taxval = taxper;//Convert.ToDouble(taxper.Text);
 			double amount = Math.Round((stqQty * uprice),2);
 			double netamount = amount;
-			bool taxinclusice = isincl.Checked;
+			bool taxinclusice = isInclusive;// isincl.Checked;
 			double taxamt = 0;
 			if (taxinclusice) {
 				double percent = (taxval/100) + 1;
@@ -295,16 +298,16 @@ namespace wincom.mobile.erp
 			//TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
 			TextView tax =  FindViewById<TextView> (Resource.Id.txttax);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
-			EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
-			CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
+			//EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
+			//CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
 			EditText qty = FindViewById<EditText> (Resource.Id.txtqty);
 		//	desc.Text = item.IDesc;
 			if (FIRSTLOAD=="")
 				price.Text = item.Price.ToString ();
 			else FIRSTLOAD="";
 			tax.Text = item.taxgrp;
-			taxper.Text = item.tax.ToString ();
-			isincl.Checked = item.isincludesive;
+			taxper = item.tax;
+			isInclusive = item.isincludesive;
 			qty.RequestFocus ();
 
 		}

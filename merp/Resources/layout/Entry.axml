@@ -77,7 +77,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/txtcode"
                         android:paddingLeft="5dp"
-                        android:background="@android:drawable/edit_text" />
+                        android:background="@android:drawable/spinner_dropdown_background"
+                        android:fitsSystemWindows="false" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -93,75 +94,6 @@
                         android:background="@android:drawable/ic_search_category_default" />
                 </LinearLayout>
             </LinearLayout>
-            <TableLayout
-                android:minWidth="25px"
-                android:minHeight="25px"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tableLayout1">
-                <TableRow
-                    android:id="@+id/tableRow1">
-                    <TextView
-                        android:text="TAX GRP"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#ff093bf6"
-                        android:paddingLeft="5dp"
-                        android:id="@+id/textView5" />
-                    <TextView
-                        android:text="TAX PER"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#ff093bf6"
-                        android:paddingLeft="5dp"
-                        android:id="@+id/textView5" />
-                    <TextView
-                        android:text="INCLUSIVE"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#ff093bf6"
-                        android:paddingLeft="5dp"
-                        android:id="@+id/textView5" />
-                </TableRow>
-                <TableRow
-                    android:id="@+id/tableRow1">
-                    <TextView
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/txttax"
-                        android:textColor="#ff140000"
-                        android:paddingLeft="5dp"
-                        android:background="@android:drawable/edit_text"
-                        android:selectAllOnFocus="false"
-                        android:editable="false" />
-                    <EditText
-                        android:inputType="numberDecimal"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#ff093bf6"
-                        android:background="@android:drawable/edit_text"
-                        android:paddingLeft="5dp"
-                        android:id="@+id/txtinvtaxper"
-                        android:editable="false"
-                        android:enabled="false" />
-                    <CheckBox
-                        android:text="CheckBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:drawable/edit_text"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:id="@+id/txtinvisincl"
-                        android:textColor="@android:color/background_light"
-                        android:editable="false"
-                        android:enabled="false"
-                        android:textIsSelectable="false" />
-                </TableRow>
-            </TableLayout>
             <TableLayout
                 android:minWidth="25px"
                 android:minHeight="25px"
@@ -209,6 +141,17 @@
                         android:textColor="#ff140000"
                         android:paddingLeft="5dp"
                         android:background="@android:drawable/edit_text" />
+                    <TextView
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txttax"
+                        android:textColor="#ff140000"
+                        android:paddingLeft="5dp"
+                        android:background="@android:drawable/edit_text"
+                        android:selectAllOnFocus="false"
+                        android:editable="false"
+                        android:width="40dp" />
                 </TableRow>
                 <TableRow
                     android:id="@+id/tableRow1">

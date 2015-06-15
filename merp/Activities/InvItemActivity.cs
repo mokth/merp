@@ -73,7 +73,9 @@ namespace wincom.mobile.erp
 			view.FindViewById<TextView> (Resource.Id.invitemdesc).Text = item.description;
 			view.FindViewById<TextView> (Resource.Id.invitemqty).Text = sqty;
 			view.FindViewById<TextView> (Resource.Id.invitemtaxgrp).Text = item.taxgrp;
-			view.FindViewById<TextView> (Resource.Id.invitemtax).Text = item.tax.ToString ("n2");
+			if (item.icode == "TAX" || item.icode == "AMOUNT") {
+				view.FindViewById<TextView> (Resource.Id.invitemtax).Text = "";
+			}else view.FindViewById<TextView> (Resource.Id.invitemtax).Text = item.tax.ToString ("n2");
 			view.FindViewById<TextView> (Resource.Id.invitemprice).Text = sprice;
 			view.FindViewById<TextView> (Resource.Id.invitemamt).Text = item.netamount.ToString ("n2");
 

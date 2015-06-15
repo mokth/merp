@@ -68,5 +68,15 @@
             android:background="#307FC1"
             android:text="EXIT"
             android:textColor="@android:color/white" />
+        <Button
+            android:id="@+id/logimport"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_password"
+            android:layout_marginTop="10dp"
+            android:background="#307FC1"
+            android:text="IMPORT"
+            android:textColor="@android:color/white"
+            android:visibility="invisible" />
     </LinearLayout>
 </RelativeLayout>

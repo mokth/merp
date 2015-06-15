@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Data;
+using System.Xml.Linq;
 using System.Linq;
+using System.Linq.Expressions;
 using Android.Bluetooth;
 using Java.Util;
 using System.Threading;
@@ -15,12 +18,14 @@ namespace wincom.mobile.erp
 		string pathToDatabase;
 		string USERID;
 		AdPara apara;
+		CompanyInfo compinfo;
 		string msg;
 		public PrintInvHelper (string adpathToDatabase,string userid)
 		{
 			pathToDatabase = adpathToDatabase;
 			USERID = userid;
 			apara =  DataHelper.GetAdPara (pathToDatabase);
+			compinfo =DataHelper.GetCompany(pathToDatabase);
 		}
 
 		private void PrintLine(string text,Stream mmOutputStream)
@@ -29,6 +34,7 @@ namespace wincom.mobile.erp
 			mmOutputStream.Write (cc, 0, cc.Length);
 		}
 
+		#region Print Receipt
 		public string OpenBTAndPrint(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list,int noofcopy )
 		{string msg = "";
 //			if (apara.PrinterName.ToUpper().Contains ("PT-I")) {
@@ -337,8 +343,30 @@ namespace wincom.mobile.erp
 		void PrintHeader (ref string test,Invoice inv)
 		{
 			string userid = USERID;
-			test += DateTime.Now.ToString ("dd-MM-yyyy")+"TAX INVOICE".PadLeft(31,' ')+"\n";
-			test += "RECPT NO : " + inv.invno+"\n";
+			string[] titles = apara.ReceiptTitle.Split (new char[]{ ',', '|', '/' });
+			string title1 = "";
+			string title2 = "";
+
+			if (titles.Length ==1)
+				title1 = titles [0].ToUpper ();
+			if (titles.Length > 1) {
+				title1 = titles [0].ToUpper ();
+				title2 = titles [1].ToUpper ();
+			}
+			if (titles.Length == 0 || title1=="")
+				title1 = "TAX INVOICE";
+				
+			string date = DateTime.Now.ToString ("dd-MM-yyyy");
+			string datetime = DateTime.Now.ToString ("dd-MM-yyyy hh:mm tt");
+			if (compinfo.ShowTime) {
+				test += datetime+title1.PadLeft(41-datetime.Length,' ')+"\n";
+			} else {
+				test += date+title1.PadLeft(41-date.Length,' ')+"\n";
+			}
+			//test += DateTime.Now.ToString ("dd-MM-yyyy")+"TAX INVOICE".PadLeft(31,' ')+"\n";
+			string recno = "RECPT NO : " + inv.invno.Trim();
+			//test += "RECPT NO : " + inv.invno+"\n";
+			test += recno+title2.PadLeft(41-recno.Length,' ')+"\n";
 			test += "ISSUED BY: " + userid.ToUpper()+"\n";
 			test += "------------------------------------------\n";
 			test += "DESCRIPTION                               \n";
@@ -394,6 +422,147 @@ namespace wincom.mobile.erp
 			test += "-------------------------------\n";
 		}
 
+		#endregion Print Receipt
+
+		public string PrintInvSumm(BluetoothSocket mmSocket,BluetoothDevice mmDevice,DateTime printDate1,DateTime printDate2)
+		{
+			msg = "";
+			Stream mmOutputStream;
+			try {
+				UUID uuid = UUID.FromString ("00001101-0000-1000-8000-00805F9B34FB");
+				mmSocket = mmDevice.CreateInsecureRfcommSocketToServiceRecord (uuid);
+				if (mmSocket == null) {
+					msg =  "Error creating sockect";
+					return msg;
+				}
+				if (mmDevice.BondState == Bond.Bonded) {
+					mmSocket.Connect ();
+					Thread.Sleep (300);
+					mmOutputStream = mmSocket.OutputStream;
+					byte[] charfont;
+					if (apara.PaperSize=="58mm")
+					{
+						charfont = new Byte[] { 27, 33, 1 }; //Char font 9x17
+						mmOutputStream.Write(charfont, 0, charfont.Length);
+					}
+
+					if (apara.PaperSize=="80mm")
+					{
+						charfont = new Byte[] { 27, 33, 0 }; //Char font 12x24
+						mmOutputStream.Write(charfont, 0, charfont.Length);
+					}
+					int nwait=0;
+					while(true)
+					{
+						if (mmOutputStream.CanWrite)
+							break;
+						else 
+						{
+							nwait+=1;
+							if (nwait>10)
+								break;
+						}
+						Thread.Sleep (300);
+					}
+					string text= GetInvoiceSumm(printDate1,printDate2);
+					byte[] cc = ASCIIEncoding.ASCII.GetBytes(text);
+					mmOutputStream.Write (cc, 0, cc.Length);
+					Thread.Sleep (3000);
+					mmOutputStream.Flush();
+					mmOutputStream.Close();
+					mmSocket.Close();
+				}
+
+			}catch(Exception ex)
+			{
+				msg = ex.Message;
+			}
+
+			return msg;
+		}
+		private string GetInvoiceSumm(DateTime printdate1,DateTime printdate2 )
+		{
+			string text = "";
+			bool isSamedate = printdate1==printdate2;
+			text += "------------------------------------------\n";
+			text += compinfo.CompanyName.ToUpper()+"\n";
+			text += "USER ID  : "+USERID+"\n";
+			text += "PRINT ON : "+DateTime.Now.ToString("dd-MM-yyyy hh:mm tt")+"\n";
+			if (isSamedate)
+				text += "DAILTY SUMMARY ON " + printdate1.ToString ("yy-MM-yyyy") + "\n";
+			else {
+				text += "DAILTY SUMMARY ON " + printdate1.ToString ("yy-MM-yyyy")+" - "+ printdate2.ToString ("yy-MM-yyyy")+ "\n";
+			}
+			text += "------------------------------------------\n";
+			text += "NO  INVOICE NO   TYPE     TAX AMT   AMOUNT\n";
+			text += "------------------------------------------\n";
+			Invoice[] invs = { };
+			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
+			{
+				var list = db.Table<Invoice> ()
+					.Where(x=>x.invdate>=printdate1 && x.invdate<=printdate2)
+					.OrderBy (x => x.invdate).ToList<Invoice> ();
+				invs = new Invoice[list.Count];
+				list.CopyTo (invs);
+			}
+
+			var grp= from inv in invs 
+					  group inv by inv.invdate 
+				      into g select new {key=g.Key,results=g};
+
+			double ttltax = 0;
+			double ttlamt = 0;
+			double subttltax = 0;
+			double subttlamt = 0;
+			string line = "";
+			int cont = 0;
+			foreach (var g in grp) {
+				var list = g.results.OrderBy (x => x.invno);
+				subttltax = 0;
+				subttlamt = 0;
+				cont = 0;
+				if (!isSamedate) {
+					text = text + g.key.ToString ("dd-MM-yyyy") + "\n";
+					text = text +"---------- \n";
+				}
+				foreach (Invoice inv in list) {
+					cont += 1;
+					ttltax += inv.taxamt;
+					ttlamt += inv.amount;
+					subttltax += inv.taxamt;
+					subttlamt += inv.amount;
+					line = (cont.ToString ()+".").PadRight (4, ' ')+
+						   inv.invno.PadRight (13, ' ') + 
+						   inv.trxtype.PadRight (8, ' ') + 
+						   inv.taxamt.ToString ("n2").PadLeft (9, ' ') + 
+						   inv.amount.ToString ("n2").PadLeft (8, ' ')+"\n";
+					text = text + line;
+				}
+				if (!isSamedate) {
+					text = text +PrintSubTotal (subttltax, subttlamt);
+				}
+			}
+
+			text += "------------------------------------------\n";
+			text += "TOTAL TAX    :" + ttltax.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += "TOTAL AMOUNT :" + ttlamt.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += "------------------------------------------\n\n\n\n";
+			return text;
+		}
+
+		string PrintSubTotal(double ttltax,double ttlamt)
+		{
+			string text ="";
+			text += "------------------------------------------\n";
+			text += " SUB TOTAL TAX    :" + ttltax.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += " SUB TOTAL AMOUNT :" + ttlamt.ToString ("n2").PadLeft (13, ' ')+"\n";
+			//text += "------------------------------------------\n";
+			return text;				
+		}
 	}
+
+
+
+
 }
 
