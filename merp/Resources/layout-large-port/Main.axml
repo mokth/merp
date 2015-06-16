@@ -24,7 +24,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:height="80dp"
             android:textSize="24sp"
-            android:drawableLeft="@drawable/shoplist"
+            android:drawableLeft="@drawable/shop"
             android:id="@+id/butInvlist" />
         <Button
             android:text="INVOICE SUMMARY"
@@ -33,7 +33,7 @@
             android:height="80dp"
             android:textSize="24sp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:drawableLeft="@drawable/shoplist"
+            android:drawableLeft="@drawable/print"
             android:id="@+id/butInvsumm" />
         <Button
             android:text="MASTER ITEM"

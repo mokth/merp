@@ -195,19 +195,22 @@ namespace wincom.mobile.erp
 			public const int print = 2130837524;
 			
 			// aapt resource value: 0x7f020015
-			public const int shop = 2130837525;
+			public const int report = 2130837525;
 			
 			// aapt resource value: 0x7f020016
-			public const int shoplist = 2130837526;
+			public const int shop = 2130837526;
 			
 			// aapt resource value: 0x7f020017
-			public const int trader = 2130837527;
+			public const int shoplist = 2130837527;
 			
 			// aapt resource value: 0x7f020018
-			public const int upload = 2130837528;
+			public const int trader = 2130837528;
 			
 			// aapt resource value: 0x7f020019
-			public const int wrench = 2130837529;
+			public const int upload = 2130837529;
+			
+			// aapt resource value: 0x7f02001a
+			public const int wrench = 2130837530;
 			
 			static Drawable()
 			{

@@ -62,7 +62,7 @@
             android:id="@+id/newinv_type"
             android:paddingLeft="5dp"
             android:textSize="24sp"
-            android:background="@android:drawable/edit_text" />
+            android:background="@android:drawable/spinner_dropdown_background" />
         <TextView
             android:text="CUSTOMER"
             android:textAppearance="?android:attr/textAppearanceMedium"

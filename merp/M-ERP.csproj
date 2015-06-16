@@ -226,6 +226,11 @@
     <AndroidResource Include="Resources\drawable-xhdpi\print.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\print.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\print.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\report.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\report.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\report.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\report.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\report.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

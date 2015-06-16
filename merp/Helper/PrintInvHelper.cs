@@ -480,31 +480,42 @@ namespace wincom.mobile.erp
 
 			return msg;
 		}
-		private string GetInvoiceSumm(DateTime printdate1,DateTime printdate2 )
+
+		void PrintSummHeader (DateTime printdate1, DateTime printdate2, ref string text, bool isSamedate)
 		{
-			string text = "";
-			bool isSamedate = printdate1==printdate2;
 			text += "------------------------------------------\n";
-			text += compinfo.CompanyName.ToUpper()+"\n";
-			text += "USER ID  : "+USERID+"\n";
-			text += "PRINT ON : "+DateTime.Now.ToString("dd-MM-yyyy hh:mm tt")+"\n";
+			text += compinfo.CompanyName.ToUpper () + "\n";
+			text += "USER ID  : " + USERID + "\n";
+			text += "PRINT ON : " + DateTime.Now.ToString ("dd-MM-yyyy hh:mm tt") + "\n";
 			if (isSamedate)
 				text += "DAILTY SUMMARY ON " + printdate1.ToString ("yy-MM-yyyy") + "\n";
 			else {
-				text += "DAILTY SUMMARY ON " + printdate1.ToString ("yy-MM-yyyy")+" - "+ printdate2.ToString ("yy-MM-yyyy")+ "\n";
+				text += "DAILTY SUMMARY ON " + printdate1.ToString ("yy-MM-yyyy") + " - " + printdate2.ToString ("yy-MM-yyyy") + "\n";
 			}
 			text += "------------------------------------------\n";
 			text += "NO  INVOICE NO   TYPE     TAX AMT   AMOUNT\n";
 			text += "------------------------------------------\n";
-			Invoice[] invs = { };
-			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
-			{
-				var list = db.Table<Invoice> ()
-					.Where(x=>x.invdate>=printdate1 && x.invdate<=printdate2)
-					.OrderBy (x => x.invdate).ToList<Invoice> ();
+		}
+
+		Invoice[] GetInvoices (DateTime printdate1, DateTime printdate2)
+		{
+			Invoice[] invs =  {
+
+			};
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list = db.Table<Invoice> ().Where (x => x.invdate >= printdate1 && x.invdate <= printdate2).OrderBy (x => x.invdate).ToList<Invoice> ();
 				invs = new Invoice[list.Count];
 				list.CopyTo (invs);
 			}
+			return invs;
+		}
+
+		private string GetInvoiceSumm(DateTime printdate1,DateTime printdate2 )
+		{
+			string text = "";
+			bool isSamedate = printdate1==printdate2;
+			PrintSummHeader (printdate1, printdate2, ref text, isSamedate);
+			var invs = GetInvoices (printdate1, printdate2);
 
 			var grp= from inv in invs 
 					  group inv by inv.invdate 
@@ -516,46 +527,58 @@ namespace wincom.mobile.erp
 			double subttlamt = 0;
 			string line = "";
 			int cont = 0;
-			foreach (var g in grp) {
+			foreach (var g in grp) { //group by date
 				var list = g.results.OrderBy (x => x.invno);
-				subttltax = 0;
-				subttlamt = 0;
-				cont = 0;
+				var typgrp = from ty in list
+				             group ty by ty.trxtype	into tg
+				             select new {key = tg.Key,results = tg};
+			
 				if (!isSamedate) {
 					text = text + g.key.ToString ("dd-MM-yyyy") + "\n";
 					text = text +"---------- \n";
 				}
-				foreach (Invoice inv in list) {
-					cont += 1;
-					ttltax += inv.taxamt;
-					ttlamt += inv.amount;
-					subttltax += inv.taxamt;
-					subttlamt += inv.amount;
-					line = (cont.ToString ()+".").PadRight (4, ' ')+
-						   inv.invno.PadRight (13, ' ') + 
-						   inv.trxtype.PadRight (8, ' ') + 
-						   inv.taxamt.ToString ("n2").PadLeft (9, ' ') + 
-						   inv.amount.ToString ("n2").PadLeft (8, ' ')+"\n";
-					text = text + line;
-				}
-				if (!isSamedate) {
-					text = text +PrintSubTotal (subttltax, subttlamt);
+				foreach (var tygrp in typgrp) {  //group by trxtype
+					text = text +"[ "+ tygrp.key.ToUpper() + " ]\n";
+					var list2 = tygrp.results.OrderBy (x => x.invno);
+					subttltax = 0;
+					subttlamt = 0;
+					cont = 0;
+					foreach (Invoice inv in list2) {
+						cont += 1;
+						ttltax += inv.taxamt;
+						ttlamt += inv.amount;
+						subttltax += inv.taxamt;
+						subttlamt += inv.amount;
+						line = (cont.ToString () + ".").PadRight (4, ' ') +
+						inv.invno.PadRight (13, ' ') +
+						inv.trxtype.PadRight (8, ' ') +
+						inv.taxamt.ToString ("n2").PadLeft (9, ' ') +
+						inv.amount.ToString ("n2").PadLeft (8, ' ') + "\n";
+						text = text + line;
+					}
+					if (!isSamedate) {
+						text = text + PrintSubTotal (subttltax, subttlamt);
+					}
 				}
 			}
 
+			double ttl = ttlamt + ttltax;
 			text += "------------------------------------------\n";
 			text += "TOTAL TAX    :" + ttltax.ToString ("n2").PadLeft (13, ' ')+"\n";
 			text += "TOTAL AMOUNT :" + ttlamt.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += "      TOTAL  :" + ttl.ToString ("n2").PadLeft (13, ' ')+"\n";
 			text += "------------------------------------------\n\n\n\n";
 			return text;
 		}
 
 		string PrintSubTotal(double ttltax,double ttlamt)
 		{
+			double ttl = ttlamt + ttltax;
 			string text ="";
 			text += "------------------------------------------\n";
 			text += " SUB TOTAL TAX    :" + ttltax.ToString ("n2").PadLeft (13, ' ')+"\n";
 			text += " SUB TOTAL AMOUNT :" + ttlamt.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += "        SUB TOTAL :" + ttl.ToString ("n2").PadLeft (13, ' ')+"\n";
 			//text += "------------------------------------------\n";
 			return text;				
 		}

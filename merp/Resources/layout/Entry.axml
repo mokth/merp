@@ -103,11 +103,11 @@
                 <TableRow
                     android:id="@+id/tableRow1">
                     <TextView
-                        android:text="QTY"
+                        android:text="QUANTITY"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#ff093bf6"
+                        android:textColor="#fff6092b"
                         android:paddingLeft="5dp"
                         android:id="@+id/textView4"
                         android:width="100dp" />

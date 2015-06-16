@@ -12,70 +12,70 @@
             style="@style/XamButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/butSecond"
             android:drawableLeft="@drawable/shop" />
         <Button
             android:text="INVOICE LIST"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:drawableLeft="@drawable/shoplist"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableLeft="@drawable/report"
             android:id="@+id/butInvlist" />
         <Button
             android:text="INVOICE SUMMARY"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/print"
             android:id="@+id/butInvsumm" />
         <Button
             android:text="MASTER ITEM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/item"
             android:id="@+id/butMaster" />
         <Button
             android:text="CUSTOMER PROFILE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/trader"
             android:id="@+id/butCustProf" />
         <Button
             android:text="DOWNLOAD MASTER ITEM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/download"
             android:id="@+id/butDown" />
         <Button
             android:text="DOWNLOAD CUSTOMER"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/download"
             android:id="@+id/butDownCust" />
         <Button
             android:text="UPLOAD INVOICE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/upload"
             android:id="@+id/butupload" />
         <Button
             android:text="ABOUT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/about"
             android:id="@+id/butAbout" />
         <Button
             android:text="EXIT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/exit"
             android:id="@+id/butOut" />
     </LinearLayout>

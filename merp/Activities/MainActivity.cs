@@ -153,6 +153,11 @@ namespace wincom.mobile.erp
 
 		void ClearPostedInv()
 		{
+			CompanyInfo para = DataHelper.GetCompany (pathToDatabase);
+			if (!para.AllowDelete) {
+				Toast.MakeText (this, "Access denied...", ToastLength.Long).Show ();	
+				return;
+			}
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
 				var list2 = db.Table<Invoice> ().Where (x => x.isUploaded == true).ToList<Invoice> ();
