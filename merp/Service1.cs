@@ -358,6 +358,8 @@ namespace WcfServiceItem
         
         private int SalesTaxDecField;
         
+        private bool ShowPrintTimeField;
+        
         private string SupportContatField;
         
         private string TelField;
@@ -558,6 +560,19 @@ namespace WcfServiceItem
             set
             {
                 this.SalesTaxDecField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool ShowPrintTime
+        {
+            get
+            {
+                return this.ShowPrintTimeField;
+            }
+            set
+            {
+                this.ShowPrintTimeField = value;
             }
         }
         

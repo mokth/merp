@@ -92,6 +92,7 @@ namespace wincom.mobile.erp
 				cprof.AllowEdit = pro.AllowEdit;
 				cprof.WCFUrl = pro.WCFUrl;
 				cprof.SupportContat = pro.SupportContat;
+				cprof.ShowTime = pro.ShowPrintTime;
 
 				cprof.Tel = pro.Tel;
 				if (list2.Count==0)
@@ -110,6 +111,7 @@ namespace wincom.mobile.erp
 				apara.Warehouse = pro.WareHouse;
 
 				if (list3.Count == 0) {
+					apara.ReceiptTitle = "TAX INVOICE";
 					db.Insert (apara); 
 				} else {
 					db.Update (apara);
