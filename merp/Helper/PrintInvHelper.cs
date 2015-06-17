@@ -525,6 +525,7 @@ namespace wincom.mobile.erp
 			double ttlamt = 0;
 			double subttltax = 0;
 			double subttlamt = 0;
+			bool multiType = false;
 			string line = "";
 			int cont = 0;
 			foreach (var g in grp) { //group by date
@@ -537,6 +538,7 @@ namespace wincom.mobile.erp
 					text = text + g.key.ToString ("dd-MM-yyyy") + "\n";
 					text = text +"---------- \n";
 				}
+				multiType = (typgrp.Count() > 1);
 				foreach (var tygrp in typgrp) {  //group by trxtype
 					text = text +"[ "+ tygrp.key.ToUpper() + " ]\n";
 					var list2 = tygrp.results.OrderBy (x => x.invno);
@@ -556,7 +558,7 @@ namespace wincom.mobile.erp
 						inv.amount.ToString ("n2").PadLeft (8, ' ') + "\n";
 						text = text + line;
 					}
-					if (!isSamedate) {
+					if (multiType) {
 						text = text + PrintSubTotal (subttltax, subttlamt);
 					}
 				}
