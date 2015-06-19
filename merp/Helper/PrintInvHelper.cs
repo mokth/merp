@@ -237,28 +237,28 @@ namespace wincom.mobile.erp
 		{
 			string test = "";
 			string desc = itm.description;
-			string[] strlist = desc.Split (new char[] { ' ' });
-			string line = "";
-			int counter = 0;
-			foreach (string s in strlist) {
-				if (line.Length + s.Length > 42) {
-					counter = counter + 1;
-					if (counter == 1) {
-						string pline = line.Trim ().PadRight (42, ' ');
-						test += pline + "\n";
-					} else if (counter == 2) {
-						string pline = line.Trim ().PadRight (42, ' ');
-					} else {
-						string pline = line.Trim ().PadRight (42, ' ');
-						test += pline + "\n";
-					}
-					line = s;
-				} else {
-					line = line + s;
-				}
-			}
+//			string[] strlist = desc.Split (new char[] { ' ' });
+//			string line = "";
+//			int counter = 0;
+//			foreach (string s in strlist) {
+//				if (line.Length + s.Length > 42) {
+//					counter = counter + 1;
+//					if (counter == 1) {
+//						string pline = line.Trim ().PadRight (42, ' ');
+//						test += pline + "\n";
+//					} else if (counter == 2) {
+//						string pline = line.Trim ().PadRight (42, ' ');
+//					} else {
+//						string pline = line.Trim ().PadRight (42, ' ');
+//						test += pline + "\n";
+//					}
+//					line = s;
+//				} else {
+//					line = line + s;
+//				}
+//			}
 
-			string pline2 = line+ "\n";
+			string pline2 = desc.ToUpper().Trim()+ "\n";
 			pline2 = pline2 + count.ToString ().PadRight (3, ' ');
 			if (itm.qty < 0) {
 				string sqty = "(EX)"+itm.qty.ToString ().Trim ()  ;
