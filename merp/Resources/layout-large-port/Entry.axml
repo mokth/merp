@@ -165,7 +165,8 @@
                     android:textSize="24sp"
                     android:textColor="#ff140000"
                     android:paddingLeft="5dp"
-                    android:background="@android:drawable/edit_text" />
+                    android:background="@android:drawable/edit_text"
+                    android:editable="false" />
                 <EditText
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:inputType="numberDecimal|numberSigned"

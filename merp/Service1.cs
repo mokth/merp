@@ -202,6 +202,8 @@ namespace WcfServiceItem
         
         private string GstField;
         
+        private string PayCodeField;
+        
         private string TelField;
         
         [System.Runtime.Serialization.DataMemberAttribute()]
@@ -309,6 +311,19 @@ namespace WcfServiceItem
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string PayCode
+        {
+            get
+            {
+                return this.PayCodeField;
+            }
+            set
+            {
+                this.PayCodeField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string Tel
         {
             get
@@ -336,11 +351,21 @@ namespace WcfServiceItem
         
         private string Addr4Field;
         
+        private bool AllowClrTrxHisField;
+        
         private bool AllowDeleteField;
         
         private bool AllowEditField;
         
+        private string CNPrefixField;
+        
+        private int CNRunNoField;
+        
         private string CompanyNameField;
+        
+        private string DOPrefixField;
+        
+        private int DORunNoField;
         
         private string FaxField;
         
@@ -348,13 +373,21 @@ namespace WcfServiceItem
         
         private string HomeCurrField;
         
+        private bool IsCustByAgentField;
+        
         private bool IsInclusiveField;
+        
+        private bool NoEditAfterPrintField;
         
         private string PrefixField;
         
         private string RegNoField;
         
         private int RunNoField;
+        
+        private string SOPrefixField;
+        
+        private int SORunNoField;
         
         private int SalesTaxDecField;
         
@@ -421,6 +454,19 @@ namespace WcfServiceItem
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool AllowClrTrxHis
+        {
+            get
+            {
+                return this.AllowClrTrxHisField;
+            }
+            set
+            {
+                this.AllowClrTrxHisField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public bool AllowDelete
         {
             get
@@ -447,6 +493,32 @@ namespace WcfServiceItem
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CNPrefix
+        {
+            get
+            {
+                return this.CNPrefixField;
+            }
+            set
+            {
+                this.CNPrefixField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int CNRunNo
+        {
+            get
+            {
+                return this.CNRunNoField;
+            }
+            set
+            {
+                this.CNRunNoField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string CompanyName
         {
             get
@@ -456,6 +528,32 @@ namespace WcfServiceItem
             set
             {
                 this.CompanyNameField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DOPrefix
+        {
+            get
+            {
+                return this.DOPrefixField;
+            }
+            set
+            {
+                this.DOPrefixField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int DORunNo
+        {
+            get
+            {
+                return this.DORunNoField;
+            }
+            set
+            {
+                this.DORunNoField = value;
             }
         }
         
@@ -499,6 +597,19 @@ namespace WcfServiceItem
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool IsCustByAgent
+        {
+            get
+            {
+                return this.IsCustByAgentField;
+            }
+            set
+            {
+                this.IsCustByAgentField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public bool IsInclusive
         {
             get
@@ -508,6 +619,19 @@ namespace WcfServiceItem
             set
             {
                 this.IsInclusiveField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool NoEditAfterPrint
+        {
+            get
+            {
+                return this.NoEditAfterPrintField;
+            }
+            set
+            {
+                this.NoEditAfterPrintField = value;
             }
         }
         
@@ -547,6 +671,32 @@ namespace WcfServiceItem
             set
             {
                 this.RunNoField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SOPrefix
+        {
+            get
+            {
+                return this.SOPrefixField;
+            }
+            set
+            {
+                this.SOPrefixField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int SORunNo
+        {
+            get
+            {
+                return this.SORunNoField;
+            }
+            set
+            {
+                this.SORunNoField = value;
             }
         }
         

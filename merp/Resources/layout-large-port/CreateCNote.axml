@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/alert_light_frame">
+        <TextView
+            android:text="TRANSACTION DATE"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lbinvno"
+            android:textColor="#ff1131f0"
+            android:textSize="24sp"
+            android:paddingLeft="5dp" />
+        <EditText
+            android:inputType="date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="@android:drawable/edit_text"
+            android:id="@+id/newinv_date"
+            android:textSize="24sp"
+            android:drawableRight="@android:drawable/ic_menu_today"
+            android:textColor="@android:color/black" />
+        <TextView
+            android:text="CREDIT NOTE NO"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lbinvno"
+            android:textSize="24sp"
+            android:textColor="#ff1131f0"
+            android:paddingLeft="5dp" />
+        <TextView
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newinv_no"
+            android:editable="false"
+            android:paddingLeft="5dp"
+            android:textSize="24sp"
+            android:textColor="#ff140000"
+            android:background="@android:drawable/edit_text" />
+        <TextView
+            android:text="INVOICE NO"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lbinvno"
+            android:textSize="24sp"
+            android:textColor="#ff1131f0"
+            android:paddingLeft="5dp" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="3">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:padding="2dip">
+                <EditText
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newcninv_no"
+                    android:paddingLeft="5dp"
+                    android:textSize="24sp"
+                    android:textColor="#ff140000"
+                    android:background="@android:drawable/edit_text"
+                    android:inputType="textCapCharacters" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:paddingLeft="5dip">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:id="@+id/newinv_bfindinv"
+                    android:background="@android:drawable/ic_search_category_default" />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:text="CUSTOMER"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lbinvno"
+            android:textSize="24sp"
+            android:textColor="#ff1131f0"
+            android:paddingLeft="5dp" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="3">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:padding="2dip">
+                <Spinner
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newinv_custcode"
+                    android:paddingLeft="5dp"
+                    android:textSize="24sp"
+                    android:background="@android:drawable/spinner_dropdown_background"
+                    android:fitsSystemWindows="false" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:paddingLeft="5dip">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:id="@+id/newinv_bfind"
+                    android:background="@android:drawable/ic_search_category_default" />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newinv_custname"
+            android:editable="false"
+            android:paddingLeft="5dp"
+            android:textSize="24sp"
+            android:textColor="#ff140000"
+            android:background="@android:drawable/edit_text" />
+    </LinearLayout>
+    <TableLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tableLayout1">
+        <TableRow
+            android:id="@+id/tableRow1">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:typeface="sans"
+                android:id="@+id/newinv_bsave"
+                android:drawableLeft="@drawable/add"
+                android:width="120dp"
+                android:text="ADD" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:typeface="sans"
+                android:id="@+id/newinv_cancel"
+                android:drawableLeft="@drawable/left"
+                android:width="120dp"
+                android:text="BACK" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow2">
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

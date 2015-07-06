@@ -18,7 +18,7 @@ namespace wincom.mobile.erp
 	[Activity (Label = "M-ERP", MainLauncher = true,NoHistory=true, Theme="@style/android:Theme.Holo.Light.NoActionBar" )]			
 	public class LoginActivity : Activity,IEventListener
 	{
-		//public static readonly EndpointAddress EndPoint = new EndpointAddress("http://www.wincomcloud.com/Wfc/Service1.svc");
+
 		private Service1Client _client;
 		string pathToDatabase;
 
@@ -105,6 +105,8 @@ namespace wincom.mobile.erp
 				conn.CreateTable<CompanyInfo> ();
 				conn.CreateTable<AdPara> ();
 				conn.CreateTable<AdNumDate> ();
+				conn.CreateTable<CNNote>();
+				conn.CreateTable<CNNoteDtls>();
 			}
 		}
 		private void LoginIntoCloud()
@@ -118,6 +120,7 @@ namespace wincom.mobile.erp
 			//_client.LoginAsync (userid.Text, passw.Text, code.Text);
 			DownloadHelper download= new DownloadHelper();
 			download.Downloadhandle = LoginDoneDlg; 
+			download.DownloadAllhandle =LoginDoneDlgEx; 
 			download.CallingActivity = this;
 			download.startLogin(userid.Text, passw.Text, code.Text);
 		}
@@ -130,6 +133,13 @@ namespace wincom.mobile.erp
 			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 		}
 
+		private void LoginDoneDlgEx(Activity callingAct,int count,string msg)
+		{
+			Button login = FindViewById<Button>(Resource.Id.login);
+			login.Enabled = false;
+			//login.Text = "LOGIN";
+			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
+		}
 
 		private void LoginLocal(AdUser user)
 		{
@@ -187,16 +197,17 @@ namespace wincom.mobile.erp
 		{
 			
 			switch (e.EventID) {
-			case 2:
+			case EventID.LOGIN_DOWNCOMPLETE:
 				string comp =((GlobalvarsApp)this.Application).COMPANY_CODE;
 				string bran = ((GlobalvarsApp)this.Application).BRANCH_CODE;
 				ShowMainActivity (comp,bran);
 				break;
-			case 1:
+			case EventID.LOGIN_SUCCESS:
 				DownloadHelper download = new DownloadHelper ();
 				download.Downloadhandle = LoginDoneDlg; 
+				download.DownloadAllhandle= LoginDoneDlgEx; 
 				download.CallingActivity = this;
-				download.startDownloadCompInfoEx ();
+				download.StartDownloadAll ();
 				break;
 			}
 		}

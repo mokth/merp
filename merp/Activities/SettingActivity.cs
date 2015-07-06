@@ -66,6 +66,7 @@ namespace wincom.mobile.erp
 		{
 			TextView txtprinter =FindViewById<TextView> (Resource.Id.txtad_printer);
 			TextView txtprefix =FindViewById<TextView> (Resource.Id.txtad_prefix);
+			TextView txtcnprefix =FindViewById<TextView> (Resource.Id.txtad_cnprefix);
 			TextView txttitle =FindViewById<TextView> (Resource.Id.txtad_title);
 
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
@@ -78,6 +79,7 @@ namespace wincom.mobile.erp
 					txtprefix.Text = apra.Prefix;
 					txtprinter.Text = apra.PrinterName;
 					txttitle.Text = apra.ReceiptTitle;
+					txtcnprefix.Text = apra.CNPrefix;
 					int prnpos = adapterBT.GetPosition (apra.PrinterName);
 					if (prnpos>0)
 						spinBt.SetSelection (prnpos);

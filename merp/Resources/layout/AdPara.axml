@@ -51,7 +51,7 @@
         android:background="@android:drawable/spinner_dropdown_background"
         android:fitsSystemWindows="false" />
     <TextView
-        android:text="INVOICE PREFIX"
+        android:text="INVOICE/CASH BILL PREFIX"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,7 +67,27 @@
         android:textSize="17sp"
         android:paddingLeft="5dp"
         android:textColor="#ff140000"
-        android:background="@android:drawable/edit_text" />
+        android:background="@android:drawable/edit_text"
+        android:editable="false" />
+    <TextView
+        android:text="CREDIT NOTE PREFIX"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lbinvno"
+        android:textSize="17sp"
+        android:paddingLeft="5dp"
+        android:textColor="#ff093bf6" />
+    <EditText
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtad_cnprefix"
+        android:textSize="17sp"
+        android:paddingLeft="5dp"
+        android:textColor="#ff140000"
+        android:background="@android:drawable/edit_text"
+        android:editable="false" />
     <TextView
         android:text="RECEIPT TITLE"
         android:textAppearance="?android:attr/textAppearanceMedium"

@@ -23,6 +23,9 @@ namespace wincom.mobile.erp
 		public bool  ShowTime { get; set;}
 		public string WCFUrl { get ; set;}
 		public string SupportContat { get; set;}
+		public bool  NotEditAfterPrint { get; set;}
+		public bool  AllowClrTrxHis { get; set;}
+
 	}
 }
 

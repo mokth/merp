@@ -98,6 +98,17 @@
     <Compile Include="TraderDialog.cs" />
     <Compile Include="Activities\PrintSumm.cs" />
     <Compile Include="Helper\Utility.cs" />
+    <Compile Include="Entity\CNNote.cs" />
+    <Compile Include="CNNote\CNNoteActivity.cs" />
+    <Compile Include="CNNote\CreateCNNote.cs" />
+    <Compile Include="CNNote\CNEntryActivity.cs" />
+    <Compile Include="CNNote\CNItemActivity.cs" />
+    <Compile Include="CNNote\CNAllActivity.cs" />
+    <Compile Include="CNNote\CNItemHisActivity.cs" />
+    <Compile Include="InvoiceDialog.cs" />
+    <Compile Include="Activities\DownloadActivity.cs" />
+    <Compile Include="Activities\TransListActivity.cs" />
+    <Compile Include="Activities\MasterRefActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -234,6 +245,20 @@
     <AndroidResource Include="Resources\drawable-xhdpi\report.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\report.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\report.png" />
+    <AndroidResource Include="Resources\layout\CreateCNote.axml" />
+    <AndroidResource Include="Resources\layout-large-port\CreateCNote.axml" />
+    <AndroidResource Include="Resources\layout-large-port\spinner_item.axml" />
+    <AndroidResource Include="Resources\layout\Download.axml" />
+    <AndroidResource Include="Resources\layout-large-port\Download.axml" />
+    <AndroidResource Include="Resources\layout\Translist.axml" />
+    <AndroidResource Include="Resources\layout-large-port\Translist.axml" />
+    <AndroidResource Include="Resources\layout\MasterRef.axml" />
+    <AndroidResource Include="Resources\layout-large-port\MasterRef.axml" />
+    <AndroidResource Include="Resources\drawable-hdpi\printer_blue.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\printer_blue.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\printer_blue.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\printer_blue.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\printer_blue.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
@@ -244,5 +269,6 @@
     <Folder Include="Resources\drawable\" />
     <Folder Include="EventManager\" />
     <Folder Include="Model\" />
+    <Folder Include="CNNote\" />
   </ItemGroup>
 </Project>

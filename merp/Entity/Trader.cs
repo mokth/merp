@@ -20,6 +20,8 @@ namespace wincom.mobile.erp
 		public string Tel{ get; set;}
 		public string Fax{ get; set;}
 		public string gst{ get; set;}
+
+		public string PayCode{ get; set;}
 	}
 }
 

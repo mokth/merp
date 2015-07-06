@@ -46,12 +46,15 @@ namespace wincom.mobile.erp
 			ViewGroup lview = (ViewGroup)view;
 			for (int i = 0; i < lview.ChildCount; i++) {
 				var tview = lview.GetChildAt (i);
-				Android.Util.Log.Debug ("Test",tview.GetType ().ToString ());
+				//Android.Util.Log.Debug ("Test",tview.GetType ().ToString ());
 				if (tview.GetType () == typeof(TextView)) {
 					TextView v = (TextView)tview;
 					v.SetTextColor (col);
-				} else
-					SetChildFontColor (tview, col);
+				} else {
+					if (tview.GetType () == typeof(ImageView)) {
+						
+					}else SetChildFontColor (tview, col);
+				}
 			}
 		}
 

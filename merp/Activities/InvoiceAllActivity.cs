@@ -47,7 +47,7 @@ namespace wincom.mobile.erp
 			butNew.Visibility = ViewStates.Invisible;
 			Button butInvBack= FindViewById<Button> (Resource.Id.butInvBack); 
 			butInvBack.Click+= (object sender, EventArgs e) => {
-				StartActivity(typeof(MainActivity));
+				StartActivity(typeof(TransListActivity));
 			};
 
 			listView.ItemClick += OnListItemClick;

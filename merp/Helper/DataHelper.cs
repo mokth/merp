@@ -7,7 +7,36 @@ namespace wincom.mobile.erp
 {
 	public class DataHelper
 	{
-		
+		public static bool GetInvoicePrintStatus(string pathToDatabase,string invno)
+		{
+			bool iSPrinted = false;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var info = db.Table<CompanyInfo> ().FirstOrDefault ();
+				if (info.NotEditAfterPrint) {
+					var list = db.Table<Invoice> ().Where (x => x.invno == invno).ToList ();
+					if (list.Count > 0) {
+						iSPrinted = list [0].isPrinted; 				
+					}
+				}
+			}
+			return iSPrinted;
+		}
+
+		public static bool GetCNNotePrintStatus(string pathToDatabase,string cnno)
+		{
+			bool iSPrinted = false;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var info = db.Table<CompanyInfo> ().FirstOrDefault ();
+				if (info.NotEditAfterPrint) {
+					var list = db.Table<CNNote> ().Where (x => x.cnno == cnno).ToList ();
+					if (list.Count > 0) {
+						iSPrinted = list [0].isPrinted; 				
+					}
+				}
+			}
+			return iSPrinted;
+		}
+
 		public static CompanyInfo GetCompany(string pathToDatabase)
 		{
 			CompanyInfo info = null;
@@ -46,7 +75,7 @@ namespace wincom.mobile.erp
 		{
 			AdNumDate info = null;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list = db.Table<AdNumDate> ().Where (x => x.Year == trxdate.Year && x.Month == trxdate.Month).ToList<AdNumDate> ();
+				var list = db.Table<AdNumDate> ().Where (x =>x.TrxType=="INV" && x.Year == trxdate.Year && x.Month == trxdate.Month).ToList<AdNumDate> ();
 				if (list.Count > 0)
 					info = list [0];
 				else {
@@ -54,11 +83,34 @@ namespace wincom.mobile.erp
 					info.Year = trxdate.Year;
 					info.Month = trxdate.Month;
 					info.RunNo = 0;
+					info.TrxType = "INV";
 					info.ID = -1;
+
 				}
 			}
 
 			
+			return info;
+		}
+
+		public static AdNumDate GetNumDate(string pathToDatabase,DateTime trxdate,string trxtype)
+		{
+			AdNumDate info = null;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list = db.Table<AdNumDate> ().Where (x =>x.TrxType==trxtype && x.Year == trxdate.Year && x.Month == trxdate.Month).ToList<AdNumDate> ();
+				if (list.Count > 0)
+					info = list [0];
+				else {
+					info = new AdNumDate ();
+					info.Year = trxdate.Year;
+					info.Month = trxdate.Month;
+					info.RunNo = 0;
+					info.TrxType = trxtype;
+					info.ID = -1;
+				}
+			}
+
+
 			return info;
 		}
 
@@ -93,6 +145,8 @@ namespace wincom.mobile.erp
 				cprof.WCFUrl = pro.WCFUrl;
 				cprof.SupportContat = pro.SupportContat;
 				cprof.ShowTime = pro.ShowPrintTime;
+				cprof.AllowClrTrxHis = pro.AllowClrTrxHis;
+				cprof.NotEditAfterPrint = pro.NoEditAfterPrint;
 
 				cprof.Tel = pro.Tel;
 				if (list2.Count==0)
@@ -109,6 +163,14 @@ namespace wincom.mobile.erp
 				apara.Prefix = pro.Prefix;
 				apara.RunNo = pro.RunNo;
 				apara.Warehouse = pro.WareHouse;
+				//new added V2
+				apara.CNPrefix = pro.CNPrefix;
+				apara.CNRunNo = pro.CNRunNo;
+				apara.DOPrefix = pro.DOPrefix;
+				apara.DORunNo = pro.DORunNo;
+				apara.SOPrefix = pro.SOPrefix;
+				apara.SORunNo = pro.SORunNo;
+
 
 				if (list3.Count == 0) {
 					apara.ReceiptTitle = "TAX INVOICE";
@@ -124,6 +186,7 @@ namespace wincom.mobile.erp
 					info.Year = DateTime.Now.Year;
 					info.Month = DateTime.Now.Month;
 					info.RunNo = pro.RunNo;
+					info.TrxType = "INV";
 					db.Insert (info);
 				}
 			}

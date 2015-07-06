@@ -68,7 +68,9 @@ namespace wincom.mobile.erp
 				icodes.Add (item.CustCode+" | "+item.CustName);
 			}
 
-			dataAdapter = new ArrayAdapter<String>(this,Resource.Layout.spinner_item, icodes);
+			dataAdapter = new ArrayAdapter<String> (this, Resource.Layout.spinner_item, icodes);
+
+
 			dataAdapter2 =ArrayAdapter.CreateFromResource (
 							this, Resource.Array.trxtype, Resource.Layout.spinner_item);
 
@@ -116,6 +118,20 @@ namespace wincom.mobile.erp
 			if (item != null) {
 				TextView name = FindViewById<TextView> (Resource.Id.newinv_custname);
 				name.Text = item.CustName;
+				Spinner spinnerType = FindViewById<Spinner> (Resource.Id.newinv_type);
+				int pos = -1;
+				string paycode = item.PayCode.ToUpper().Trim();
+				if (!string.IsNullOrEmpty (paycode)) {
+					if (paycode.Contains ("CASH")) {
+						pos = dataAdapter2.GetPosition ("INVOICE");
+					} else {
+						pos = dataAdapter2.GetPosition ("INVOICE");
+					}
+				}
+				if (pos > -1) {
+					spinnerType.SetSelection (pos);
+					spinnerType.Enabled = false;
+				}else spinnerType.Enabled = true;
 			}
 
 		}
@@ -223,7 +239,7 @@ namespace wincom.mobile.erp
 		public void PerformEvent(object sender, EventParam e)
 		{
 			switch (e.EventID) {
-			case 101:
+			case EventID.CUSTCODE_SELECTED:
 				RunOnUiThread (() => SetSelectedItem(e.Param["SELECTED"].ToString()));
 				break;
 			}

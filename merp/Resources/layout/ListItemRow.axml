@@ -38,6 +38,16 @@
             android:paddingTop="5dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#ffffff" />
+        <ImageView
+            android:id="@+id/printed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/trxtype"
+            android:gravity="left"
+            android:src="@android:drawable/star_on"
+            android:scaleType="fitStart"
+            android:maxWidth="16dp"
+            android:maxHeight="16dp" />
         <TextView
             android:id="@+id/invcust"
             android:layout_width="fill_parent"

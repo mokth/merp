@@ -29,6 +29,7 @@ namespace wincom.mobile.erp
 			if (!((GlobalvarsApp)this.Application).ISLOGON) {
 				Finish ();
 			}
+			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			SetContentView (Resource.Layout.ItemCodeList);
 			populate (listData);
 			listView = FindViewById<ListView> (Resource.Id.ICodeList);
@@ -86,6 +87,7 @@ namespace wincom.mobile.erp
 				FindItemByText ();
 				return;
 			}
+			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			listData = new List<Item> ();
 			populate (listData);
 			listView = FindViewById<ListView> (Resource.Id.ICodeList);
@@ -95,8 +97,8 @@ namespace wincom.mobile.erp
 		void populate(List<Item> list)
 		{
 
-			var documents = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-			pathToDatabase = Path.Combine(documents, "db_adonet.db");
+//			var documents = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+//			pathToDatabase = Path.Combine(documents, "db_adonet.db");
 
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))

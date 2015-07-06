@@ -50,7 +50,7 @@ namespace wincom.mobile.erp
 				ShowDialog (DATE_DIALOG_ID2);
 			};
 			butInvBack.Click += (object sender, EventArgs e) => {
-				StartActivity(typeof(MainActivity));
+				StartActivity(typeof(TransListActivity));
 			};
 			butPrint.Click+= ButPrint_Click;
 		}

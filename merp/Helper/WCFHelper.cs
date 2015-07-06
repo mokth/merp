@@ -10,7 +10,8 @@ namespace wincom.mobile.erp
 
 		public WCFHelper()
 		{
-			EndPoint = new EndpointAddress("http://www.wincomcloud.com/Wfc/Service1.svc");
+		  //EndPoint = new EndpointAddress("http://www.wincomcloud.com/Wfc/Service1.svc");
+			EndPoint = new EndpointAddress("http://www.wincomcloud.com/erpwfcdemo/Service1.svc");
 		}
 
 		public  Service1Client GetServiceClient()

@@ -37,6 +37,8 @@ namespace wincom.mobile.erp
 			string comp =((GlobalvarsApp)CallingActivity.Application).COMPANY_CODE;
 			string brn =((GlobalvarsApp)CallingActivity.Application).BRANCH_CODE;
 			bills = GetBills();
+			if (bills.Count == 0)
+				bills = GetCNs();	
 			invcount += bills.Count;
 			if (bills.Count > 0) {
 				_client.UploadOutletBillsAsync (bills.ToArray (), comp, brn, serial, phone);
@@ -55,7 +57,7 @@ namespace wincom.mobile.erp
 					var list1 = db.Table<Invoice> ().ToList<Invoice> ().Where (x => x.isUploaded == false).ToList<Invoice> ();
 					List<Invoice> invlist = new List<Invoice>();
 					foreach (OutLetBill bill in bills) {
-					 	var found = list1.Where(x=>x.invno==bill.InvNo).ToList<Invoice>();
+						var found = list1.Where(x=>x.invno==bill.InvNo && bill.TrxType==x.trxtype).ToList<Invoice>();
 						if (found.Count>0)
 						{  
 							found[0].isUploaded = true;
@@ -64,7 +66,23 @@ namespace wincom.mobile.erp
 						}
 
 					}	
-					db.UpdateAll (invlist);
+
+					var list2 = db.Table<CNNote> ().ToList<CNNote> ().Where (x => x.isUploaded == false).ToList<CNNote> ();
+					List<CNNote> invlist2 = new List<CNNote>();
+					foreach (OutLetBill bill in bills) {
+						var found = list2.Where(x=>x.cnno==bill.InvNo && bill.TrxType==x.trxtype).ToList<CNNote>();
+						if (found.Count>0)
+						{  
+							found[0].isUploaded = true;
+							found[0].uploaded = now;
+							invlist2.Add(found[0]);
+						}
+
+					}	
+					if (invlist.Count>0)
+						db.UpdateAll (invlist);
+					if (invlist2.Count>0)
+						db.UpdateAll (invlist2);
 					UploadBillsToServer ();
 				}
 			} catch (Exception ex) {
@@ -100,6 +118,50 @@ namespace wincom.mobile.erp
 						bill.ICode = invdtl.icode;
 						bill.InvDate = inv.invdate;
 						bill.InvNo = inv.invno;
+						bill.IsInclusive = invdtl.isincludesive;
+						bill.Amount = invdtl.amount;
+						bill.NetAmount = invdtl.netamount;
+						bill.TaxAmt = invdtl.tax;
+						bill.TaxGrp = invdtl.taxgrp;
+						bill.UPrice = invdtl.price;
+						bill.Qty = invdtl.qty;
+						bill.TrxType = inv.trxtype;
+						bills.Add (bill);
+					}
+				}
+			}
+
+			return bills;
+		}
+
+		public List<OutLetBill> GetCNs()
+		{
+			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
+			string comp =((GlobalvarsApp)CallingActivity.Application).COMPANY_CODE;
+			string brn =((GlobalvarsApp)CallingActivity.Application).BRANCH_CODE;
+			string userid =((GlobalvarsApp)CallingActivity.Application).USERID_CODE;
+
+			bills = new List<OutLetBill> ();
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list1 = db.Table<CNNote> ().Where(x=>x.isUploaded==false)
+					.OrderBy(x=>x.cnno)
+					.Take(50)
+					.ToList<CNNote> ();
+
+				var list2 = db.Table<CNNoteDtls> ().ToList<CNNoteDtls> ();
+
+				foreach (CNNote inv in list1) {
+					var list3 = list2.Where (x => x.cnno == inv.cnno).ToList<CNNoteDtls> ();
+					foreach (CNNoteDtls invdtl in list3) {
+						OutLetBill bill = new OutLetBill ();
+						bill.UserID = userid;
+						bill.BranchCode = brn;
+						bill.CompanyCode = comp;
+						bill.Created = inv.created;
+						bill.CustCode = inv.custcode;
+						bill.ICode = invdtl.icode;
+						bill.InvDate = inv.invdate;
+						bill.InvNo = inv.cnno;
 						bill.IsInclusive = invdtl.isincludesive;
 						bill.Amount = invdtl.amount;
 						bill.NetAmount = invdtl.netamount;

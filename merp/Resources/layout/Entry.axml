@@ -140,7 +140,9 @@
                         android:id="@+id/txtprice"
                         android:textColor="#ff140000"
                         android:paddingLeft="5dp"
-                        android:background="@android:drawable/edit_text" />
+                        android:background="@android:drawable/edit_text"
+                        android:editable="false"
+                        android:enabled="true" />
                     <TextView
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:layout_width="match_parent"

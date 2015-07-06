@@ -43,25 +43,44 @@ namespace wincom.mobile.erp
 			but.Click += butClick;
 			Button butInvlist = FindViewById<Button> (Resource.Id.butInvlist);
 			butInvlist.Click+= ButInvlist_Click;
-			Button but2 = FindViewById<Button> (Resource.Id.butDown);
-			but2.Click += butDownloadItems;
+			Button butdown = FindViewById<Button> (Resource.Id.butDown);
+			butdown.Click += butDownloadItems;
 			Button butMItem = FindViewById<Button> (Resource.Id.butMaster);
 			butMItem.Click += butMasterClick;
-			Button butCust = FindViewById<Button> (Resource.Id.butDownCust);
-			butCust.Click += butDownloadCusts;
-			Button butCustProf = FindViewById<Button> (Resource.Id.butCustProf);
-			butCustProf.Click+=  butCustomerClick;
+			Button butSett = FindViewById<Button> (Resource.Id.butsetting);
+			butSett.Click += butSetting;
+//			Button butCustProf = FindViewById<Button> (Resource.Id.butCustProf);
+//			butCustProf.Click+=  butCustomerClick;
 			Button butlogOff = FindViewById<Button> (Resource.Id.butOut);
 			butlogOff.Click += ButlogOff_Click;
 			Button butAbt = FindViewById<Button> (Resource.Id.butAbout);
 			butAbt.Click+= ButAbt_Click;
-			Button butupload = FindViewById<Button> (Resource.Id.butupload);
-			butupload.Click += butUploadBills;
+//			Button butupload = FindViewById<Button> (Resource.Id.butupload);
+//			butupload.Click += butUploadBills;
 			//Button butExitOnly = FindViewById<Button> (Resource.Id.butExitOnly);
-			Button butsumm = FindViewById<Button> (Resource.Id.butInvsumm);
-			butsumm.Click+= (object sender, EventArgs e) => {
-				StartActivity(typeof(PrintSumm));
-			};
+//			Button butsumm = FindViewById<Button> (Resource.Id.butInvsumm);
+//			butsumm.Click+= (object sender, EventArgs e) => {
+//				StartActivity(typeof(PrintSumm));
+//			};
+
+			Button butCNNote = FindViewById<Button> (Resource.Id.butcnnote);
+			butCNNote.Click+= ButCNNote_Click;
+//			Button butCNNoteList = FindViewById<Button> (Resource.Id.butCNlist);
+//			butCNNoteList.Click+= ButCNNoteList_Click;
+		}
+
+		void ButCNNoteList_Click (object sender, EventArgs e)
+		{
+			var intent = new Intent(this, typeof(CNAllActivity));
+
+			StartActivity(intent);
+		}
+
+		void ButCNNote_Click (object sender, EventArgs e)
+		{
+			var intent = new Intent(this, typeof(CNNoteActivity));
+
+			StartActivity(intent);
 		}
 
 		void ButAbt_Click (object sender, EventArgs e)
@@ -99,7 +118,7 @@ namespace wincom.mobile.erp
 
 		void ButInvlist_Click (object sender, EventArgs e)
 		{
-			var intent = new Intent(this, typeof(InvoiceAllActivity));
+			var intent = new Intent(this, typeof(TransListActivity));
 
 			StartActivity(intent);
 		}
@@ -154,7 +173,7 @@ namespace wincom.mobile.erp
 		void ClearPostedInv()
 		{
 			CompanyInfo para = DataHelper.GetCompany (pathToDatabase);
-			if (!para.AllowDelete) {
+			if (!para.AllowClrTrxHis) {
 				Toast.MakeText (this, "Access denied...", ToastLength.Long).Show ();	
 				return;
 			}
@@ -164,6 +183,17 @@ namespace wincom.mobile.erp
 				db.RunInTransaction (() => {
 					foreach (var item in list2) {
 						var listitm = db.Table<InvoiceDtls> ().Where (x => x.invno == item.invno).ToList<InvoiceDtls> ();
+						foreach(var iitem in listitm){
+							db.Delete(iitem);
+						}
+						db.Delete(item);
+					}
+				});
+
+				var list3 = db.Table<CNNote> ().Where (x => x.isUploaded == true).ToList<CNNote> ();
+				db.RunInTransaction (() => {
+					foreach (var item in list3) {
+						var listitm = db.Table<CNNoteDtls> ().Where (x => x.cnno == item.cnno).ToList<CNNoteDtls> ();
 						foreach(var iitem in listitm){
 							db.Delete(iitem);
 						}
@@ -212,23 +242,27 @@ namespace wincom.mobile.erp
 
 		void butDownloadItems(object sender,EventArgs e)
 		{
-			Button butDown =  FindViewById<Button> (Resource.Id.butDown);
-			butDown.Enabled = false;
-			DownloadHelper download= new DownloadHelper();
-			download.Downloadhandle = DownItemsDoneDlg; 
-			download.CallingActivity = this;
-			download.startDownloadItem ();
+			StartActivity (typeof(DownloadActivity));
+//			Button butDown =  FindViewById<Button> (Resource.Id.butDown);
+//			butDown.Enabled = false;
+//			DownloadHelper download= new DownloadHelper();
+//			download.Downloadhandle = DownItemsDoneDlg; 
+//			download.CallingActivity = this;
+//			download.startDownloadItem ();
 		}
-
-		void butDownloadCusts(object sender,EventArgs e)
+		void butSetting(object sender,EventArgs e)
 		{
-			Button butDown =  FindViewById<Button> (Resource.Id.butDownCust);
-			butDown.Enabled = false;
-			DownloadHelper download= new DownloadHelper();
-			download.Downloadhandle =  DownCustDoneDlg; 
-			download.CallingActivity = this;
-			download.startDownloadCustomer ();
+			StartActivity (typeof(SettingActivity));
 		}
+//		void butDownloadCusts(object sender,EventArgs e)
+//		{
+//			Button butDown =  FindViewById<Button> (Resource.Id.butDownCust);
+//			butDown.Enabled = false;
+//			DownloadHelper download= new DownloadHelper();
+//			download.Downloadhandle =  DownCustDoneDlg; 
+//			download.CallingActivity = this;
+//			download.startDownloadCustomer ();
+//		}
 
 		private void DownloadCompInfo()
 		{
@@ -321,7 +355,7 @@ namespace wincom.mobile.erp
 
 		private void butMasterClick(object sender,EventArgs e)
 		{
-			var intent = new Intent(this, typeof(MasterItemActivity));
+			var intent = new Intent(this, typeof(MasterRefActivity));
 
 			StartActivity(intent);
 		}

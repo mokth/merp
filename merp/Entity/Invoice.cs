@@ -16,6 +16,7 @@ namespace wincom.mobile.erp
 		public string description { get; set; }
 		public DateTime uploaded  { get; set; }
 		public bool isUploaded  { get; set; }
+		public bool isPrinted  { get; set; }
 	}
 
 	public class InvoiceDtls

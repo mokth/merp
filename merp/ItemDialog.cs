@@ -107,7 +107,7 @@ namespace wincom.mobile.erp
 				_selectedItem = itm.ICode + " | " + itm.IDesc;
 				Hashtable param = new Hashtable ();
 				param.Add ("SELECTED", _selectedItem);
-				EventParam p = new EventParam (102, param);
+				EventParam p = new EventParam (EventID.ICODE_SELECTED, param);
 				EventManagerFacade.Instance.GetEventManager ().PerformEvent (this.Activity, p);
 			}
 			this.Dialog.Dismiss ();

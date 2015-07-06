@@ -63,7 +63,8 @@ namespace wincom.mobile.erp
 				ShowItemLookUp();
 			};
 			qty.EditorAction += HandleEditorAction;
-			price.EditorAction += HandleEditorAction; 
+			price.Enabled = false;
+			//price.EditorAction += HandleEditorAction; 
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 
 			//SqliteConnection.CreateFile(pathToDatabase);
@@ -335,7 +336,7 @@ namespace wincom.mobile.erp
 		public void PerformEvent(object sender, EventParam e)
 		{
 			switch (e.EventID) {
-			case 102:
+			case EventID.ICODE_SELECTED:
 				RunOnUiThread (() => SetSelectedItem(e.Param["SELECTED"].ToString()));
 				break;
 			}

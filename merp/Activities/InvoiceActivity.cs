@@ -72,6 +72,9 @@ namespace wincom.mobile.erp
 			view.FindViewById<TextView> (Resource.Id.TaxAmount).Text = item.taxamt.ToString("n2");
 			double ttl = item.amount + item.taxamt;
 			view.FindViewById<TextView> (Resource.Id.TtlAmount).Text =ttl.ToString("n2");
+			ImageView img = view.FindViewById<ImageView> (Resource.Id.printed);
+			if (!item.isPrinted)
+				img.Visibility = ViewStates.Invisible;
 		}
 
 		protected override void OnResume()
@@ -99,6 +102,9 @@ namespace wincom.mobile.erp
 			menu.Inflate (Resource.Menu.popupInv);
 
 			if (!compinfo.AllowDelete) {
+				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
+			}
+			if (DataHelper.GetInvoicePrintStatus (pathToDatabase, item.invno)) {
 				menu.Menu.RemoveItem (Resource.Id.popInvdelete);
 			}
 			menu.MenuItemClick += (s1, arg1) => {
@@ -200,8 +206,20 @@ namespace wincom.mobile.erp
 
 			if (mmDevice != null) {
 				StartPrint (inv, list,noofcopy);
+				updatePrintedStatus (inv);
 			}
 		
+		}
+
+		void updatePrintedStatus(Invoice inv)
+		{
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list = db.Table<Invoice> ().Where (x => x.invno == inv.invno).ToList<Invoice> ();
+				if (list.Count > 0) {
+					list [0].isPrinted = true;
+					db.Update (list [0]);
+				}
+			}
 		}
 
 		void StartPrint(Invoice inv,InvoiceDtls[] list,int noofcopy )

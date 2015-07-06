@@ -49,6 +49,28 @@ namespace wincom.mobile.erp
 			return msg;
 		}
 
+		void PrintInvoice (Invoice inv, InvoiceDtls[] list, ref string test)
+		{
+			PrintCompHeader (ref test);
+			PrintCustomer (ref test, inv.custcode);
+			PrintHeader (ref test, inv);
+			string dline = "";
+			double ttlAmt = 0;
+			double ttltax = 0;
+			int count = 0;
+			foreach (InvoiceDtls itm in list) {
+				count += 1;
+				dline = dline + PrintDetail (itm, count);
+				ttlAmt = ttlAmt + itm.netamount;
+				ttltax = ttltax + itm.tax;
+			}
+			test += dline;
+			PrintTotal (ref test, ttlAmt, ttltax);
+			PrintTaxSumm (ref test, list);
+			PrintFooter (ref test);
+			test += "\nTHANK YOU\n\n\n\n";
+		}
+
 		//Bluetooth Printer -Mini Bluetooth Printer
 		public void BluetoothMini(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list,int noofcopy)
 		{
@@ -71,41 +93,35 @@ namespace wincom.mobile.erp
 					//mmInputStream = mmSocket.InputStream;
 					mmOutputStream = mmSocket.OutputStream;
 					byte[] charfont;
+					charfont = new Byte[] { 27, 64 }; //Char font 9x17
+					mmOutputStream.Write(charfont, 0, charfont.Length);
 					if (apara.PaperSize=="58mm")
 					{
-						charfont = new Byte[] { 27, 33, 1 }; //Char font 9x17
+						//charfont = new Byte[] { 27, 33, 1 }; //Char font 9x17
+						charfont = new Byte[] { 27, 77, 1 }; //Char font 9x17
 						mmOutputStream.Write(charfont, 0, charfont.Length);
 					}
 
 					if (apara.PaperSize=="80mm")
 					{
-						charfont = new Byte[] { 27, 33, 0 }; //Char font 12x24
+						//charfont = new Byte[] { 27, 33, 0 }; //Char font 12x24
+						charfont = new Byte[] { 27, 77, 1 }; //Char font 9x17
 						mmOutputStream.Write(charfont, 0, charfont.Length);
 					}
-
+					charfont = new Byte[] { 28, 38 };
+					mmOutputStream.Write(charfont, 0, charfont.Length);
+					charfont = new Byte[] { 28, 67,0,48 };
+					mmOutputStream.Write(charfont, 0, charfont.Length);
+					//charfont = new Byte[] { 27, 82, 15 }; //Char font 9x17
+				//	mmOutputStream.Write(charfont, 0, charfont.Length);
 					string test = "";
 
-					PrintCompHeader (ref test);
-					PrintCustomer (ref test,inv.custcode);
-					PrintHeader (ref test,inv);
-					string dline="";
-					double ttlAmt =0;
-					double ttltax =0;
-					int count =0;
-					foreach(InvoiceDtls itm in list)
-					{
-						count+=1;
-						dline =dline+PrintDetail (itm,count);
-						ttlAmt = ttlAmt+ itm.netamount;
-						ttltax = ttltax+itm.tax;
-					}
-					test += dline;
-					PrintTotal (ref test,ttlAmt,ttltax);
-
-					PrintTaxSumm(ref test,list );
-					PrintFooter (ref test);
-					test += "\nTHANK YOU\n\n\n\n";
-					byte[] cc =ASCIIEncoding.ASCII.GetBytes(test);
+					PrintInvoice (inv, list, ref test);
+					//var encoding = Encoding.GetEncoding(936);
+					//byte[] source = Encoding.Unicode.GetBytes(text);
+					//byte[] converted = Encoding.Convert(Encoding.Unicode, encoding, source);
+					byte[] cc = Encoding.GetEncoding("GB18030").GetBytes(test);
+					//byte[] cc =ASCIIEncoding.ASCII.GetBytes(test);
 
 					for (int i=0; i<noofcopy;i++)
 					{
@@ -140,6 +156,8 @@ namespace wincom.mobile.erp
 						//mmOutputStream.Flush ();
 					}
 					Thread.Sleep (300);
+					charfont = new Byte[] { 28, 46 };
+					mmOutputStream.Write(charfont, 0, charfont.Length);
 					mmOutputStream.Close ();
 					//mmInputStream.Close();
 					mmSocket.Close ();
@@ -155,6 +173,141 @@ namespace wincom.mobile.erp
 			}
 
 		//	return msg;
+		}
+
+		public string OpenBTAndPrintCN(BluetoothSocket mmSocket,BluetoothDevice mmDevice,CNNote inv,CNNoteDtls[] list,int noofcopy )
+		{string msg = "";
+			
+			BluetoothMiniCN (mmSocket, mmDevice, inv, list, noofcopy);
+
+			return msg;
+		}
+
+		private bool PrintCNInvoice(CNNote cn,ref string  test,ref double ttlAmt,ref double ttltax)
+		{
+			bool IsfoundInvoice =false;
+			InvoiceDtls[] list =null;
+			Invoice inv=null;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)){
+				var lsinv= db.Table<Invoice> ().Where (x => x.invno==cn.invno).ToList<Invoice>();
+				if (lsinv.Count > 0) {
+					IsfoundInvoice =true;
+					inv = lsinv [0];
+					var ls = db.Table<InvoiceDtls> ().Where (x => x.invno == cn.invno).ToList<InvoiceDtls> ();
+					list = new InvoiceDtls[ls.Count];
+					ls.CopyTo (list);
+				}
+			}
+
+
+			if (inv != null) {
+				PrintInvoice (inv, list, ref test);
+				foreach(InvoiceDtls itm in list)
+				{
+					ttlAmt = ttlAmt+ itm.netamount;
+					ttltax = ttltax+itm.tax;
+				}
+			}
+
+			return IsfoundInvoice;
+		}
+
+		public void BluetoothMiniCN(BluetoothSocket mmSocket,BluetoothDevice mmDevice,CNNote inv,CNNoteDtls[] list,int noofcopy )
+		{
+			msg = "";
+			Stream mmOutputStream;
+			try {
+				UUID uuid = UUID.FromString ("00001101-0000-1000-8000-00805F9B34FB");
+
+				mmSocket = mmDevice.CreateInsecureRfcommSocketToServiceRecord (uuid);
+				if (mmSocket == null) {
+					msg =  "Error creating sockect";
+					return;
+				}
+				if (mmDevice.BondState == Bond.Bonded) {
+					mmSocket.Connect ();
+					Thread.Sleep (300);
+					mmOutputStream = mmSocket.OutputStream;
+					byte[] charfont;
+					if (apara.PaperSize=="58mm")
+					{
+						charfont = new Byte[] { 27, 33, 1 }; //Char font 9x17
+						mmOutputStream.Write(charfont, 0, charfont.Length);
+					}
+					if (apara.PaperSize=="80mm")
+					{
+						charfont = new Byte[] { 27, 33, 0 }; //Char font 12x24
+						mmOutputStream.Write(charfont, 0, charfont.Length);
+					}
+					string test = "";
+					double invTtlAmt =0;
+					double invTtlTax =0;
+					bool IsfoundInvoice =PrintCNInvoice(inv,ref test,ref invTtlAmt,ref invTtlTax);
+					PrintCompHeader (ref test);
+					PrintCustomer (ref test,inv.custcode);
+					PrintCNHeader (ref test,inv);
+					string dline="";
+					double ttlAmt =0;
+					double ttltax =0;
+					int count =0;
+					foreach(CNNoteDtls itm in list)
+					{
+						count+=1;
+						dline =dline+PrintCNDetail (itm,count);
+						ttlAmt = ttlAmt+ itm.netamount;
+						ttltax = ttltax+itm.tax;
+					}
+					test += dline;
+					PrintTotal (ref test,ttlAmt,ttltax);
+
+					PrintCNTaxSumm(ref test,list );
+					PrintFooter (ref test);
+					if (IsfoundInvoice)
+					{
+						test += "\nTHANK YOU\n\n";
+						PrintTotal (ref test,ttlAmt, ttltax, invTtlAmt,invTtlTax);	
+						test += "\n\n\n";
+					}else test += "\nTHANK YOU\n\n\n\n";
+
+					byte[] cc =ASCIIEncoding.ASCII.GetBytes(test);
+
+					for (int i=0; i<noofcopy;i++)
+					{
+
+						int nwait=0;
+						while(true)
+						{
+							if (mmOutputStream.CanWrite)
+								break;
+							else 
+							{
+								nwait+=1;
+								if (nwait>10)
+									break;
+							}
+							Thread.Sleep (300);
+						}
+						//mmOutputStream.BeginWrite(cc,0,cc.Length,
+						mmOutputStream.Write (cc, 0, cc.Length);
+						Thread.Sleep (3000);
+						//mmOutputStream.Flush ();
+					}
+					Thread.Sleep (300);
+					mmOutputStream.Close ();
+					//mmInputStream.Close();
+					mmSocket.Close ();
+					msg ="Printing....";
+				} else {
+					//txtv.Text = "Device not connected";
+					msg= "Device not connected";	
+				}
+
+
+			} catch (Exception ex) {
+				msg = ex.Message;
+			}
+
+			//	return msg;
 		}
 
 		//Bluetooth Printer -PT-II and PT-III
@@ -237,27 +390,6 @@ namespace wincom.mobile.erp
 		{
 			string test = "";
 			string desc = itm.description;
-//			string[] strlist = desc.Split (new char[] { ' ' });
-//			string line = "";
-//			int counter = 0;
-//			foreach (string s in strlist) {
-//				if (line.Length + s.Length > 42) {
-//					counter = counter + 1;
-//					if (counter == 1) {
-//						string pline = line.Trim ().PadRight (42, ' ');
-//						test += pline + "\n";
-//					} else if (counter == 2) {
-//						string pline = line.Trim ().PadRight (42, ' ');
-//					} else {
-//						string pline = line.Trim ().PadRight (42, ' ');
-//						test += pline + "\n";
-//					}
-//					line = s;
-//				} else {
-//					line = line + s;
-//				}
-//			}
-
 			string pline2 = desc.ToUpper().Trim()+ "\n";
 			pline2 = pline2 + count.ToString ().PadRight (3, ' ');
 			if (itm.qty < 0) {
@@ -270,6 +402,25 @@ namespace wincom.mobile.erp
 			pline2 = pline2 + Math.Round (itm.netamount, 2).ToString ("n2").PadLeft (9, ' ');
 			test += pline2 + "\n";
 					
+			return test;
+		}
+
+		static string PrintCNDetail(CNNoteDtls itm,int count)
+		{
+			string test = "";
+			string desc = itm.description;
+			string pline2 = desc.ToUpper().Trim()+ "\n";
+			pline2 = pline2 + count.ToString ().PadRight (3, ' ');
+			if (itm.qty < 0) {
+				string sqty = "(EX)"+itm.qty.ToString ().Trim ()  ;
+				pline2 = pline2 +sqty.PadLeft (9, ' ')+" ";
+			}else  pline2 = pline2 + itm.qty.ToString ().PadLeft (9, ' ')+" ";
+			pline2 = pline2 + Math.Round (itm.price, 2).ToString ("n2").PadLeft (8, ' ')+" ";
+			string stax=Math.Round (itm.tax, 2).ToString ("n2") +" "+ itm.taxgrp;
+			pline2 = pline2 + stax.PadLeft (10, ' ') + " ";
+			pline2 = pline2 + Math.Round (itm.netamount, 2).ToString ("n2").PadLeft (9, ' ');
+			test += pline2 + "\n";
+
 			return test;
 		}
 
@@ -343,7 +494,7 @@ namespace wincom.mobile.erp
 		void PrintHeader (ref string test,Invoice inv)
 		{
 			string userid = USERID;
-			string[] titles = apara.ReceiptTitle.Split (new char[]{ ',', '|', '/' });
+			string[] titles = apara.ReceiptTitle.Split (new char[]{ ',', '|'});
 			string title1 = "";
 			string title2 = "";
 
@@ -367,7 +518,49 @@ namespace wincom.mobile.erp
 			string recno = "RECPT NO : " + inv.invno.Trim();
 			//test += "RECPT NO : " + inv.invno+"\n";
 			test += recno+title2.PadLeft(41-recno.Length,' ')+"\n";
-			test += "ISSUED BY: " + userid.ToUpper()+"\n";
+			string issueline = "ISSUED BY: " + userid.ToUpper ();
+			int templen = 41 - issueline.Length;
+			string term = "("+((inv.trxtype.IndexOf("CASH")>-1)?"COD":"TERM")+")"; 
+			issueline = issueline + term.PadLeft (templen, ' ')+"\n";
+			test += issueline;// "ISSUED BY: " + userid.ToUpper()+"\n";
+			test += "------------------------------------------\n";
+			test += "DESCRIPTION                               \n";
+			test += "NO       QTY  U/PRICE    TAX AMT    AMOUNT\n";
+			test += "------------------------------------------\n";
+			/*
+            DESCRIPTION       QTY    U/PRICE    AMOUNT
+			                  TAXGR  TAX AMT  
+			------------------------------------------
+			xxxxxxxxxxxxxxxxx xxxxx xxxxxxxx xxxxxxxxx
+			xxxxxxxxxxxxxxxxx xxxxx xxxxxxxx xxxxxxxxx
+			12345678901234567 12345 12345678 123456789
+		  */
+		}
+
+		void PrintCNHeader (ref string test,CNNote inv)
+		{
+			string userid = USERID;
+			string[] titles = apara.ReceiptTitle.Split (new char[]{ ',', '|'});
+			string title1 = "";
+			string title2 = "";
+			title1 = "CREDIT NOTE";
+
+			string date = DateTime.Now.ToString ("dd-MM-yyyy");
+			string datetime = DateTime.Now.ToString ("dd-MM-yyyy hh:mm tt");
+			if (compinfo.ShowTime) {
+				test += datetime+title1.PadLeft(41-datetime.Length,' ')+"\n";
+			} else {
+				test += date+title1.PadLeft(41-date.Length,' ')+"\n";
+			}
+			//test += DateTime.Now.ToString ("dd-MM-yyyy")+"TAX INVOICE".PadLeft(31,' ')+"\n";
+			string recno = "CREDIT NOTE NO : " + inv.cnno.Trim();
+			//test += "RECPT NO : " + inv.invno+"\n";
+			test += recno+title2.PadLeft(41-recno.Length,' ')+"\n";
+			string issueline = "ISSUED BY: " + userid.ToUpper ();
+			int templen = 41 - issueline.Length;
+			string term = "("+((inv.trxtype.IndexOf("CASH")>-1)?"COD":"TERM")+")"; 
+			issueline = issueline + term.PadLeft (templen, ' ')+"\n";
+			test += issueline;// "ISSUED BY: " + userid.ToUpper()+"\n";
 			test += "------------------------------------------\n";
 			test += "DESCRIPTION                               \n";
 			test += "NO       QTY  U/PRICE    TAX AMT    AMOUNT\n";
@@ -392,7 +585,47 @@ namespace wincom.mobile.erp
 			test += "------------------------------------------\n";
 		}
 
+		void PrintTotal (ref string test,double cnttlAmt,double cnttlTax,double InvttlAmt,double invttlTax)
+		{
+			double ttlCollect = (InvttlAmt + invttlTax) - (cnttlAmt + cnttlTax);
+			test += "------------------------------------------\n";
+			test += "  TOTAL C/NOTE AMOUNT  : "+Math.Round(cnttlAmt+cnttlTax,2).ToString("n2").PadLeft (12, ' ')+"\n";
+			test += "  TOTAL INVOICE AMOUNT : "+Math.Round(InvttlAmt+invttlTax,2).ToString("n2").PadLeft (12, ' ')+"\n";
+			test += "  TOTAL COLLECT AMOUNT : "+Math.Round(ttlCollect,2).ToString("n2").PadLeft (12, ' ')+"\n";
+			test += "------------------------------------------\n";
+		}
+
 		void PrintTaxSumm(ref string test,InvoiceDtls[] list )
+		{
+			List<Item> list2 = new List<Item> ();
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				list2 = db.Table<Item> ().ToList<Item> ();
+			}
+			var grp = from p in list
+				group p by p.taxgrp into g
+				select new {taxgrp = g.Key, ttltax = g.Sum (x => x.tax),ttlAmt = g.Sum (v => v.netamount)};
+
+			test += "SUMMARY\n";
+			test += "-------------------------------\n";
+			test += "TAX            AMOUNT   TAX AMT\n";
+			test += "-------------------------------\n";
+			//       123456789 12345678901 123456789 
+			string pline="";
+			foreach (var g in grp) {
+				var list3 =list2.Where (x => x.taxgrp == g.taxgrp).ToList ();
+				if (list3.Count > 0) {
+					string stax = g.taxgrp.Trim () + " @ " + list3 [0].tax.ToString () + "%";
+					pline = pline + stax.PadRight (10,' ');
+				} else pline = pline + g.taxgrp.Trim().PadRight (10, ' ');
+				pline = pline + g.ttlAmt.ToString("n2").PadLeft(11, ' ')+" ";
+				pline = pline + g.ttltax.ToString("n2").PadLeft(9, ' ');
+				test += pline + "\n";
+				pline = "";
+			}
+			test += "-------------------------------\n";
+		}
+
+		void PrintCNTaxSumm(ref string test,CNNoteDtls[] list )
 		{
 			List<Item> list2 = new List<Item> ();
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
@@ -521,6 +754,8 @@ namespace wincom.mobile.erp
 					  group inv by inv.invdate 
 				      into g select new {key=g.Key,results=g};
 
+			double ttlcash = 0;
+			double ttlInv = 0;
 			double ttltax = 0;
 			double ttlamt = 0;
 			double subttltax = 0;
@@ -551,6 +786,9 @@ namespace wincom.mobile.erp
 						ttlamt += inv.amount;
 						subttltax += inv.taxamt;
 						subttlamt += inv.amount;
+						if (tygrp.key.ToUpper () == "CASH") {
+							ttlcash = ttlcash + inv.amount + inv.taxamt;
+						}else ttlInv = ttlInv + inv.amount + inv.taxamt;
 						line = (cont.ToString () + ".").PadRight (4, ' ') +
 						inv.invno.PadRight (13, ' ') +
 						inv.trxtype.PadRight (8, ' ') +
@@ -558,18 +796,23 @@ namespace wincom.mobile.erp
 						inv.amount.ToString ("n2").PadLeft (8, ' ') + "\n";
 						text = text + line;
 					}
-					if (multiType) {
+					//if (multiType) {
 						text = text + PrintSubTotal (subttltax, subttlamt);
-					}
+				//	}
 				}
 			}
 
 			double ttl = ttlamt + ttltax;
 			text += "------------------------------------------\n";
-			text += "TOTAL TAX    :" + ttltax.ToString ("n2").PadLeft (13, ' ')+"\n";
-			text += "TOTAL AMOUNT :" + ttlamt.ToString ("n2").PadLeft (13, ' ')+"\n";
-			text += "      TOTAL  :" + ttl.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += "TOTAL TAX     :" + ttltax.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += "TOTAL AMOUNT  :" + ttlamt.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += "      TOTAL   :" + ttl.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += "------------------------------------------\n";
+			text += "SUMMARY\n";
+			text += "TOTAL CASH    :" + ttlcash.ToString ("n2").PadLeft (13, ' ')+"\n";
+			text += "TOTAL INVOICE :" + ttlInv.ToString ("n2").PadLeft (13, ' ')+"\n";
 			text += "------------------------------------------\n\n\n\n";
+
 			return text;
 		}
 

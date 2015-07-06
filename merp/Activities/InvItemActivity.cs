@@ -24,20 +24,25 @@ namespace wincom.mobile.erp
 		string CUSTCODE ="";
 		string CUSTNAME ="";
 		CompanyInfo comp;
+		bool isNotAllowEditAfterPrinted  ;
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
 			if (!((GlobalvarsApp)this.Application).ISLOGON) {
 				Finish ();
 			}
+			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			SetContentView (Resource.Layout.InvDtlView);
 			invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
+			isNotAllowEditAfterPrinted  = DataHelper.GetInvoicePrintStatus (pathToDatabase,invno);
 			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
 			butNew.Click += (object sender, EventArgs e) => {
 				NewItem(invno);
 			};
-
+			if (isNotAllowEditAfterPrinted)
+				butNew.Enabled = false;
+		   
 			Button butInvBack= FindViewById<Button> (Resource.Id.butInvItmBack); 
 			butInvBack.Click += (object sender, EventArgs e) => {
 				StartActivity(typeof(InvoiceActivity));
@@ -85,8 +90,14 @@ namespace wincom.mobile.erp
 		protected override void OnResume()
 		{
 			base.OnResume();
+			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			invno = Intent.GetStringExtra ("invoiceno") ?? "AUTO";
 			CUSTCODE = Intent.GetStringExtra ("custcode") ?? "AUTO";
+			isNotAllowEditAfterPrinted  = DataHelper.GetInvoicePrintStatus (pathToDatabase,invno);
+			Button butNew= FindViewById<Button> (Resource.Id.butnewItem); 
+			if (isNotAllowEditAfterPrinted)
+				butNew.Enabled = false;
+			
 			listData = new List<InvoiceDtls> ();
 			populate (listData);
 			listView = FindViewById<ListView> (Resource.Id.invitemList);
@@ -107,6 +118,16 @@ namespace wincom.mobile.erp
 			if (!comp.AllowDelete) {
 				menu.Menu.RemoveItem (Resource.Id.popdelete);
 			}
+			//if allow edit and Invoice printed, remove edit
+			//printed invoice not allow to edit
+
+			if (isNotAllowEditAfterPrinted) {
+				menu.Menu.RemoveItem (Resource.Id.popedit);
+				menu.Menu.RemoveItem (Resource.Id.popdelete);
+				menu.Menu.RemoveItem (Resource.Id.popadd);
+			}
+
+
 			menu.MenuItemClick += (s1, arg1) => {
 				if (arg1.Item.TitleFormatted.ToString().ToLower()=="add")
 				{
@@ -173,8 +194,8 @@ namespace wincom.mobile.erp
 		void populate(List<InvoiceDtls> list)
 		{
 
-			var documents = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-			pathToDatabase = Path.Combine(documents, "db_adonet.db");
+//			var documents = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+//			pathToDatabase = Path.Combine(documents, "db_adonet.db");
 			comp = DataHelper.GetCompany (pathToDatabase);
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))

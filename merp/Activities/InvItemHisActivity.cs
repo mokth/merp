@@ -40,7 +40,7 @@ namespace wincom.mobile.erp
 			butNew.Visibility = ViewStates.Invisible;
 			Button butInvBack= FindViewById<Button> (Resource.Id.butInvItmBack); 
 			butInvBack.Click+= (object sender, EventArgs e) => {
-				StartActivity(typeof(MainActivity));
+				base.OnBackPressed();
 			};
 				
 			populate (listData);

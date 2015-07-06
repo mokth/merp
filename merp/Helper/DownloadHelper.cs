@@ -9,16 +9,25 @@ using System.Collections;
 
 namespace wincom.mobile.erp
 {
-	public class DownloadHelper:Activity
+	public class DownloadHelper:Activity,IEventListener
 	{
 		Service1Client _client;
 		WCFHelper _wfc = new WCFHelper();
 
 		public Activity CallingActivity=null;
 		public OnUploadDoneDlg Downloadhandle;
+		public OnUploadDoneDlg DownloadAllhandle;
+		public static bool _downloadAll = false;
 
 		public DownloadHelper ()
-		{			
+		{
+			EventManagerFacade.Instance.GetEventManager().AddListener(this);
+		}
+
+		public void StartDownloadAll()
+		{
+			_downloadAll = true;
+			startDownloadCompInfo() ;
 		}
 
 		public void startDownloadItem()
@@ -86,8 +95,14 @@ namespace wincom.mobile.erp
 				RunOnUiThread (() => InsertItemIntoDb (list));
 			}
 
-			if (msg!=null)
-				RunOnUiThread (() => Downloadhandle.Invoke(CallingActivity,0,msg));
+			if (msg != null) {
+				RunOnUiThread (() => Downloadhandle.Invoke (CallingActivity, 0, msg));
+				if (_downloadAll) {
+					_downloadAll = false;	
+					FireEvent (EventID.LOGIN_DOWNCOMPLETE);
+				}
+			}
+			
 		}
 
 		private void ClientOnGetCustomerCompleted(object sender, GetCustomersCompletedEventArgs e)
@@ -112,6 +127,10 @@ namespace wincom.mobile.erp
 			}
 			if (!success) {
 				RunOnUiThread (() => Downloadhandle.Invoke(CallingActivity,0,msg));
+				if (_downloadAll) {
+					_downloadAll = false;	
+					FireEvent (EventID.LOGIN_DOWNCOMPLETE);
+				}
 			}
 		}
 
@@ -136,6 +155,10 @@ namespace wincom.mobile.erp
 			}
 			if (!success) {
 				RunOnUiThread (() => Downloadhandle.Invoke(CallingActivity,0,msg));
+				if (_downloadAll) {
+					_downloadAll = false;	
+					FireEvent (EventID.LOGIN_DOWNCOMPLETE);
+				}
 			}
 		}
 
@@ -184,6 +207,10 @@ namespace wincom.mobile.erp
 			}
 			if (!success) {
 				RunOnUiThread (() => Downloadhandle.Invoke(CallingActivity,0,msg));
+				if (_downloadAll) {
+					_downloadAll = false;	
+					FireEvent (EventID.LOGIN_DOWNCOMPLETE);
+				}
 			}
 		}
 
@@ -191,8 +218,12 @@ namespace wincom.mobile.erp
 		{
 			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
 			DataHelper.InsertCompProfIntoDb (pro, pathToDatabase);
-			Downloadhandle.Invoke(CallingActivity,0,"Successfully download.");
 
+			if (_downloadAll) {
+				DownloadAllhandle.Invoke(CallingActivity,0,"Successfully downloaded Profile.");
+				FireEvent (EventID.DOWNLOADED_PROFILE);
+
+			}else Downloadhandle.Invoke(CallingActivity,0,"Successfully downloaded Profile.");
 		}
 
 		private void InsertItemIntoDb(List<ItemCode> list)
@@ -210,15 +241,28 @@ namespace wincom.mobile.erp
 					itm.taxgrp = item.taxgrp;
 					itm.isincludesive = item.isincludesive;
 
-					if (list2.Where (x => x.ICode == itm.ICode).ToList ().Count () == 0) {
+					var itemlist = list2.Where (x => x.ICode == itm.ICode).ToList ();
+					if (itemlist.Count () == 0) {
 						db.Insert (itm);
-					} else
+					} else {
+						itm = itemlist [0];
+						itm.IDesc = item.IDesc;
+						itm.Price = item.Price;
+						itm.tax = item.tax;
+						itm.taxgrp = item.taxgrp;
+						itm.isincludesive = item.isincludesive;
+
 						db.Update (itm);
+					}
 				}
 			}
-		//	DownloadCOmpleted ("Successfully downloaded.");
-		//	EnableButDonwICode ();
-			Downloadhandle.Invoke(CallingActivity,list.Count,"Successfully download.");
+		
+
+			if (_downloadAll) {
+				DownloadAllhandle.Invoke(CallingActivity,list.Count,"Successfully downloaded"+list.Count.ToString()+"Item(s).");
+				FireEvent (EventID.DOWNLOADED_ITEM);
+			}
+			else Downloadhandle.Invoke(CallingActivity,list.Count,"Successfully downloaded"+list.Count.ToString()+"Item(s).");
 		}
 
 		private void InsertCustomerIntoDb(List<Customer> list)
@@ -238,15 +282,21 @@ namespace wincom.mobile.erp
 					itm.Tel = item.Tel;
 					itm.Fax = item.Fax;
 					itm.gst = item.Gst;
+					itm.PayCode = item.PayCode;
 
 
 					if (list2.Where (x => x.CustCode == itm.CustCode).ToList ().Count () == 0) {
 						db.Insert (itm);
-					} else
+					} else {
 						db.Update (itm);
+					}
 				}
 			}
-			Downloadhandle.Invoke(CallingActivity,list.Count,"Successfully download.");
+
+			if (_downloadAll) {
+				FireEvent (EventID.LOGIN_DOWNCOMPLETE);
+				DownloadAllhandle.Invoke(CallingActivity,list.Count,"Successfully downloaded "+list.Count.ToString()+" customer(s).");
+			}else Downloadhandle.Invoke(CallingActivity,list.Count,"Successfully downloaded "+list.Count.ToString()+" customer(s).");
 
 		}
 
@@ -275,7 +325,7 @@ namespace wincom.mobile.erp
 			((GlobalvarsApp)CallingActivity.Application).COMPANY_CODE = para [2];
 			((GlobalvarsApp)CallingActivity.Application).BRANCH_CODE = para [3];
 			//DownloadCOmpleted ("Successfully Logon.");
-			Downloadhandle.Invoke(CallingActivity,0,"Successfully Logon.");
+			//Downloadhandle.Invoke(CallingActivity,0,"Successfully Logon.");
 			FireEvent (EventID.LOGIN_SUCCESS);
 		}
 
@@ -283,8 +333,13 @@ namespace wincom.mobile.erp
 		{
 			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
 			DataHelper.InsertCompProfIntoDb (pro, pathToDatabase);
-			Downloadhandle.Invoke(CallingActivity,0,"Successfully Download Company Profile.");
-			FireEvent (EventID.LOGIN_DOWNCOMPRO);
+
+			//FireEvent (EventID.LOGIN_DOWNCOMPRO);
+			if (_downloadAll) {
+				DownloadAllhandle.Invoke(CallingActivity,0,"Successfully Download Company Profile.");
+				FireEvent (EventID.DOWNLOADED_PROFILE);
+			}
+			else Downloadhandle.Invoke(CallingActivity,0,"Successfully Download Company Profile.");
 		}
 
 		void FireEvent (int eventID)
@@ -292,6 +347,33 @@ namespace wincom.mobile.erp
 			Hashtable param = new Hashtable ();
 			EventParam p = new EventParam (eventID, param);
 			EventManagerFacade.Instance.GetEventManager ().PerformEvent (CallingActivity, p);
+		}
+
+		public event nsEventHandler eventHandler;
+
+		public void FireEvent(object sender,EventParam eventArgs)
+		{
+			if (eventHandler != null)
+				eventHandler (sender, eventArgs);
+		}
+
+
+		public void PerformEvent(object sender, EventParam e)
+		{
+
+			switch (e.EventID) {
+			case EventID.DOWNLOADED_PROFILE:
+				if (_downloadAll) {
+					startDownloadItem ();
+				}
+				break;
+			case EventID.DOWNLOADED_ITEM:
+				if (_downloadAll) {
+					startDownloadCustomer ();
+				}
+				break;
+			
+			}
 		}
 	}
 }
