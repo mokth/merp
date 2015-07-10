@@ -11,13 +11,12 @@
         android:layout_margin="10dp"
         android:orientation="vertical">
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:scaleType="fitXY"
             android:layout_gravity="center"
+            android:layout_width="350dp"
+            android:layout_height="350dp"
             android:layout_marginBottom="20dp"
-            android:src="@drawable/icon"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true" />
+            android:src="@drawable/icon" />
         <EditText
             android:id="@+id/login_userName"
             android:layout_width="fill_parent"

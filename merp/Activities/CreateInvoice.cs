@@ -195,7 +195,12 @@ namespace wincom.mobile.erp
 //				}
 				string invno = "";
 				int runno = adNum.RunNo + 1;
+				int currentRunNo =DataHelper.GetLastInvRunNo (pathToDatabase, invdate);
+				if (currentRunNo >= runno)
+					runno = currentRunNo + 1;
+				
 				invno =prefix + invdate.ToString("yyMM") + runno.ToString().PadLeft (4, '0');
+
 				txtinvno.Text= invno;
 				inv.invdate = invdate;
 				inv.trxtype = spinner2.SelectedItem.ToString ();
@@ -205,8 +210,10 @@ namespace wincom.mobile.erp
 				inv.amount = 0;
 				inv.custcode = codes [0].Trim ();
 				inv.isUploaded = false;
+
+				txtinvno.Text = invno;
 				db.Insert (inv);
-				adNum.RunNo += 1;
+				adNum.RunNo = runno;
 				if (adNum.ID >= 0)
 					db.Update (adNum);
 				else

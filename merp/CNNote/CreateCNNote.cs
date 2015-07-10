@@ -166,6 +166,10 @@ namespace wincom.mobile.erp
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 				string invno = "";
 				int runno = adNum.RunNo + 1;
+				int currentRunNo =DataHelper.GetLastCNRunNo (pathToDatabase, invdate);
+				if (currentRunNo >= runno)
+					runno = currentRunNo + 1;
+				
 				invno =prefix + invdate.ToString("yyMM") + runno.ToString().PadLeft (4, '0');
 				txtinvno.Text= invno;
 				inv.invdate = invdate;
@@ -178,7 +182,7 @@ namespace wincom.mobile.erp
 				inv.isUploaded = false;
 				inv.invno = cninvno.Text;
 				db.Insert (inv);
-				adNum.RunNo += 1;
+				adNum.RunNo = runno;
 				if (adNum.ID >= 0)
 					db.Update (adNum);
 				else

@@ -63,6 +63,7 @@ namespace wincom.mobile.erp
 				ShowItemLookUp();
 			};
 			qty.EditorAction += HandleEditorAction;
+			qty.AfterTextChanged+= Qty_AfterTextChanged;
 			price.Enabled = false;
 			//price.EditorAction += HandleEditorAction; 
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
@@ -91,6 +92,11 @@ namespace wincom.mobile.erp
 				FIRSTLOAD="1";
 				LoadData (INVOICENO, ITEMUID);
 			}
+		}
+
+		void Qty_AfterTextChanged (object sender, Android.Text.AfterTextChangedEventArgs e)
+		{
+			CalAmt ();
 		}
 
 		private void HandleEditorAction(object sender, TextView.EditorActionEventArgs e)

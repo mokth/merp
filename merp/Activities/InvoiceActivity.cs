@@ -194,7 +194,7 @@ namespace wincom.mobile.erp
 //		}
 		void PrintInv(Invoice inv,int noofcopy)
 		{
-			Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
+			//Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
 			InvoiceDtls[] list;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)){
 				var ls= db.Table<InvoiceDtls> ().Where (x => x.invno==inv.invno).ToList<InvoiceDtls>();
@@ -228,6 +228,7 @@ namespace wincom.mobile.erp
 			PrintInvHelper prnHelp = new PrintInvHelper (pathToDatabase, userid);
 			string msg =prnHelp.OpenBTAndPrint (mmSocket, mmDevice, inv, list,noofcopy);
 			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
+			//AlertShow (msg);
 		}
 
 		string getBTAddrFile(string printername)
@@ -255,6 +256,16 @@ namespace wincom.mobile.erp
 			return found;
 	     }
 
+		void AlertShow(string text)
+		{
+			AlertDialog.Builder alert = new AlertDialog.Builder (this);
+
+			alert.SetMessage (text);
+			RunOnUiThread (() => {
+				alert.Show();
+			} );
+			
+		}
 		void findBTPrinter(){
 			string printername = apara.PrinterName.Trim ().ToUpper ();
 //			string addrfile = getBTAddrFile(printername);
@@ -264,13 +275,17 @@ namespace wincom.mobile.erp
 			try{
 				mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 
+				if (mBluetoothAdapter ==null)
+				{
+					Toast.MakeText (this, "Can not Find Bluetooth device,try again.", ToastLength.Long).Show ();	
+					return;
+				}
 				string txt ="";
 				if (!mBluetoothAdapter.Enable()) {
 					Intent enableBluetooth = new Intent(
 						BluetoothAdapter.ActionRequestEnable);
 					StartActivityForResult(enableBluetooth, 0);
 				}
-
 
 				var pair= mBluetoothAdapter.BondedDevices;
 				if (pair.Count > 0) {
@@ -285,12 +300,13 @@ namespace wincom.mobile.erp
 						}
 					}
 				}
-				Toast.MakeText (this, "found device " +mmDevice.Name, ToastLength.Long).Show ();	
+				Toast.MakeText(this, "found device " +mmDevice.Name, ToastLength.Long).Show ();	
+				//AlertShow( "found device " +mmDevice.Name);
 				//txtv.Text ="found device " +mmDevice.Name;
 			}catch(Exception ex) {
-
 				//txtv.Text = ex.Message;
-				Toast.MakeText (this, ex.Message, ToastLength.Long).Show ();	
+				Toast.MakeText (this, "Error in Bluetooth device. Try again.", ToastLength.Long).Show ();	
+				//AlertShow(ex.Message);
 			}
 		}
 

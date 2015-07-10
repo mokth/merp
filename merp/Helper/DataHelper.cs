@@ -7,6 +7,64 @@ namespace wincom.mobile.erp
 {
 	public class DataHelper
 	{
+		public static AdUser GetUser(string pathToDatabase)
+		{
+		AdUser user=null;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list2 = db.Table<AdUser> ().ToList<AdUser> ();
+				if (list2.Count > 0) {
+					user = list2 [0];
+				}
+			}
+		
+			return user;
+		}
+
+		public static int GetLastInvRunNo(string pathToDatabase, DateTime invdate )
+		{
+			DateTime Sdate = invdate.AddDays (1 - invdate.Day);
+			DateTime Edate = new DateTime (invdate.Year, invdate.Month, DateTime.DaysInMonth (invdate.Year, invdate.Month));
+			int runno = -1;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list2 = db.Table<Invoice> ().Where(x=>x.invdate>=Sdate && x.invdate<=Edate)
+						    .OrderByDescending(x=>x.invdate)
+					        .ToList<Invoice> ();
+				if (list2.Count > 0) {
+					string invno =list2[0].invno;
+					if (invno.Length > 5)
+					{
+						string srunno = invno.Substring(invno.Length - 4);
+						runno = Convert.ToInt32(srunno);
+					}
+				}
+			}
+
+			return runno;
+		}
+
+		public static int GetLastCNRunNo(string pathToDatabase, DateTime invdate )
+		{
+			DateTime Sdate = invdate.AddDays (1 - invdate.Day);
+			DateTime Edate = new DateTime (invdate.Year, invdate.Month, DateTime.DaysInMonth (invdate.Year, invdate.Month));
+			int runno = -1;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list2 = db.Table<CNNote> ().Where(x=>x.invdate>=Sdate && x.invdate<=Edate)
+					.OrderByDescending(x=>x.invdate)
+					.ToList<CNNote> ();
+				if (list2.Count > 0) {
+					string invno =list2[0].cnno;
+					if (invno.Length > 5)
+					{
+						string srunno = invno.Substring(invno.Length - 4);
+						runno = Convert.ToInt32(srunno);
+					}
+				}
+			}
+
+			return runno;
+		}
+
+
 		public static bool GetInvoicePrintStatus(string pathToDatabase,string invno)
 		{
 			bool iSPrinted = false;

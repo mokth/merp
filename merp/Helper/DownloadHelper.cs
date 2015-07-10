@@ -69,11 +69,24 @@ namespace wincom.mobile.erp
 			_client.GetCompProfileAsync (comp,brn,userid);
 		}
 
+		public void startDownloadRunNoInfo()
+		{
+			string comp =((GlobalvarsApp)CallingActivity.Application).COMPANY_CODE;
+			string brn =((GlobalvarsApp)CallingActivity.Application).BRANCH_CODE;
+			string userid = ((GlobalvarsApp)CallingActivity.Application).USERID_CODE;
+			_client = _wfc.GetServiceClient ();	
+			_client.GetRunnoCompleted+= _client_GetRunnoCompleted;
+			_client.GetRunnoAsync(comp,brn,userid);
+		}
+
+	
 		public void startLogin(string userid, string passw, string code)
 		{
 			_client = _wfc.GetServiceClient ();	
-			_client.LoginCompleted += ClientOnLoginCompleted;
-			_client.LoginAsync (userid, passw, code);
+			PhoneTool ptool = new PhoneTool ();
+			string serial =ptool.DeviceIdIMEI();
+			_client.LoginExCompleted += ClientOnLoginCompleted;
+			_client.LoginExAsync(userid, passw, code,serial);
 		}
 
 		private void ClientOnGetItemCompleted(object sender, GetItemCodesCompletedEventArgs e)
@@ -162,7 +175,7 @@ namespace wincom.mobile.erp
 			}
 		}
 
-		private void ClientOnLoginCompleted(object sender, LoginCompletedEventArgs e)
+		private void ClientOnLoginCompleted(object sender, LoginExCompletedEventArgs e)
 		{
 			string msg = null;
 			bool success = true;
@@ -207,11 +220,67 @@ namespace wincom.mobile.erp
 			}
 			if (!success) {
 				RunOnUiThread (() => Downloadhandle.Invoke(CallingActivity,0,msg));
+			}
+		}
+
+		void _client_GetRunnoCompleted (object sender, GetRunnoCompletedEventArgs e)
+		{
+			List<RunnoInfo> list = new List<RunnoInfo> ();
+			string msg = null;
+			bool success = true;
+			if ( e.Error != null)
+			{
+				msg =  e.Error.Message;
+				success = false;
+			}
+			else if ( e.Cancelled)
+			{
+				msg = "Request was cancelled.";
+				success = false;
+			}
+			else
+			{
+				list =  e.Result.ToList<RunnoInfo>();
+				RunOnUiThread (() => InsertRunoIntoDb(list));
+			}
+			if (!success) {
+				RunOnUiThread (() => Downloadhandle.Invoke(CallingActivity,0,msg));
 				if (_downloadAll) {
 					_downloadAll = false;	
 					FireEvent (EventID.LOGIN_DOWNCOMPLETE);
 				}
+
 			}
+		}
+
+		private void InsertRunoIntoDb(List<RunnoInfo> list)
+		{
+			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list2 = db.Table<AdNumDate> ().ToList<AdNumDate> ();
+				foreach (var runinfo in list) {
+				
+					var found = list2.Where (x => x.Month == runinfo.Month && x.Year == runinfo.Year && x.TrxType == runinfo.Trxtype).ToList ();
+					if (found.Count > 0) {
+						found [0].RunNo = runinfo.RunNo;
+						db.Update (found [0]);
+					} else {
+						AdNumDate num = new AdNumDate ();
+						num.ID = -1;
+						num.Month = runinfo.Month;
+						num.Year = runinfo.Year;
+						num.RunNo = runinfo.RunNo;
+						num.TrxType = runinfo.Trxtype;
+						db.Insert (num);
+					}
+				}
+			}
+			if (_downloadAll) {
+				DownloadAllhandle.Invoke (CallingActivity, 0, "Successfully downloaded runing no.");
+				FireEvent (EventID.DOWNLOADED_RUNNO);
+
+			} else
+				DownloadAllhandle.Invoke (CallingActivity, 0, "Successfully downloaded runing no.");
 		}
 
 		private void InsertCompProfIntoDb(CompanyProfile pro)
@@ -363,6 +432,9 @@ namespace wincom.mobile.erp
 
 			switch (e.EventID) {
 			case EventID.DOWNLOADED_PROFILE:
+				startDownloadRunNoInfo ();
+				break;
+			case EventID.DOWNLOADED_RUNNO:
 				if (_downloadAll) {
 					startDownloadItem ();
 				}

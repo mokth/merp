@@ -44,18 +44,25 @@ namespace wincom.mobile.erp
 			//InitializeServiceClient();
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 
+			AdUser user=null;
 			//SQLiteConnection...CreateFile(pathToDatabase);
 			if (!File.Exists (pathToDatabase)) {
 				createTable (pathToDatabase);
-			} 
-
-			AdUser user=null;
-			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-				var list2 = db.Table<AdUser> ().ToList<AdUser> ();
-				if (list2.Count > 0) {
-					user = list2 [0];
-				}
+			} else {
+				user = DataHelper.GetUser (pathToDatabase);
+				UpdateDatbase ();
+				if (user !=null)
+					BeforeReLoginToCloud (user);
 			}
+
+			user = DataHelper.GetUser (pathToDatabase);
+//			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+//				var list2 = db.Table<AdUser> ().ToList<AdUser> ();
+//				if (list2.Count > 0) {
+//					user = list2 [0];
+//				}
+//			}
+
 
 			if (user != null) {
 				((GlobalvarsApp)this.Application).USERID_CODE = user.UserID;
@@ -76,6 +83,53 @@ namespace wincom.mobile.erp
 				};
 			}
 
+		}
+
+		void AlertShow(string text)
+		{
+			AlertDialog.Builder alert = new AlertDialog.Builder (this);
+
+			alert.SetMessage (text);
+			RunOnUiThread (() => {
+				alert.Show();
+			} );
+
+		}
+		private void UpdateDatbase()
+		{
+			try {
+				using (var conn = new SQLite.SQLiteConnection (pathToDatabase)) {
+			
+					var num = conn.ExecuteScalar<Int32> ("SELECT count(name) FROM sqlite_master WHERE type='table' and name='CNNote'", new object[]{ });
+					int count = Convert.ToInt32 (num);
+					if (count > 0)
+						return;
+
+					conn.CreateTable<CNNote> ();
+					conn.CreateTable<CNNoteDtls> ();
+					conn.DropTable<AdPara> ();
+					conn.CreateTable<AdPara> ();
+					conn.DropTable<AdNumDate> ();
+					conn.CreateTable<AdNumDate> ();
+					conn.DropTable<CompanyInfo> ();
+					conn.CreateTable<CompanyInfo> ();
+					conn.DropTable<Trader> ();
+					conn.CreateTable<Trader> ();
+					conn.DropTable<AdUser> ();
+					conn.CreateTable<AdUser> ();
+
+					string sql = @"ALTER TABLE Invoice RENAME TO sqlitestudio_temp_table;
+									CREATE TABLE Invoice (invno varchar PRIMARY KEY NOT NULL, trxtype varchar, invdate bigint, created bigint, amount float, taxamt float, custcode varchar, description varchar, uploaded bigint, isUploaded integer, isPrinted integer);
+									INSERT INTO Invoice (invno, trxtype, invdate, created, amount, taxamt, custcode, description, uploaded, isUploaded,isPrinted) SELECT invno, trxtype, invdate, created, amount, taxamt, custcode, description, uploaded, isUploaded,0 FROM sqlitestudio_temp_table;
+									DROP TABLE sqlitestudio_temp_table";
+					string[] sqls = sql.Split (new char[]{ ';' });
+					foreach (string ssql in sqls) {
+						conn.Execute (ssql, new object[]{ });
+					}
+				}
+			} catch (Exception ex) {
+				AlertShow (ex.Message);
+			}
 		}
 
 		void ImportDatabase ()
@@ -109,6 +163,19 @@ namespace wincom.mobile.erp
 				conn.CreateTable<CNNoteDtls>();
 			}
 		}
+
+		private void BeforeReLoginToCloud(AdUser user)
+		{
+			EditText userid = FindViewById<EditText> (Resource.Id.login_userName);
+			EditText passw = FindViewById<EditText> (Resource.Id.login_password);
+			EditText code = FindViewById<EditText> (Resource.Id.login_code);
+			userid.Text = user.UserID;
+			passw.Text = user.Password;
+			code.Text = user.CompCode;
+			userid.Enabled = false;
+			code.Enabled = false;
+		}
+
 		private void LoginIntoCloud()
 		{
 			EditText userid = FindViewById<EditText> (Resource.Id.login_userName);

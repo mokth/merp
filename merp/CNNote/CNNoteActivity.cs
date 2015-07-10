@@ -194,7 +194,7 @@ namespace wincom.mobile.erp
 //		}
 		void PrintInv(CNNote inv,int noofcopy)
 		{
-			Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
+			//Toast.MakeText (this, "print....", ToastLength.Long).Show ();	
 			CNNoteDtls[] list;
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)){
 				var ls= db.Table<CNNoteDtls> ().Where (x => x.cnno==inv.cnno).ToList<CNNoteDtls>();
@@ -263,7 +263,11 @@ namespace wincom.mobile.erp
 			
 			try{
 				mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-
+				if (mBluetoothAdapter==null)
+				{
+					Toast.MakeText (this, "Error initialize bluetooth Adapter. Try again", ToastLength.Long).Show ();
+					return;					
+				}
 				string txt ="";
 				if (!mBluetoothAdapter.Enable()) {
 					Intent enableBluetooth = new Intent(
@@ -289,8 +293,7 @@ namespace wincom.mobile.erp
 				//txtv.Text ="found device " +mmDevice.Name;
 			}catch(Exception ex) {
 
-				//txtv.Text = ex.Message;
-				Toast.MakeText (this, ex.Message, ToastLength.Long).Show ();	
+				Toast.MakeText (this, "Error initialize bluetooth Adapter. Try again", ToastLength.Long).Show ();	
 			}
 		}
 

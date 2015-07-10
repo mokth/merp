@@ -31,6 +31,11 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <MandroidI18n>cjk</MandroidI18n>
+    <AndroidSigningKeyStore>C:\Users\MoK-Lenovo\AppData\Local\Xamarin\Mono for Android\Keystore\com.wincom.merp\com.wincom.merp.keystore</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>wincom@123</AndroidSigningStorePass>
+    <AndroidSigningKeyAlias>com.wincom.merp</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>wincom@123</AndroidSigningKeyPass>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -41,7 +46,13 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <AndroidSupportedAbis>armeabi-v7a</AndroidSupportedAbis>
+    <MandroidI18n>cjk</MandroidI18n>
+    <AndroidKeyStore>True</AndroidKeyStore>
+    <AndroidSigningKeyStore>C:\Users\MoK-Lenovo\AppData\Local\Xamarin\Mono for Android\Keystore\com.wincom.merp\com.wincom.merp.keystore</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>wincom@123</AndroidSigningStorePass>
     <DebugType>full</DebugType>
+    <AndroidSigningKeyAlias>com.wincom.merp</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>wincom@123</AndroidSigningKeyPass>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

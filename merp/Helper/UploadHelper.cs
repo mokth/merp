@@ -162,6 +162,7 @@ namespace wincom.mobile.erp
 						bill.ICode = invdtl.icode;
 						bill.InvDate = inv.invdate;
 						bill.InvNo = inv.cnno;
+						bill.CNInvNo = inv.invno;
 						bill.IsInclusive = invdtl.isincludesive;
 						bill.Amount = invdtl.amount;
 						bill.NetAmount = invdtl.netamount;
