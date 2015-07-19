@@ -21,6 +21,7 @@ namespace wincom.mobile.erp
 
 		private Service1Client _client;
 		string pathToDatabase;
+		static volatile bool _donwloadPro = false;
 
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -48,12 +49,13 @@ namespace wincom.mobile.erp
 			//SQLiteConnection...CreateFile(pathToDatabase);
 			if (!File.Exists (pathToDatabase)) {
 				createTable (pathToDatabase);
-			} else {
-				user = DataHelper.GetUser (pathToDatabase);
-				UpdateDatbase ();
-				if (user !=null)
-					BeforeReLoginToCloud (user);
-			}
+			} 
+			//else {
+//				user = DataHelper.GetUser (pathToDatabase);
+//				UpdateDatbase ();
+//				if (user !=null)
+//					BeforeReLoginToCloud (user);
+//			}
 
 			user = DataHelper.GetUser (pathToDatabase);
 //			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
@@ -270,11 +272,14 @@ namespace wincom.mobile.erp
 				ShowMainActivity (comp,bran);
 				break;
 			case EventID.LOGIN_SUCCESS:
-				DownloadHelper download = new DownloadHelper ();
-				download.Downloadhandle = LoginDoneDlg; 
-				download.DownloadAllhandle= LoginDoneDlgEx; 
-				download.CallingActivity = this;
-				download.StartDownloadAll ();
+				if (!_donwloadPro) {
+					DownloadHelper download = new DownloadHelper ();
+					download.Downloadhandle = LoginDoneDlg; 
+					download.DownloadAllhandle = LoginDoneDlgEx; 
+					download.CallingActivity = this;
+					download.StartDownloadAll ();
+					_donwloadPro = true;
+				}
 				break;
 			}
 		}

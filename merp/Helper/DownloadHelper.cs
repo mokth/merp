@@ -17,7 +17,10 @@ namespace wincom.mobile.erp
 		public Activity CallingActivity=null;
 		public OnUploadDoneDlg Downloadhandle;
 		public OnUploadDoneDlg DownloadAllhandle;
-		public static bool _downloadAll = false;
+		public volatile static bool _downloadAll = false;
+		public volatile static bool _downloadPro = false;
+		public volatile static bool _downloadItem = false;
+		public volatile static bool _downloadCust = false;
 
 		public DownloadHelper ()
 		{
@@ -27,7 +30,7 @@ namespace wincom.mobile.erp
 		public void StartDownloadAll()
 		{
 			_downloadAll = true;
-			startDownloadCompInfo() ;
+			startDownloadCompInfoex() ;
 		}
 
 		public void startDownloadItem()
@@ -49,7 +52,7 @@ namespace wincom.mobile.erp
 			_client.GetCustomersAsync (comp, brn);
 		}
 
-		public  void startDownloadCompInfo()
+		public  void startDownloadCompInfoex()
 		{
 			string comp =((GlobalvarsApp)CallingActivity.Application).COMPANY_CODE;
 			string brn =((GlobalvarsApp)CallingActivity.Application).BRANCH_CODE;
@@ -59,15 +62,26 @@ namespace wincom.mobile.erp
 			_client.GetCompProfileAsync (comp,brn,userid);
 		}
 
-		public  void startDownloadCompInfoEx()
+		public  void startDownloadCompInfo()
 		{
+			_downloadAll =false;
 			string comp =((GlobalvarsApp)CallingActivity.Application).COMPANY_CODE;
 			string brn =((GlobalvarsApp)CallingActivity.Application).BRANCH_CODE;
 			string userid = ((GlobalvarsApp)CallingActivity.Application).USERID_CODE;
 			_client = _wfc.GetServiceClient ();	
-			_client.GetCompProfileCompleted += ClientOnCompProfCompletedEx;
+			_client.GetCompProfileCompleted += ClientOnCompProfCompleted;
 			_client.GetCompProfileAsync (comp,brn,userid);
 		}
+
+		//		public  void startDownloadCompInfoEx()
+		//		{
+		//			string comp =((GlobalvarsApp)CallingActivity.Application).COMPANY_CODE;
+		//			string brn =((GlobalvarsApp)CallingActivity.Application).BRANCH_CODE;
+		//			string userid = ((GlobalvarsApp)CallingActivity.Application).USERID_CODE;
+		//			_client = _wfc.GetServiceClient ();	
+		//			_client.GetCompProfileCompleted += ClientOnCompProfCompletedEx;
+		//			_client.GetCompProfileAsync (comp,brn,userid);
+		//		}
 
 		public void startDownloadRunNoInfo()
 		{
@@ -79,7 +93,7 @@ namespace wincom.mobile.erp
 			_client.GetRunnoAsync(comp,brn,userid);
 		}
 
-	
+
 		public void startLogin(string userid, string passw, string code)
 		{
 			_client = _wfc.GetServiceClient ();	
@@ -115,7 +129,7 @@ namespace wincom.mobile.erp
 					FireEvent (EventID.LOGIN_DOWNCOMPLETE);
 				}
 			}
-			
+
 		}
 
 		private void ClientOnGetCustomerCompleted(object sender, GetCustomersCompletedEventArgs e)
@@ -256,10 +270,11 @@ namespace wincom.mobile.erp
 		private void InsertRunoIntoDb(List<RunnoInfo> list)
 		{
 			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
+
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 				var list2 = db.Table<AdNumDate> ().ToList<AdNumDate> ();
 				foreach (var runinfo in list) {
-				
+
 					var found = list2.Where (x => x.Month == runinfo.Month && x.Year == runinfo.Year && x.TrxType == runinfo.Trxtype).ToList ();
 					if (found.Count > 0) {
 						found [0].RunNo = runinfo.RunNo;
@@ -276,23 +291,42 @@ namespace wincom.mobile.erp
 				}
 			}
 			if (_downloadAll) {
-				DownloadAllhandle.Invoke (CallingActivity, 0, "Successfully downloaded runing no.");
+				_downloadPro = true;
+				DownloadAllhandle.Invoke (CallingActivity, 0, "Successfully downloaded runing no. 1");
 				FireEvent (EventID.DOWNLOADED_RUNNO);
 
 			} else
-				DownloadAllhandle.Invoke (CallingActivity, 0, "Successfully downloaded runing no.");
-		}
+				if (CallingActivity!=null)
+					Downloadhandle.Invoke (CallingActivity, 0, "Successfully downloaded runing no.");
 
+		}
+		void AlertShow(string text)
+		{
+			AlertDialog.Builder alert = new AlertDialog.Builder (this);
+
+			alert.SetMessage (text);
+			RunOnUiThread (() => {
+				alert.Show();
+			} );
+
+		}
 		private void InsertCompProfIntoDb(CompanyProfile pro)
 		{
 			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
-			DataHelper.InsertCompProfIntoDb (pro, pathToDatabase);
+			try{
+				DataHelper.InsertCompProfIntoDb (pro, pathToDatabase);
+			}
+			catch(Exception ex) {
+				AlertShow (ex.Message + ex.StackTrace);
+			}
+			//DownloadAllhandle.Invoke(CallingActivity,0,"Successfully downloaded Profile.");
+			startDownloadRunNoInfo ();
 
-			if (_downloadAll) {
-				DownloadAllhandle.Invoke(CallingActivity,0,"Successfully downloaded Profile.");
-				FireEvent (EventID.DOWNLOADED_PROFILE);
-
-			}else Downloadhandle.Invoke(CallingActivity,0,"Successfully downloaded Profile.");
+			//			if (_downloadAll) {
+			//				DownloadAllhandle.Invoke(CallingActivity,0,"Successfully downloaded Profile.");
+			//				FireEvent (EventID.DOWNLOADED_PROFILE);
+			//
+			//			}else Downloadhandle.Invoke(CallingActivity,0,"Successfully downloaded Profile.");
 		}
 
 		private void InsertItemIntoDb(List<ItemCode> list)
@@ -300,7 +334,8 @@ namespace wincom.mobile.erp
 			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<Item>().ToList<Item>();
+				//var list2 = db.Table<Item>().ToList<Item>();
+				db.DeleteAll<Item> ();
 				foreach (ItemCode item in list) {
 					Item itm = new Item ();
 					itm.ICode = item.ICode;
@@ -309,25 +344,26 @@ namespace wincom.mobile.erp
 					itm.tax = item.tax;
 					itm.taxgrp = item.taxgrp;
 					itm.isincludesive = item.isincludesive;
-
-					var itemlist = list2.Where (x => x.ICode == itm.ICode).ToList ();
-					if (itemlist.Count () == 0) {
-						db.Insert (itm);
-					} else {
-						itm = itemlist [0];
-						itm.IDesc = item.IDesc;
-						itm.Price = item.Price;
-						itm.tax = item.tax;
-						itm.taxgrp = item.taxgrp;
-						itm.isincludesive = item.isincludesive;
-
-						db.Update (itm);
-					}
+					db.Insert (itm);
+//					var itemlist = list2.Where (x => x.ICode == itm.ICode).ToList ();
+//					if (itemlist.Count () == 0) {
+//						db.Insert (itm);
+//					} else {
+//						itm = itemlist [0];
+//						itm.IDesc = item.IDesc;
+//						itm.Price = item.Price;
+//						itm.tax = item.tax;
+//						itm.taxgrp = item.taxgrp;
+//						itm.isincludesive = item.isincludesive;
+//
+//						db.Update (itm);
+//					}
 				}
 			}
-		
+
 
 			if (_downloadAll) {
+				_downloadItem = true;
 				DownloadAllhandle.Invoke(CallingActivity,list.Count,"Successfully downloaded"+list.Count.ToString()+"Item(s).");
 				FireEvent (EventID.DOWNLOADED_ITEM);
 			}
@@ -339,7 +375,8 @@ namespace wincom.mobile.erp
 			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<Trader>().ToList<Trader>();
+				//var list2 = db.Table<Trader>().ToList<Trader>();
+				db.DeleteAll<Trader> ();// (list2);
 				foreach (Customer item in list) {
 					Trader itm = new Trader ();
 					itm.CustCode = item.CustomerCode;
@@ -353,12 +390,12 @@ namespace wincom.mobile.erp
 					itm.gst = item.Gst;
 					itm.PayCode = item.PayCode;
 
-
-					if (list2.Where (x => x.CustCode == itm.CustCode).ToList ().Count () == 0) {
-						db.Insert (itm);
-					} else {
-						db.Update (itm);
-					}
+					db.Insert (itm);
+//					if (list2.Where (x => x.CustCode == itm.CustCode).ToList ().Count () == 0) {
+//						db.Insert (itm);
+//					} else {
+//						db.Update (itm);
+//					}
 				}
 			}
 
@@ -436,15 +473,21 @@ namespace wincom.mobile.erp
 				break;
 			case EventID.DOWNLOADED_RUNNO:
 				if (_downloadAll) {
-					startDownloadItem ();
+					if (_downloadPro) {
+						_downloadPro = false;
+						startDownloadItem ();
+					}
 				}
 				break;
 			case EventID.DOWNLOADED_ITEM:
 				if (_downloadAll) {
-					startDownloadCustomer ();
+					if (_downloadItem) {
+						_downloadItem = false;
+						startDownloadCustomer ();
+					}
 				}
 				break;
-			
+
 			}
 		}
 	}

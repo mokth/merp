@@ -123,16 +123,16 @@ namespace wincom.mobile.erp
 				string paycode = item.PayCode.ToUpper().Trim();
 				if (!string.IsNullOrEmpty (paycode)) {
 					if (paycode.Contains ("CASH")) {
-						pos = dataAdapter2.GetPosition ("INVOICE");
+						pos = dataAdapter2.GetPosition ("CASH");
 					} else {
 						pos = dataAdapter2.GetPosition ("INVOICE");
 					}
-				}
-				if (pos > -1) {
+				}else pos = dataAdapter2.GetPosition ("CASH");
+			if (pos > -1) {
 					spinnerType.SetSelection (pos);
-					spinnerType.Enabled = false;
-				}else spinnerType.Enabled = true;
-			}
+					//spinnerType.Enabled = false;
+				}//else spinnerType.Enabled = true;
+		}
 
 		}
 		[Obsolete]

@@ -149,7 +149,12 @@ namespace wincom.mobile.erp
 				DownloadCompInfo ();
 				return true;
 			case Resource.Id.mmenu_clear:
-				ClearPostedInv ();
+				var builder = new AlertDialog.Builder(this);
+				builder.SetMessage("Confirm to CLEAR ? All transaction will be deleted. Deleted records are not recoverable.");
+				builder.SetPositiveButton("OK", (s, e) => { ClearPostedInv () ;});
+				builder.SetNegativeButton("Cancel", (s, e) => { /* do something on Cancel click */ });
+				builder.Create().Show();
+
 				return true;
 			}
 		
@@ -179,27 +184,31 @@ namespace wincom.mobile.erp
 			}
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<Invoice> ().Where (x => x.isUploaded == true).ToList<Invoice> ();
-				db.RunInTransaction (() => {
-					foreach (var item in list2) {
-						var listitm = db.Table<InvoiceDtls> ().Where (x => x.invno == item.invno).ToList<InvoiceDtls> ();
-						foreach(var iitem in listitm){
-							db.Delete(iitem);
-						}
-						db.Delete(item);
-					}
-				});
-
-				var list3 = db.Table<CNNote> ().Where (x => x.isUploaded == true).ToList<CNNote> ();
-				db.RunInTransaction (() => {
-					foreach (var item in list3) {
-						var listitm = db.Table<CNNoteDtls> ().Where (x => x.cnno == item.cnno).ToList<CNNoteDtls> ();
-						foreach(var iitem in listitm){
-							db.Delete(iitem);
-						}
-						db.Delete(item);
-					}
-				});
+				db.DeleteAll<InvoiceDtls> ();
+				db.DeleteAll<Invoice> ();
+				db.DeleteAll<CNNoteDtls> ();
+				db.DeleteAll<CNNote> ();
+//				var list2 = db.Table<Invoice> ().Where (x => x.isUploaded == true).ToList<Invoice> ();
+//				db.RunInTransaction (() => {
+//					foreach (var item in list2) {
+//						var listitm = db.Table<InvoiceDtls> ().Where (x => x.invno == item.invno).ToList<InvoiceDtls> ();
+//						foreach(var iitem in listitm){
+//							db.Delete(iitem);
+//						}
+//						db.Delete(item);
+//					}
+//				});
+//
+//				var list3 = db.Table<CNNote> ().Where (x => x.isUploaded == true).ToList<CNNote> ();
+//				db.RunInTransaction (() => {
+//					foreach (var item in list3) {
+//						var listitm = db.Table<CNNoteDtls> ().Where (x => x.cnno == item.cnno).ToList<CNNoteDtls> ();
+//						foreach(var iitem in listitm){
+//							db.Delete(iitem);
+//						}
+//						db.Delete(item);
+//					}
+//				});
 
 				Toast.MakeText (this, "Transaction clear...", ToastLength.Long).Show ();	
 			}
