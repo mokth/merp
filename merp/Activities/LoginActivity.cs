@@ -22,13 +22,13 @@ namespace wincom.mobile.erp
 		private Service1Client _client;
 		string pathToDatabase;
 		static volatile bool _donwloadPro = false;
-
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
 			SetContentView (Resource.Layout.SignIn);
 			// Create your application here
 			EventManagerFacade.Instance.GetEventManager().AddListener(this);
+
 
 			//Button import = FindViewById<Button>(Resource.Id.logimport);
 
@@ -49,13 +49,12 @@ namespace wincom.mobile.erp
 			//SQLiteConnection...CreateFile(pathToDatabase);
 			if (!File.Exists (pathToDatabase)) {
 				createTable (pathToDatabase);
-			} 
-			//else {
-//				user = DataHelper.GetUser (pathToDatabase);
-//				UpdateDatbase ();
-//				if (user !=null)
-//					BeforeReLoginToCloud (user);
-//			}
+			} else {
+				user = DataHelper.GetUser (pathToDatabase);
+				UpdateDatbase ();
+				if (user !=null)
+					BeforeReLoginToCloud (user);
+			}
 
 			user = DataHelper.GetUser (pathToDatabase);
 //			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
@@ -163,6 +162,10 @@ namespace wincom.mobile.erp
 				conn.CreateTable<AdNumDate> ();
 				conn.CreateTable<CNNote>();
 				conn.CreateTable<CNNoteDtls>();
+				conn.CreateTable<SaleOrder>();
+				conn.CreateTable<SaleOrderDtls>();
+				conn.CreateTable<DelOrder>();
+				conn.CreateTable<DelOrderDtls>();
 			}
 		}
 

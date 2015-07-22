@@ -42,20 +42,31 @@ namespace wincom.mobile.erp
 
 		#region Print Receipt
 		public string OpenBTAndPrint(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list,int noofcopy )
-		{string msg = "";
-//			if (apara.PrinterName.ToUpper().Contains ("PT-I")) {
-//				msg =BlueToothPT(mmSocket, mmDevice, inv, list, noofcopy);
-//			} 
-//			if (apara.PrinterName.ToUpper().Contains ("BLUETOOTH"))  {
-//				msg =BluetoothMini (mmSocket, mmDevice, inv, list, noofcopy);
-//			}
-
-			BluetoothMini (mmSocket, mmDevice, inv, list, noofcopy);
-			//File.WriteAllText (sdcard, errmsg.ToString());
-			//errmsg.Clear ();
+		{
+			string msg = "";
+			string text = "";
+			PrintInvoice (inv, list, ref text);
+			BluetoothPrint (mmSocket, mmDevice, text, noofcopy);
 			return msg;
 		}
 
+		public string OpenBTAndPrintSO(BluetoothSocket mmSocket,BluetoothDevice mmDevice,SaleOrder so,SaleOrderDtls[] list,int noofcopy )
+		{
+			string msg = "";
+			string text = "";
+			PrintSO (so, list, ref text);
+			BluetoothPrint (mmSocket, mmDevice, text, noofcopy);
+			return msg;
+		}
+
+		public string OpenBTAndPrintDO(BluetoothSocket mmSocket,BluetoothDevice mmDevice,DelOrder doOrder,DelOrderDtls[] list,int noofcopy )
+		{
+			string msg = "";
+			string text = "";
+			PrintDO ( doOrder, list, ref text);
+			BluetoothPrint (mmSocket, mmDevice, text, noofcopy);
+			return msg;
+		}
 
 		void PrintInvoice (Invoice inv, InvoiceDtls[] list, ref string test)
 		{
@@ -79,6 +90,49 @@ namespace wincom.mobile.erp
 			test += "\nTHANK YOU\n\n\n\n";
 		}
 
+		void PrintSO (SaleOrder so, SaleOrderDtls[] list, ref string test)
+		{
+			PrintCompHeader (ref test);
+			PrintCustomer (ref test, so.custcode);
+			PrintSOHeader (ref test, so);
+			string dline = "";
+			double ttlAmt = 0;
+			double ttltax = 0;
+			int count = 0;
+			foreach (SaleOrderDtls itm in list) {
+				count += 1;
+				dline = dline + PrintSODetail (itm, count);
+				ttlAmt = ttlAmt + itm.netamount;
+				ttltax = ttltax + itm.tax;
+			}
+			test += dline;
+			PrintTotal (ref test, ttlAmt, ttltax);
+			PrintSOTaxSumm (ref test, list);
+			PrintFooter (ref test);
+			test += "\nTHANK YOU\n\n\n\n";
+		}
+
+		void PrintDO (DelOrder doorder, DelOrderDtls[] list, ref string test)
+		{
+			PrintCompHeader (ref test);
+			PrintCustomer (ref test, doorder.custcode);
+			PrintDOHeader (ref test, doorder);
+			string dline = "";
+			double ttlAmt = 0;
+			double ttltax = 0;
+			int count = 0;
+			foreach (DelOrderDtls itm in list) {
+				count += 1;
+				dline = dline + PrintDODetail (itm, count);
+				ttlAmt = ttlAmt + itm.qty;
+			}
+			test += dline;
+			PrintDOTotal (ref test, ttlAmt);
+			PrintFooter (ref test);
+			test += "\nTHANK YOU\n\n\n\n";
+		}
+
+
 		private bool TrytoConnect(BluetoothSocket mmSocket)
 		{
 			bool TrytoConnect = true;
@@ -97,32 +151,22 @@ namespace wincom.mobile.erp
 			return !TrytoConnect;
 		}
 
-		//Bluetooth Printer -Mini Bluetooth Printer
-		public void BluetoothMini(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list,int noofcopy)
+	
+		public void BluetoothPrint(BluetoothSocket mmSocket,BluetoothDevice mmDevice,string text,int noofcopy)
 		{
 			msg = "";
 			Stream mmOutputStream;
 			//TextView txtv = FindViewById<TextView> (Resource.Id.textView2);
 			try {
 				UUID uuid = UUID.FromString ("00001101-0000-1000-8000-00805F9B34FB");
-
 				mmSocket = mmDevice.CreateInsecureRfcommSocketToServiceRecord (uuid);
 				if (mmSocket == null) {
-					//txtv.Text = "Error creating sockect";
 					msg =  "Error creating sockect";
-					//errmsg.Append(msg);
 					return;
 				}
-				//txtv.Text = mmDevice.BondState.ToString ();
 				if (mmDevice.BondState == Bond.Bonded) {
-					//errmsg.Append("Start to connect\n");
-
-					//mmSocket.Connect ();
 					TrytoConnect(mmSocket);
-
 					Thread.Sleep (300);
-					//mmInputStream = mmSocket.InputStream;
-					//errmsg.Append("connected\n");
 					mmOutputStream = mmSocket.OutputStream;
 					byte[] charfont;
 					charfont = new Byte[] { 27, 64 }; //Char font 9x17
@@ -130,30 +174,19 @@ namespace wincom.mobile.erp
 					if (apara.PaperSize=="58mm")
 					{
 						charfont = new Byte[] { 27, 33, 1 }; //Char font 9x17
-						//charfont = new Byte[] { 27, 77, 1 }; //Char font 9x17
 						mmOutputStream.Write(charfont, 0, charfont.Length);
 					}
 
 					if (apara.PaperSize=="80mm")
 					{
 						charfont = new Byte[] { 27, 33, 0 }; //Char font 12x24
-						//charfont = new Byte[] { 27, 77, 1 }; //Char font 9x17
 						mmOutputStream.Write(charfont, 0, charfont.Length);
 					}
 					charfont = new Byte[] { 28, 38 };
 					mmOutputStream.Write(charfont, 0, charfont.Length);
-					charfont = new Byte[] { 28, 67,0,48 };
-					mmOutputStream.Write(charfont, 0, charfont.Length);
-					//charfont = new Byte[] { 27, 82, 15 }; //Char font 9x17
-				//	mmOutputStream.Write(charfont, 0, charfont.Length);
-					string test = "";
-					//errmsg.Append("Set printer\n");
-					PrintInvoice (inv, list, ref test);
-					//var encoding = Encoding.GetEncoding(936);
-					//byte[] source = Encoding.Unicode.GetBytes(text);
-					//byte[] converted = Encoding.Convert(Encoding.Unicode, encoding, source);
-					//errmsg.Append("Start Endcoidng\n");
-					byte[] cc = Encoding.GetEncoding("GB18030").GetBytes(test);
+//					charfont = new Byte[] { 28, 67,0,48 };
+//					mmOutputStream.Write(charfont, 0, charfont.Length);
+					byte[] cc = Encoding.GetEncoding("GB18030").GetBytes(text);
 					for (int i=0; i<noofcopy;i++)
 					{
 						int rem;
@@ -167,22 +200,16 @@ namespace wincom.mobile.erp
 						}
 						if (rem >0)
 							mmOutputStream.Write (cc, pos, rem);
-						//mmOutputStream.BeginWrite(cc,0,cc.Length,
-						//mmOutputStream.Write (cc, 0, cc.Length);
 						Thread.Sleep (3000);
-						//mmOutputStream.Flush ();
 					}
 					Thread.Sleep (300);
 					charfont = new Byte[] { 28, 46 };
 					mmOutputStream.Write(charfont, 0, charfont.Length);
 					mmOutputStream.Close ();
-					//mmInputStream.Close();
 					mmSocket.Close ();
 					msg ="Printing....";
 				} else {
-					//txtv.Text = "Device not connected";
 					msg= "Device not connected";	
-					//errmsg.Append(msg);
 				}
 			} catch (Exception ex) {
 				msg = ex.Message;
@@ -279,8 +306,8 @@ namespace wincom.mobile.erp
 					}
 					charfont = new Byte[] { 28, 38 };
 					mmOutputStream.Write(charfont, 0, charfont.Length);
-					charfont = new Byte[] { 28, 67,0,48 };
-					mmOutputStream.Write(charfont, 0, charfont.Length);
+//					charfont = new Byte[] { 28, 67,0,48 };
+//					mmOutputStream.Write(charfont, 0, charfont.Length);
 					string test = "";
 					double invTtlAmt =0;
 					double invTtlTax =0;
@@ -328,6 +355,7 @@ namespace wincom.mobile.erp
 						}
 						if (rem >0)
 							mmOutputStream.Write (cc, pos, rem);
+						mmOutputStream.Flush();
 						//mmOutputStream.BeginWrite(cc,0,cc.Length,
 						//mmOutputStream.Write (cc, 0, cc.Length);
 						Thread.Sleep (3000);
@@ -370,6 +398,58 @@ namespace wincom.mobile.erp
 					
 			return test;
 		}
+
+		static string PrintSODetail(SaleOrderDtls itm,int count)
+		{
+			string test = "";
+			string desc = itm.description;
+			string pline2 = desc.ToUpper().Trim()+ "\n";
+			pline2 = pline2 + count.ToString ().PadRight (3, ' ');
+			if (itm.qty < 0) {
+				string sqty = "(EX)"+itm.qty.ToString ().Trim ()  ;
+				pline2 = pline2 +sqty.PadLeft (9, ' ')+" ";
+			}else  pline2 = pline2 + itm.qty.ToString ().PadLeft (9, ' ')+" ";
+			pline2 = pline2 + Math.Round (itm.price, 2).ToString ("n2").PadLeft (8, ' ')+" ";
+			string stax=Math.Round (itm.tax, 2).ToString ("n2") +" "+ itm.taxgrp;
+			pline2 = pline2 + stax.PadLeft (10, ' ') + " ";
+			pline2 = pline2 + Math.Round (itm.netamount, 2).ToString ("n2").PadLeft (9, ' ');
+			test += pline2 + "\n";
+
+			return test;
+		}
+
+		static string PrintDODetail(DelOrderDtls itm,int count)
+		{
+			string test = "";
+			string desc = itm.description;
+			string pline2 = desc.ToUpper ().Trim ();
+			string scount = count.ToString ().PadRight (4, ' ');
+			if (pline2.Length > 33) {
+			
+				string[] strs = pline2.Split (new char[]{ ' ' });
+				string tmp = "";
+
+				string sqty = itm.qty.ToString ("n").PadLeft (5, ' ');
+				foreach (string s in strs) {
+					if ((tmp + s + " ").Length > 33) {
+						test  = test + scount + tmp.PadRight (33, ' ') + sqty+"\n"; 
+						scount = "".PadRight (4, ' ');
+						sqty = "".PadRight (5, ' ');
+						tmp = s+" ";
+					} else {
+						tmp = tmp + s+" ";
+					}
+				}
+				test = test + "".PadRight (4, ' ') + tmp + "\n";
+
+			} else {
+				test = count.ToString ().PadRight (4, ' ') + pline2.PadRight (33, ' ')+scount+ "\n";
+
+			}
+
+			return test;
+		}
+
 
 		static string PrintCNDetail(CNNoteDtls itm,int count)
 		{
@@ -493,14 +573,63 @@ namespace wincom.mobile.erp
 			test += "DESCRIPTION                               \n";
 			test += "NO       QTY  U/PRICE    TAX AMT    AMOUNT\n";
 			test += "------------------------------------------\n";
-			/*
-            DESCRIPTION       QTY    U/PRICE    AMOUNT
-			                  TAXGR  TAX AMT  
-			------------------------------------------
-			xxxxxxxxxxxxxxxxx xxxxx xxxxxxxx xxxxxxxxx
-			xxxxxxxxxxxxxxxxx xxxxx xxxxxxxx xxxxxxxxx
-			12345678901234567 12345 12345678 123456789
-		  */
+
+		}
+
+		void PrintSOHeader (ref string test,SaleOrder so)
+		{
+			string userid = USERID;
+			string title1 = "SALES ORDER";
+			string date = DateTime.Now.ToString ("dd-MM-yyyy");
+			string datetime = DateTime.Now.ToString ("dd-MM-yyyy hh:mm tt");
+			if (compinfo.ShowTime) {
+				test += datetime+title1.PadLeft(41-datetime.Length,' ')+"\n";
+			} else {
+				test += date+title1.PadLeft(41-date.Length,' ')+"\n";
+			}
+			string recno = "SALES ORDER NO : " + so.sono.Trim();
+			test += recno+"\n";
+			test += "CUST PO NO : " + so.custpono+"\n";
+			string issueline = "ISSUED BY: " + userid.ToUpper ();
+			issueline = issueline +"\n";
+			test += issueline;// "ISSUED BY: " + userid.ToUpper()+"\n";
+			if (so.remark.Length > 1) {
+				test += "REMARK:\n";
+				test += so.remark+"\n";
+			}
+			test += "------------------------------------------\n";
+			test += "DESCRIPTION                               \n";
+			test += "NO       QTY  U/PRICE    TAX AMT    AMOUNT\n";
+			test += "------------------------------------------\n";
+		
+		}
+
+		void PrintDOHeader (ref string test,DelOrder doOrder)
+		{
+			string userid = USERID;
+			string title1 = "DELIVERY ORDER";
+			string date = DateTime.Now.ToString ("dd-MM-yyyy");
+			string datetime = DateTime.Now.ToString ("dd-MM-yyyy hh:mm tt");
+			if (compinfo.ShowTime) {
+				test += datetime+title1.PadLeft(41-datetime.Length,' ')+"\n";
+			} else {
+				test += date+title1.PadLeft(41-date.Length,' ')+"\n";
+			}
+			string recno = "DELIVERY ORDER NO : " + doOrder.dono.Trim();
+			test += recno+"\n";
+			string issueline = "ISSUED BY: " + userid.ToUpper ();
+			issueline = issueline +"\n";
+			test += issueline;// "ISSUED BY: " + userid.ToUpper()+"\n";
+			if (doOrder.remark.Length > 1) {
+				test += "REMARK:\n";
+				test += doOrder.remark+"\n";
+			}
+			test += "------------------------------------------\n";
+			test += "NO  DESCRIPTION                       QTY \n";
+			test += "------------------------------------------\n";
+			     //  1234
+				//	  	 12345678901234567890123456789012312345
+				//
 		}
 
 		void PrintCNHeader (ref string test,CNNote inv)
@@ -531,14 +660,7 @@ namespace wincom.mobile.erp
 			test += "DESCRIPTION                               \n";
 			test += "NO       QTY  U/PRICE    TAX AMT    AMOUNT\n";
 			test += "------------------------------------------\n";
-			/*
-            DESCRIPTION       QTY    U/PRICE    AMOUNT
-			                  TAXGR  TAX AMT  
-			------------------------------------------
-			xxxxxxxxxxxxxxxxx xxxxx xxxxxxxx xxxxxxxxx
-			xxxxxxxxxxxxxxxxx xxxxx xxxxxxxx xxxxxxxxx
-			12345678901234567 12345 12345678 123456789
-		  */
+
 		}
 
 		void PrintTotal (ref string test,double ttlAmt,double ttlTax)
@@ -551,6 +673,13 @@ namespace wincom.mobile.erp
 			test += "------------------------------------------\n";
 		}
 
+		void PrintDOTotal (ref string test,double ttlQty)
+		{
+
+			test += "------------------------------------------\n";
+			test += "                   TOTAL QTY  "+ttlQty.ToString("n").PadLeft (12, ' ')+"\n";
+			test += "------------------------------------------\n";
+		}
 		void PrintTotal (ref string test,double cnttlAmt,double cnttlTax,double InvttlAmt,double invttlTax)
 		{
 			double ttlCollect = (InvttlAmt + invttlTax) - (cnttlAmt + cnttlTax);
@@ -562,6 +691,36 @@ namespace wincom.mobile.erp
 		}
 
 		void PrintTaxSumm(ref string test,InvoiceDtls[] list )
+		{
+			List<Item> list2 = new List<Item> ();
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				list2 = db.Table<Item> ().ToList<Item> ();
+			}
+			var grp = from p in list
+				group p by p.taxgrp into g
+				select new {taxgrp = g.Key, ttltax = g.Sum (x => x.tax),ttlAmt = g.Sum (v => v.netamount)};
+
+			test += "SUMMARY\n";
+			test += "-------------------------------\n";
+			test += "TAX            AMOUNT   TAX AMT\n";
+			test += "-------------------------------\n";
+			//       123456789 12345678901 123456789 
+			string pline="";
+			foreach (var g in grp) {
+				var list3 =list2.Where (x => x.taxgrp == g.taxgrp).ToList ();
+				if (list3.Count > 0) {
+					string stax = g.taxgrp.Trim () + " @ " + list3 [0].tax.ToString () + "%";
+					pline = pline + stax.PadRight (10,' ');
+				} else pline = pline + g.taxgrp.Trim().PadRight (10, ' ');
+				pline = pline + g.ttlAmt.ToString("n2").PadLeft(11, ' ')+" ";
+				pline = pline + g.ttltax.ToString("n2").PadLeft(9, ' ');
+				test += pline + "\n";
+				pline = "";
+			}
+			test += "-------------------------------\n";
+		}
+
+		void PrintSOTaxSumm(ref string test,SaleOrderDtls[] list )
 		{
 			List<Item> list2 = new List<Item> ();
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
@@ -871,6 +1030,164 @@ namespace wincom.mobile.erp
 		}
 	 */
 
+	/*
+	//Bluetooth Printer -Mini Bluetooth Printer
+	public void BluetoothMini(BluetoothSocket mmSocket,BluetoothDevice mmDevice,Invoice inv,InvoiceDtls[] list,int noofcopy)
+	{
+		msg = "";
+		Stream mmOutputStream;
+		//TextView txtv = FindViewById<TextView> (Resource.Id.textView2);
+		try {
+			UUID uuid = UUID.FromString ("00001101-0000-1000-8000-00805F9B34FB");
 
+			mmSocket = mmDevice.CreateInsecureRfcommSocketToServiceRecord (uuid);
+			if (mmSocket == null) {
+				//txtv.Text = "Error creating sockect";
+				msg =  "Error creating sockect";
+				//errmsg.Append(msg);
+				return;
+			}
+			//txtv.Text = mmDevice.BondState.ToString ();
+			if (mmDevice.BondState == Bond.Bonded) {
+				//errmsg.Append("Start to connect\n");
+
+				//mmSocket.Connect ();
+				TrytoConnect(mmSocket);
+
+				Thread.Sleep (300);
+				//mmInputStream = mmSocket.InputStream;
+				//errmsg.Append("connected\n");
+				mmOutputStream = mmSocket.OutputStream;
+				byte[] charfont;
+				charfont = new Byte[] { 27, 64 }; //Char font 9x17
+				mmOutputStream.Write(charfont, 0, charfont.Length);
+				if (apara.PaperSize=="58mm")
+				{
+					charfont = new Byte[] { 27, 33, 1 }; //Char font 9x17
+					//charfont = new Byte[] { 27, 77, 1 }; //Char font 9x17
+					mmOutputStream.Write(charfont, 0, charfont.Length);
+				}
+
+				if (apara.PaperSize=="80mm")
+				{
+					charfont = new Byte[] { 27, 33, 0 }; //Char font 12x24
+					//charfont = new Byte[] { 27, 77, 1 }; //Char font 9x17
+					mmOutputStream.Write(charfont, 0, charfont.Length);
+				}
+				charfont = new Byte[] { 28, 38 };
+				mmOutputStream.Write(charfont, 0, charfont.Length);
+				charfont = new Byte[] { 28, 67,0,48 };
+				mmOutputStream.Write(charfont, 0, charfont.Length);
+				//charfont = new Byte[] { 27, 82, 15 }; //Char font 9x17
+				//	mmOutputStream.Write(charfont, 0, charfont.Length);
+				string test = "";
+				//errmsg.Append("Set printer\n");
+				PrintInvoice (inv, list, ref test);
+				//var encoding = Encoding.GetEncoding(936);
+				//byte[] source = Encoding.Unicode.GetBytes(text);
+				//byte[] converted = Encoding.Convert(Encoding.Unicode, encoding, source);
+				//errmsg.Append("Start Endcoidng\n");
+				byte[] cc = Encoding.GetEncoding("GB18030").GetBytes(test);
+				for (int i=0; i<noofcopy;i++)
+				{
+					int rem;
+					int result =Math.DivRem(cc.Length, 2048, out rem);
+					int pos =0;
+					for(int line= 0;line<result;line++)
+					{
+						IsStreamCanWrite (mmOutputStream);
+						mmOutputStream.Write (cc, pos, 2048);
+						pos += 2048;
+					}
+					if (rem >0)
+						mmOutputStream.Write (cc, pos, rem);
+					//mmOutputStream.BeginWrite(cc,0,cc.Length,
+					//mmOutputStream.Write (cc, 0, cc.Length);
+					Thread.Sleep (3000);
+					//mmOutputStream.Flush ();
+				}
+				Thread.Sleep (300);
+				charfont = new Byte[] { 28, 46 };
+				mmOutputStream.Write(charfont, 0, charfont.Length);
+				mmOutputStream.Close ();
+				//mmInputStream.Close();
+				mmSocket.Close ();
+				msg ="Printing....";
+			} else {
+				//txtv.Text = "Device not connected";
+				msg= "Device not connected";	
+				//errmsg.Append(msg);
+			}
+		} catch (Exception ex) {
+			msg = ex.Message;
+		}
+	}
+
+	public void BluetoothMiniSO(BluetoothSocket mmSocket,BluetoothDevice mmDevice,SaleOrder inv,SaleOrderDtls[] list,int noofcopy)
+	{
+		msg = "";
+		Stream mmOutputStream;
+		//TextView txtv = FindViewById<TextView> (Resource.Id.textView2);
+		try {
+			UUID uuid = UUID.FromString ("00001101-0000-1000-8000-00805F9B34FB");
+			mmSocket = mmDevice.CreateInsecureRfcommSocketToServiceRecord (uuid);
+			if (mmSocket == null) {
+				msg =  "Error creating sockect";
+				return;
+			}
+			if (mmDevice.BondState == Bond.Bonded) {
+				TrytoConnect(mmSocket);
+				Thread.Sleep (300);
+				mmOutputStream = mmSocket.OutputStream;
+				byte[] charfont;
+				charfont = new Byte[] { 27, 64 }; //Char font 9x17
+				mmOutputStream.Write(charfont, 0, charfont.Length);
+				if (apara.PaperSize=="58mm")
+				{
+					charfont = new Byte[] { 27, 33, 1 }; //Char font 9x17
+					mmOutputStream.Write(charfont, 0, charfont.Length);
+				}
+
+				if (apara.PaperSize=="80mm")
+				{
+					charfont = new Byte[] { 27, 33, 0 }; //Char font 12x24
+					mmOutputStream.Write(charfont, 0, charfont.Length);
+				}
+				charfont = new Byte[] { 28, 38 };
+				mmOutputStream.Write(charfont, 0, charfont.Length);
+				charfont = new Byte[] { 28, 67,0,48 };
+				mmOutputStream.Write(charfont, 0, charfont.Length);
+				string test = "";
+				PrintSO (inv, list, ref test);
+				byte[] cc = Encoding.GetEncoding("GB18030").GetBytes(test);
+				for (int i=0; i<noofcopy;i++)
+				{
+					int rem;
+					int result =Math.DivRem(cc.Length, 2048, out rem);
+					int pos =0;
+					for(int line= 0;line<result;line++)
+					{
+						IsStreamCanWrite (mmOutputStream);
+						mmOutputStream.Write (cc, pos, 2048);
+						pos += 2048;
+					}
+					if (rem >0)
+						mmOutputStream.Write (cc, pos, rem);
+					Thread.Sleep (3000);
+				}
+				Thread.Sleep (300);
+				charfont = new Byte[] { 28, 46 };
+				mmOutputStream.Write(charfont, 0, charfont.Length);
+				mmOutputStream.Close ();
+				mmSocket.Close ();
+				msg ="Printing....";
+			} else {
+				msg= "Device not connected";	
+			}
+		} catch (Exception ex) {
+			msg = ex.Message;
+		}
+	}
+	*/
 }
 

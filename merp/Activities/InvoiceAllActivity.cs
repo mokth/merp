@@ -148,36 +148,10 @@ namespace wincom.mobile.erp
 
 		void findBTPrinter(){
 			string printername = apara.PrinterName.Trim ().ToUpper ();
-			try{
-				mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-
-				string txt ="";
-				if (!mBluetoothAdapter.Enable()) {
-					Intent enableBluetooth = new Intent(
-						BluetoothAdapter.ActionRequestEnable);
-					StartActivityForResult(enableBluetooth, 0);
-				}
-
-
-				var pair= mBluetoothAdapter.BondedDevices;
-				if (pair.Count > 0) {
-					foreach (BluetoothDevice dev in pair) {
-						Console.WriteLine (dev.Name);
-						txt = txt+","+dev.Name;
-						if (dev.Name.ToUpper()==printername)
-						{
-							mmDevice = dev;
-							break;
-						}
-					}
-				}
-				Toast.MakeText (this, "found device " +mmDevice.Name, ToastLength.Long).Show ();	
-				//txtv.Text ="found device " +mmDevice.Name;
-			}catch(Exception ex) {
-
-				//txtv.Text = ex.Message;
-				Toast.MakeText (this, ex.Message, ToastLength.Long).Show ();	
-			}
+			Utility util = new Utility ();
+			string msg = "";
+			mmDevice = util.FindBTPrinter (printername,ref  msg);
+			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 		}
 
 

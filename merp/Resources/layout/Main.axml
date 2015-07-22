@@ -8,20 +8,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <Button
-            android:text="INVOICE"
+            android:text="TRANSACTION"
             style="@style/XamButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/butSecond"
+            android:id="@+id/butTrans"
             android:drawableLeft="@drawable/shop" />
-        <Button
-            android:text="CREDIT NOTE"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:drawableLeft="@drawable/shop"
-            android:id="@+id/butcnnote" />
         <Button
             android:text="TRANSACTION LIST"
             android:layout_width="match_parent"

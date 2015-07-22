@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.wincom.merp" android:versionName="2.3" android:versionCode="8">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.wincom.merpdemo" android:versionName="2.5" android:versionCode="10">
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="21" />
-	<application android:icon="@drawable/icon" android:label="M-ERP" android:name="GlobalvarsApp"></application>
+	<application android:icon="@drawable/icon" android:label="M-ERP DEMO" android:name="GlobalvarsApp"></application>
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 	<uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />

@@ -29,12 +29,33 @@
             android:drawableLeft="@drawable/download"
             android:id="@+id/butDownSetting" />
         <Button
-            android:text="UPLOAD INVOICE"
+            android:text="UPLOAD INVOICE/CASH"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:drawableLeft="@drawable/upload"
             android:id="@+id/butupload" />
+        <Button
+            android:text="UPLOAD SALES ORDER"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableLeft="@drawable/upload"
+            android:id="@+id/butuploadSO" />
+        <Button
+            android:text="UPLOAD DELIVERY ORDER"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableLeft="@drawable/upload"
+            android:id="@+id/butuploadDO" />
+        <Button
+            android:text="UPLOAD CREDIT NOTE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableLeft="@drawable/upload"
+            android:id="@+id/butuploadCN" />
         <Button
             android:text="MAIN MENU"
             android:layout_width="match_parent"

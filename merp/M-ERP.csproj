@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -36,7 +36,6 @@
     <AndroidSigningStorePass>wincom@123</AndroidSigningStorePass>
     <AndroidSigningKeyAlias>com.wincom.merp</AndroidSigningKeyAlias>
     <AndroidSigningKeyPass>wincom@123</AndroidSigningKeyPass>
-    <DocumentationFile>bin\Debug\test3.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -45,15 +44,15 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <AndroidSupportedAbis>armeabi-v7a</AndroidSupportedAbis>
     <MandroidI18n>cjk</MandroidI18n>
     <AndroidKeyStore>True</AndroidKeyStore>
     <AndroidSigningKeyStore>C:\Users\MoK-Lenovo\AppData\Local\Xamarin\Mono for Android\Keystore\com.wincom.merp\com.wincom.merp.keystore</AndroidSigningKeyStore>
     <AndroidSigningStorePass>wincom@123</AndroidSigningStorePass>
+    <DebugType>full</DebugType>
     <AndroidSigningKeyAlias>com.wincom.merp</AndroidSigningKeyAlias>
     <AndroidSigningKeyPass>wincom@123</AndroidSigningKeyPass>
-    <DebugType>full</DebugType>
-    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -94,8 +93,8 @@
     <Compile Include="Helper\PhoneTool.cs" />
     <Compile Include="Activities\TraderActivity.cs" />
     <Compile Include="Activities\ItemActivity.cs" />
-    <Compile Include="Activities\InvoiceAllActivity.cs" />
     <Compile Include="Helper\PrintInvHelper.cs" />
+    <Compile Include="Activities\InvoiceAllActivity.cs" />
     <Compile Include="Activities\InvItemHisActivity.cs" />
     <Compile Include="Helper\UploadHelper.cs" />
     <Compile Include="Helper\WCFHelper.cs" />
@@ -121,6 +120,24 @@
     <Compile Include="Activities\DownloadActivity.cs" />
     <Compile Include="Activities\TransListActivity.cs" />
     <Compile Include="Activities\MasterRefActivity.cs" />
+    <Compile Include="SalesOrder\SOActivity.cs" />
+    <Compile Include="Entity\SaleOrder.cs" />
+    <Compile Include="SalesOrder\SOItemActivity.cs" />
+    <Compile Include="SalesOrder\CreateSaleOrder.cs" />
+    <Compile Include="SalesOrder\SOEntryActivity.cs" />
+    <Compile Include="SalesOrder\SOAllActivity.cs" />
+    <Compile Include="SalesOrder\SOItemHisActivity.cs" />
+    <Compile Include="Entity\DeliveryOrder.cs" />
+    <Compile Include="DeliveyOrder\CreateDelOrder.cs" />
+    <Compile Include="DeliveyOrder\DOActivity.cs" />
+    <Compile Include="DeliveyOrder\DOAllActivity.cs" />
+    <Compile Include="DeliveyOrder\DOEntryActivity.cs" />
+    <Compile Include="DeliveyOrder\DOItemActivity.cs" />
+    <Compile Include="DeliveyOrder\DOItemHisActivity.cs" />
+    <Compile Include="Activities\Transactionctivity.cs" />
+    <Compile Include="Helper\UploadSOHelper.cs" />
+    <Compile Include="Helper\UploadDOHelper .cs" />
+    <Compile Include="Helper\UploadCNHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -128,6 +145,7 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\drawable-hdpi\Icon.png" />
     <AndroidResource Include="Resources\drawable-mdpi\Icon.png" />
@@ -270,8 +288,28 @@
     <AndroidResource Include="Resources\drawable-xhdpi\printer_blue.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\printer_blue.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\printer_blue.png" />
-    <AndroidResource Include="Resources\layout\Main.axml" />
+    <AndroidResource Include="Resources\layout\CreateSO.axml" />
+    <AndroidResource Include="Resources\layout\SOEntry.axml" />
+    <AndroidResource Include="Resources\layout-large-port\SOEntry.axml" />
+    <AndroidResource Include="Resources\layout-large-port\CreateSO.axml" />
+    <AndroidResource Include="Resources\layout\Transactions.axml" />
+    <AndroidResource Include="Resources\layout-large-port\Transactions.axml" />
+    <AndroidResource Include="Resources\layout\DOEntry.axml" />
+    <AndroidResource Include="Resources\layout-large-port\DOEntry.axml" />
+    <AndroidResource Include="Resources\layout\CreateDO.axml" />
+    <AndroidResource Include="Resources\layout-large-port\CreateDO.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\menu\" />
+    <Folder Include="Activities\" />
+    <Folder Include="Entity\" />
+    <Folder Include="Helper\" />
+    <Folder Include="Resources\drawable\" />
+    <Folder Include="EventManager\" />
+    <Folder Include="Model\" />
+    <Folder Include="CNNote\" />
+    <Folder Include="SalesOrder\" />
+    <Folder Include="DeliveyOrder\" />
+  </ItemGroup>
 </Project>

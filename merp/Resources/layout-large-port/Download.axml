@@ -44,6 +44,33 @@
             android:drawableLeft="@drawable/upload"
             android:id="@+id/butupload" />
         <Button
+            android:text="UPLOAD SALES ORDER"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:height="80dp"
+            android:textSize="24sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableLeft="@drawable/upload"
+            android:id="@+id/butuploadSO" />
+        <Button
+            android:text="UPLOAD DELIVERY ORDER"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:height="80dp"
+            android:textSize="24sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableLeft="@drawable/upload"
+            android:id="@+id/butuploadDO" />
+        <Button
+            android:text="UPLOAD CREDIT NOTE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:height="80dp"
+            android:textSize="24sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableLeft="@drawable/upload"
+            android:id="@+id/butuploadCN" />
+        <Button
             android:text="MAIN MENU"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

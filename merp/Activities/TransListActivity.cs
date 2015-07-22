@@ -26,12 +26,18 @@ namespace wincom.mobile.erp
 			Button butInvlist = FindViewById<Button> (Resource.Id.butInvlist);
 			butInvlist.Click+= ButInvlist_Click;
 
+			Button butSOList = FindViewById<Button> (Resource.Id.butSOlist);
+			butSOList.Click+= ButSOList_Click;
+
+			Button butDOList = FindViewById<Button> (Resource.Id.butDOlist);
+			butDOList.Click+= ButDOList_Click;
+
 			Button butCNNoteList = FindViewById<Button> (Resource.Id.butCNlist);
 			butCNNoteList.Click+= ButCNNoteList_Click;
 
 			Button butsumm = FindViewById<Button> (Resource.Id.butInvsumm);
-			butsumm.Click+= (object sender, EventArgs e) => {
-				StartActivity(typeof(PrintSumm));
+			butsumm.Click += (object sender, EventArgs e) => {
+				StartActivity (typeof(PrintSumm));
 			};
 
 			Button butback = FindViewById<Button> (Resource.Id.butMain);
@@ -40,10 +46,23 @@ namespace wincom.mobile.erp
 			};
 		}
 
+		void ButSOList_Click (object sender, EventArgs e)
+		{
+			var intent = new Intent(this, typeof(SOAllActivity));
+			StartActivity(intent);
+
+		}
+
+		void ButDOList_Click (object sender, EventArgs e)
+		{
+			var intent = new Intent(this, typeof(DOAllActivity));
+			StartActivity(intent);
+
+		}
+
 		void ButInvlist_Click (object sender, EventArgs e)
 		{
 			var intent = new Intent(this, typeof(InvoiceAllActivity));
-
 			StartActivity(intent);
 		}
 

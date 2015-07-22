@@ -17,7 +17,8 @@ using Android.Text;
 
 namespace wincom.mobile.erp
 {
-	[Activity (Label = "WINCOM M-ERP",Icon = "@drawable/icon")]
+	//[Activity (Label = "WINCOM M-ERP",Icon = "@drawable/icon")]
+	[Activity (Icon = "@drawable/icon")]
 	public class MainActivity :Activity
 	{
 		//List<Item> items = null;
@@ -34,15 +35,24 @@ namespace wincom.mobile.erp
 				Finish ();
 				return;
 			}
+			if (this.BaseContext.PackageName.ToLower().Contains ("demo")) {
+				this.Window.SetTitle ("WINCOM M-ERP DEMO");
+			}else  Window.SetTitle ("WINCOM M-ERP");
+		
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
 			GetDBPath ();
 
 			AndroidEnvironment.UnhandledExceptionRaiser += AndroidEnvironment_UnhandledExceptionRaiser;
-			Button but = FindViewById<Button> (Resource.Id.butSecond);
-			but.Click += butClick;
+			Button buttrans = FindViewById<Button> (Resource.Id.butTrans);
+			buttrans.Click+= buttrans_Click;
+//			Button but = FindViewById<Button> (Resource.Id.butSecond);
+//			but.Click += butClick;
 			Button butInvlist = FindViewById<Button> (Resource.Id.butInvlist);
 			butInvlist.Click+= ButInvlist_Click;
+//			Button butso = FindViewById<Button> (Resource.Id.butso);
+//			butso.Click+= ButSO_Click;
+
 			Button butdown = FindViewById<Button> (Resource.Id.butDown);
 			butdown.Click += butDownloadItems;
 			Button butMItem = FindViewById<Button> (Resource.Id.butMaster);
@@ -63,25 +73,32 @@ namespace wincom.mobile.erp
 //				StartActivity(typeof(PrintSumm));
 //			};
 
-			Button butCNNote = FindViewById<Button> (Resource.Id.butcnnote);
-			butCNNote.Click+= ButCNNote_Click;
+//			Button butCNNote = FindViewById<Button> (Resource.Id.butcnnote);
+//			butCNNote.Click+= ButCNNote_Click;
 //			Button butCNNoteList = FindViewById<Button> (Resource.Id.butCNlist);
 //			butCNNoteList.Click+= ButCNNoteList_Click;
 		}
 
-		void ButCNNoteList_Click (object sender, EventArgs e)
+		void buttrans_Click (object sender, EventArgs e)
 		{
-			var intent = new Intent(this, typeof(CNAllActivity));
+			var intent = new Intent(this, typeof(TransactionsActivity));
 
 			StartActivity(intent);
 		}
 
-		void ButCNNote_Click (object sender, EventArgs e)
-		{
-			var intent = new Intent(this, typeof(CNNoteActivity));
-
-			StartActivity(intent);
-		}
+//		void ButCNNoteList_Click (object sender, EventArgs e)
+//		{
+//			var intent = new Intent(this, typeof(CNAllActivity));
+//
+//			StartActivity(intent);
+//		}
+//
+//		void ButCNNote_Click (object sender, EventArgs e)
+//		{
+//			var intent = new Intent(this, typeof(CNNoteActivity));
+//
+//			StartActivity(intent);
+//		}
 
 		void ButAbt_Click (object sender, EventArgs e)
 		{
@@ -149,12 +166,7 @@ namespace wincom.mobile.erp
 				DownloadCompInfo ();
 				return true;
 			case Resource.Id.mmenu_clear:
-				var builder = new AlertDialog.Builder(this);
-				builder.SetMessage("Confirm to CLEAR ? All transaction will be deleted. Deleted records are not recoverable.");
-				builder.SetPositiveButton("OK", (s, e) => { ClearPostedInv () ;});
-				builder.SetNegativeButton("Cancel", (s, e) => { /* do something on Cancel click */ });
-				builder.Create().Show();
-
+				ClearPostedInv ();
 				return true;
 			}
 		
@@ -184,31 +196,27 @@ namespace wincom.mobile.erp
 			}
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				db.DeleteAll<InvoiceDtls> ();
-				db.DeleteAll<Invoice> ();
-				db.DeleteAll<CNNoteDtls> ();
-				db.DeleteAll<CNNote> ();
-//				var list2 = db.Table<Invoice> ().Where (x => x.isUploaded == true).ToList<Invoice> ();
-//				db.RunInTransaction (() => {
-//					foreach (var item in list2) {
-//						var listitm = db.Table<InvoiceDtls> ().Where (x => x.invno == item.invno).ToList<InvoiceDtls> ();
-//						foreach(var iitem in listitm){
-//							db.Delete(iitem);
-//						}
-//						db.Delete(item);
-//					}
-//				});
-//
-//				var list3 = db.Table<CNNote> ().Where (x => x.isUploaded == true).ToList<CNNote> ();
-//				db.RunInTransaction (() => {
-//					foreach (var item in list3) {
-//						var listitm = db.Table<CNNoteDtls> ().Where (x => x.cnno == item.cnno).ToList<CNNoteDtls> ();
-//						foreach(var iitem in listitm){
-//							db.Delete(iitem);
-//						}
-//						db.Delete(item);
-//					}
-//				});
+				var list2 = db.Table<Invoice> ().Where (x => x.isUploaded == true).ToList<Invoice> ();
+				db.RunInTransaction (() => {
+					foreach (var item in list2) {
+						var listitm = db.Table<InvoiceDtls> ().Where (x => x.invno == item.invno).ToList<InvoiceDtls> ();
+						foreach(var iitem in listitm){
+							db.Delete(iitem);
+						}
+						db.Delete(item);
+					}
+				});
+
+				var list3 = db.Table<CNNote> ().Where (x => x.isUploaded == true).ToList<CNNote> ();
+				db.RunInTransaction (() => {
+					foreach (var item in list3) {
+						var listitm = db.Table<CNNoteDtls> ().Where (x => x.cnno == item.cnno).ToList<CNNoteDtls> ();
+						foreach(var iitem in listitm){
+							db.Delete(iitem);
+						}
+						db.Delete(item);
+					}
+				});
 
 				Toast.MakeText (this, "Transaction clear...", ToastLength.Long).Show ();	
 			}
@@ -278,7 +286,7 @@ namespace wincom.mobile.erp
 			DownloadHelper download= new DownloadHelper();
 			download.Downloadhandle = OnDownProfileDoneDlg; 
 			download.CallingActivity = this;
-			download.startDownloadCompInfo();
+			download.startDownloadCompInfo(false);
 		}
 
 		private void OnDownProfileDoneDlg(Activity callingAct,int count,string msg)

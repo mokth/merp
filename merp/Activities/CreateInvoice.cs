@@ -122,17 +122,19 @@ namespace wincom.mobile.erp
 				int pos = -1;
 				string paycode = item.PayCode.ToUpper().Trim();
 				if (!string.IsNullOrEmpty (paycode)) {
-					if (paycode.Contains ("CASH")) {
+					if (paycode.Contains ("CASH")|| paycode.Contains ("COD")) {
 						pos = dataAdapter2.GetPosition ("CASH");
 					} else {
 						pos = dataAdapter2.GetPosition ("INVOICE");
 					}
-				}else pos = dataAdapter2.GetPosition ("CASH");
-			if (pos > -1) {
-					spinnerType.SetSelection (pos);
-					//spinnerType.Enabled = false;
-				}//else spinnerType.Enabled = true;
-		}
+				}
+
+//				if (pos > -1) {
+//					spinnerType.SetSelection (pos);
+//					spinnerType.Enabled = false;
+//				}else spinnerType.Enabled = true;
+
+			}
 
 		}
 		[Obsolete]

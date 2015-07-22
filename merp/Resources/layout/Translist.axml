@@ -15,6 +15,20 @@
             android:drawableLeft="@drawable/shop"
             android:id="@+id/butInvlist" />
         <Button
+            android:text="SALES ORDER LIST"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableLeft="@drawable/shop"
+            android:id="@+id/butSOlist" />
+        <Button
+            android:text="DELIVERY ORDER LIST"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableLeft="@drawable/shop"
+            android:id="@+id/butDOlist" />
+        <Button
             android:text="CREDIT NOTE LIST"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

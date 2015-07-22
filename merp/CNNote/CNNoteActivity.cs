@@ -46,7 +46,7 @@ namespace wincom.mobile.erp
 			butNew.Click += butCreateNewInv;
 			Button butInvBack= FindViewById<Button> (Resource.Id.butInvBack); 
 			butInvBack.Click += (object sender, EventArgs e) => {
-				StartActivity(typeof(MainActivity));
+				StartActivity(typeof(TransactionsActivity));
 			};
 
 			listView.ItemClick += OnListItemClick;
@@ -257,46 +257,11 @@ namespace wincom.mobile.erp
 
 		void findBTPrinter(){
 			string printername = apara.PrinterName.Trim ().ToUpper ();
-//			string addrfile = getBTAddrFile(printername);
-//			if (tryConnectBtAddr(addrfile))
-//				return;
-			
-			try{
-				mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-				if (mBluetoothAdapter==null)
-				{
-					Toast.MakeText (this, "Error initialize bluetooth Adapter. Try again", ToastLength.Long).Show ();
-					return;					
-				}
-				string txt ="";
-				if (!mBluetoothAdapter.Enable()) {
-					Intent enableBluetooth = new Intent(
-						BluetoothAdapter.ActionRequestEnable);
-					StartActivityForResult(enableBluetooth, 0);
-				}
-
-
-				var pair= mBluetoothAdapter.BondedDevices;
-				if (pair.Count > 0) {
-					foreach (BluetoothDevice dev in pair) {
-						Console.WriteLine (dev.Name);
-						txt = txt+","+dev.Name;
-						if (dev.Name.ToUpper()==printername)
-						{
-							mmDevice = dev;
-//							File.WriteAllText(addrfile,dev.Address);
-							break;
-						}
-					}
-				}
-				Toast.MakeText (this, "found device " +mmDevice.Name, ToastLength.Long).Show ();	
-				//txtv.Text ="found device " +mmDevice.Name;
-			}catch(Exception ex) {
-
-				Toast.MakeText (this, "Error initialize bluetooth Adapter. Try again", ToastLength.Long).Show ();	
-			}
+			Utility util = new Utility ();
+			string msg = "";
+			mmDevice = util.FindBTPrinter (printername,ref  msg);
+			Toast.MakeText (this, msg, ToastLength.Long).Show ();	
 		}
-
 
 	}
 }

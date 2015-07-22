@@ -42,6 +42,50 @@ namespace wincom.mobile.erp
 			return runno;
 		}
 
+		public static int GetLastSORunNo(string pathToDatabase, DateTime sodate )
+		{
+			DateTime Sdate = sodate.AddDays (1 - sodate.Day);
+			DateTime Edate = new DateTime (sodate.Year, sodate.Month, DateTime.DaysInMonth (sodate.Year, sodate.Month));
+			int runno = -1;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list2 = db.Table<SaleOrder> ().Where(x=>x.sodate>=Sdate && x.sodate<=Edate)
+					.OrderByDescending(x=>x.sodate)
+					.ToList<SaleOrder> ();
+				if (list2.Count > 0) {
+					string sono =list2[0].sono;
+					if (sono.Length > 5)
+					{
+						string srunno = sono.Substring(sono.Length - 4);
+						runno = Convert.ToInt32(srunno);
+					}
+				}
+			}
+
+			return runno;
+		}
+
+		public static int GetLastDORunNo(string pathToDatabase, DateTime dodate )
+		{
+			DateTime Sdate = dodate.AddDays (1 - dodate.Day);
+			DateTime Edate = new DateTime (dodate.Year, dodate.Month, DateTime.DaysInMonth (dodate.Year, dodate.Month));
+			int runno = -1;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var list2 = db.Table<DelOrder> ().Where(x=>x.dodate>=Sdate && x.dodate<=Edate)
+					.OrderByDescending(x=>x.dodate)
+					.ToList<DelOrder> ();
+				if (list2.Count > 0) {
+					string dono =list2[0].dono;
+					if (dono.Length > 5)
+					{
+						string srunno = dono.Substring(dono.Length - 4);
+						runno = Convert.ToInt32(srunno);
+					}
+				}
+			}
+
+			return runno;
+		}
+
 		public static int GetLastCNRunNo(string pathToDatabase, DateTime invdate )
 		{
 			DateTime Sdate = invdate.AddDays (1 - invdate.Day);
@@ -64,6 +108,36 @@ namespace wincom.mobile.erp
 			return runno;
 		}
 
+
+		public static bool GetSaleOrderPrintStatus(string pathToDatabase,string sono)
+		{
+			bool iSPrinted = false;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var info = db.Table<CompanyInfo> ().FirstOrDefault ();
+				if (info.NotEditAfterPrint) {
+					var list = db.Table<SaleOrder> ().Where (x => x.sono == sono).ToList ();
+					if (list.Count > 0) {
+						iSPrinted = list [0].isPrinted; 				
+					}
+				}
+			}
+			return iSPrinted;
+		}
+
+		public static bool GetDelOderPrintStatus(string pathToDatabase,string dono)
+		{
+			bool iSPrinted = false;
+			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
+				var info = db.Table<CompanyInfo> ().FirstOrDefault ();
+				if (info.NotEditAfterPrint) {
+					var list = db.Table<DelOrder> ().Where (x => x.dono == dono).ToList ();
+					if (list.Count > 0) {
+						iSPrinted = list [0].isPrinted; 				
+					}
+				}
+			}
+			return iSPrinted;
+		}
 
 		public static bool GetInvoicePrintStatus(string pathToDatabase,string invno)
 		{
@@ -185,6 +259,7 @@ namespace wincom.mobile.erp
 					cprof = list2 [0];
 				} else {
 					cprof = new CompanyInfo ();
+					cprof.RegNo = pro.RegNo;
 				}
 
 				cprof.Addr1 = pro.Addr1;
@@ -196,7 +271,6 @@ namespace wincom.mobile.erp
 				cprof.GSTNo = pro.GSTNo;
 				cprof.HomeCurr = pro.HomeCurr;
 				cprof.IsInclusive = pro.IsInclusive;
-				cprof.RegNo = pro.RegNo;
 				cprof.SalesTaxDec = pro.SalesTaxDec;
 				cprof.AllowDelete = pro.AllowDelete;
 				cprof.AllowEdit = pro.AllowEdit;

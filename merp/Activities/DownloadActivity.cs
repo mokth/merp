@@ -30,6 +30,15 @@ namespace wincom.mobile.erp
 			Button butupload = FindViewById<Button> (Resource.Id.butupload);
 			butupload.Click += butUploadBills;
 
+			Button butuploadSO = FindViewById<Button> (Resource.Id.butuploadSO);
+			butuploadSO.Click += butUploadSOBills;
+
+			Button butuploadDO = FindViewById<Button> (Resource.Id.butuploadDO);
+			butuploadDO.Click += butUploadDOBills;
+
+			Button butuploadCN = FindViewById<Button> (Resource.Id.butuploadCN);
+			butuploadCN.Click += butUploadCNBills;
+
 			Button butdownSetting = FindViewById<Button> (Resource.Id.butDownSetting);
 			butdownSetting.Click+= ButdownSetting_Click;
 
@@ -46,7 +55,8 @@ namespace wincom.mobile.erp
 			DownloadHelper download= new DownloadHelper();
 			download.Downloadhandle = DownSettingDoneDlg; 
 			download.CallingActivity = this;
-			download.startDownloadCompInfo();
+
+			download.startDownloadCompInfo(false);
 		}
 
 		void butUploadBills(object sender,EventArgs e)
@@ -56,6 +66,38 @@ namespace wincom.mobile.erp
 			//UploadBillsToServer();
 			UploadHelper upload= new UploadHelper();
 			upload.Uploadhandle = OnUploadDoneDlg; 
+			upload.CallingActivity = this;
+			upload.startUpload ();		
+		}
+
+		void butUploadCNBills(object sender,EventArgs e)
+		{
+			Button butupload =  FindViewById<Button> (Resource.Id.butuploadCN);
+			butupload.Enabled = false;
+			//UploadBillsToServer();
+			UploadCNHelper upload= new UploadCNHelper();
+			upload.Uploadhandle = OnUploadCNDoneDlg; 
+			upload.CallingActivity = this;
+			upload.startUpload ();		
+		}
+
+
+		void butUploadSOBills(object sender,EventArgs e)
+		{
+			Button butupload =  FindViewById<Button> (Resource.Id.butuploadSO);
+			butupload.Enabled = false;
+			UploadSOHelper upload= new UploadSOHelper();
+			upload.Uploadhandle = OnUploadSODoneDlg; 
+			upload.CallingActivity = this;
+			upload.startUpload ();		
+		}
+
+		void butUploadDOBills(object sender,EventArgs e)
+		{
+			Button butupload =  FindViewById<Button> (Resource.Id.butuploadDO);
+			butupload.Enabled = false;
+			UploadDOHelper upload= new UploadDOHelper();
+			upload.Uploadhandle = OnUploadDODoneDlg; 
 			upload.CallingActivity = this;
 			upload.startUpload ();		
 		}
@@ -80,7 +122,7 @@ namespace wincom.mobile.erp
 			download.startDownloadCustomer ();
 		}
 
-		private void DownCustDoneDlg(Activity callingAct,int count,string msg)
+		private void DownCustDoneDlg(Activity callingAct, int count,string msg)
 		{
 			Button butdown = FindViewById<Button> (Resource.Id.butDownCust);
 			butdown.Enabled = true;
@@ -98,6 +140,42 @@ namespace wincom.mobile.erp
 			butupload.Enabled = true;
 			if (count > 0) {
 				string dispmsg = "Total " + count.ToString () + " invoices uploaded.";
+				Toast.MakeText (this, dispmsg, ToastLength.Long).Show ();	
+			} else {
+				Toast.MakeText (this, msg, ToastLength.Long).Show ();	
+			}
+		}
+
+		private void OnUploadSODoneDlg(Activity callingAct,int count,string msg)
+		{
+			Button butupload = callingAct.FindViewById<Button> (Resource.Id.butuploadSO);
+			butupload.Enabled = true;
+			if (count > 0) {
+				string dispmsg = "Total " + count.ToString () + " Sales Order uploaded.";
+				Toast.MakeText (this, dispmsg, ToastLength.Long).Show ();	
+			} else {
+				Toast.MakeText (this, msg, ToastLength.Long).Show ();	
+			}
+		}
+
+		private void OnUploadDODoneDlg(Activity callingAct,int count,string msg)
+		{
+			Button butupload = callingAct.FindViewById<Button> (Resource.Id.butuploadDO);
+			butupload.Enabled = true;
+			if (count > 0) {
+				string dispmsg = "Total " + count.ToString () + " Delivery Order uploaded.";
+				Toast.MakeText (this, dispmsg, ToastLength.Long).Show ();	
+			} else {
+				Toast.MakeText (this, msg, ToastLength.Long).Show ();	
+			}
+		}
+
+		private void OnUploadCNDoneDlg(Activity callingAct,int count,string msg)
+		{
+			Button butupload = callingAct.FindViewById<Button> (Resource.Id.butuploadCN);
+			butupload.Enabled = true;
+			if (count > 0) {
+				string dispmsg = "Total " + count.ToString () + " Credit Note uploaded.";
 				Toast.MakeText (this, dispmsg, ToastLength.Long).Show ();	
 			} else {
 				Toast.MakeText (this, msg, ToastLength.Long).Show ();	
