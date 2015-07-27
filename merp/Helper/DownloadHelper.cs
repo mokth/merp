@@ -324,7 +324,7 @@ namespace wincom.mobile.erp
 			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<Item>().ToList<Item>();
+				db.DeleteAll<Item> ();
 				foreach (ItemCode item in list) {
 					Item itm = new Item ();
 					itm.ICode = item.ICode;
@@ -334,19 +334,8 @@ namespace wincom.mobile.erp
 					itm.taxgrp = item.taxgrp;
 					itm.isincludesive = item.isincludesive;
 
-					var itemlist = list2.Where (x => x.ICode == itm.ICode).ToList ();
-					if (itemlist.Count () == 0) {
-						db.Insert (itm);
-					} else {
-						itm = itemlist [0];
-						itm.IDesc = item.IDesc;
-						itm.Price = item.Price;
-						itm.tax = item.tax;
-						itm.taxgrp = item.taxgrp;
-						itm.isincludesive = item.isincludesive;
+					db.Insert (itm);
 
-						db.Update (itm);
-					}
 				}
 			}
 		
@@ -364,7 +353,7 @@ namespace wincom.mobile.erp
 			string pathToDatabase = ((GlobalvarsApp)CallingActivity.Application).DATABASE_PATH;
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<Trader>().ToList<Trader>();
+				db.DeleteAll<Trader> ();// (list2);
 				foreach (Customer item in list) {
 					Trader itm = new Trader ();
 					itm.CustCode = item.CustomerCode;
@@ -377,13 +366,8 @@ namespace wincom.mobile.erp
 					itm.Fax = item.Fax;
 					itm.gst = item.Gst;
 					itm.PayCode = item.PayCode;
+					db.Insert (itm);
 
-
-					if (list2.Where (x => x.CustCode == itm.CustCode).ToList ().Count () == 0) {
-						db.Insert (itm);
-					} else {
-						db.Update (itm);
-					}
 				}
 			}
 
