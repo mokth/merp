@@ -14,6 +14,8 @@ using WcfServiceItem;
 using Android.Telephony;
 using Android.Accounts;
 using Android.Text;
+using Android.Content.PM;
+using System.Net;
 
 namespace wincom.mobile.erp
 {
@@ -46,37 +48,19 @@ namespace wincom.mobile.erp
 			AndroidEnvironment.UnhandledExceptionRaiser += AndroidEnvironment_UnhandledExceptionRaiser;
 			Button buttrans = FindViewById<Button> (Resource.Id.butTrans);
 			buttrans.Click+= buttrans_Click;
-//			Button but = FindViewById<Button> (Resource.Id.butSecond);
-//			but.Click += butClick;
 			Button butInvlist = FindViewById<Button> (Resource.Id.butInvlist);
 			butInvlist.Click+= ButInvlist_Click;
-//			Button butso = FindViewById<Button> (Resource.Id.butso);
-//			butso.Click+= ButSO_Click;
-
 			Button butdown = FindViewById<Button> (Resource.Id.butDown);
 			butdown.Click += butDownloadItems;
 			Button butMItem = FindViewById<Button> (Resource.Id.butMaster);
 			butMItem.Click += butMasterClick;
 			Button butSett = FindViewById<Button> (Resource.Id.butsetting);
 			butSett.Click += butSetting;
-//			Button butCustProf = FindViewById<Button> (Resource.Id.butCustProf);
-//			butCustProf.Click+=  butCustomerClick;
 			Button butlogOff = FindViewById<Button> (Resource.Id.butOut);
 			butlogOff.Click += ButlogOff_Click;
 			Button butAbt = FindViewById<Button> (Resource.Id.butAbout);
 			butAbt.Click+= ButAbt_Click;
-//			Button butupload = FindViewById<Button> (Resource.Id.butupload);
-//			butupload.Click += butUploadBills;
-			//Button butExitOnly = FindViewById<Button> (Resource.Id.butExitOnly);
-//			Button butsumm = FindViewById<Button> (Resource.Id.butInvsumm);
-//			butsumm.Click+= (object sender, EventArgs e) => {
-//				StartActivity(typeof(PrintSumm));
-//			};
 
-//			Button butCNNote = FindViewById<Button> (Resource.Id.butcnnote);
-//			butCNNote.Click+= ButCNNote_Click;
-//			Button butCNNoteList = FindViewById<Button> (Resource.Id.butCNlist);
-//			butCNNoteList.Click+= ButCNNoteList_Click;
 		}
 
 		void buttrans_Click (object sender, EventArgs e)
@@ -86,32 +70,21 @@ namespace wincom.mobile.erp
 			StartActivity(intent);
 		}
 
-//		void ButCNNoteList_Click (object sender, EventArgs e)
-//		{
-//			var intent = new Intent(this, typeof(CNAllActivity));
-//
-//			StartActivity(intent);
-//		}
-//
-//		void ButCNNote_Click (object sender, EventArgs e)
-//		{
-//			var intent = new Intent(this, typeof(CNNoteActivity));
-//
-//			StartActivity(intent);
-//		}
+
 
 		void ButAbt_Click (object sender, EventArgs e)
 		{
 			CompanyInfo comp= DataHelper.GetCompany (pathToDatabase);
 			View messageView = LayoutInflater.Inflate(Resource.Layout.About, null, false);
-
+			PackageInfo pInfo = PackageManager.GetPackageInfo (PackageName, 0);
 			// When linking text, force to always use default color. This works
 			// around a pressed color state bug.
 			TextView textView = (TextView) messageView.FindViewById(Resource.Id.about_credits);
 			TextView textDesc = (TextView) messageView.FindViewById(Resource.Id.about_descrip);
+			TextView textVer = (TextView) messageView.FindViewById(Resource.Id.about_ver);
 			//textDesc.Text = Html.FromHtml (Resources.GetString(Resource.String.app_descrip))..ToString();
 			textView.Text = "For inquiry, please contact " + comp.SupportContat;
-
+			textVer .Text = "Build Version : "+pInfo.VersionName;
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.SetIcon(Resource.Drawable.Icon);
 			builder.SetTitle(Resource.String.app_name);
@@ -153,9 +126,13 @@ namespace wincom.mobile.erp
 			case Resource.Id.mmenu_back:
 				BackupDatabase ();
 				return true;
-//			case Resource.Id.mmenu_Reset:
-//				//do something
-//				return true;
+			case Resource.Id.mmenu_downdb:
+				var builderd = new AlertDialog.Builder(this);
+				builderd.SetMessage("Confirm to download database from server ? All local data will be overwritten by the downloaded data.");
+				builderd.SetPositiveButton("OK", (s, e) => { DownlooadDb ();;});
+				builderd.SetNegativeButton("Cancel", (s, e) => { /* do something on Cancel click */ });
+				builderd.Create().Show();
+				return true; 
 			case Resource.Id.mmenu_setting:
 				StartActivity (typeof(SettingActivity));
 				return true;
@@ -166,11 +143,45 @@ namespace wincom.mobile.erp
 				DownloadCompInfo ();
 				return true;
 			case Resource.Id.mmenu_clear:
-				ClearPostedInv ();
+				var builder = new AlertDialog.Builder(this);
+				builder.SetMessage("Confirm to CLEAR ? All transaction will be deleted. Deleted records are not recoverable.");
+				builder.SetPositiveButton("OK", (s, e) => { ClearPostedInv () ;});
+				builder.SetNegativeButton("Cancel", (s, e) => { /* do something on Cancel click */ });
+				builder.Create().Show();
+
 				return true;
 			}
 		
 			return base.OnOptionsItemSelected(item);
+		}
+
+		void DownlooadDb()
+		{
+			try {
+				//backup db first before upload
+				BackupDatabase();
+
+				WebClient myWebClient = new WebClient ();
+				var sdcard = Path.Combine (Android.OS.Environment.ExternalStorageDirectory.Path, "erpdata");
+				string filename = COMPCODE + "_" + BRANCODE + "_" + USERID + "_erplite.db";
+				string url = WCFHelper.GetDownloadDBUrl () + filename;
+				string localfilename = Path.Combine (sdcard, "erplite.db");
+				if (File.Exists(localfilename))
+					File.Delete(localfilename);
+
+				myWebClient.DownloadFile (url, localfilename);  
+				File.Copy (localfilename, pathToDatabase, true);
+
+				//delete the file after downloaded
+				string urldel = WCFHelper.GeUploadDBUrl()+"/afterdownload.aspx?ID="+filename;
+				WebRequest request = HttpWebRequest.Create(urldel);
+				request.GetResponse();
+
+				Toast.MakeText (this, "Successfully download db file from server!", ToastLength.Long).Show ();	
+			} catch (Exception ex)
+			{
+				Toast.MakeText (this, "Error downloading db file from server!", ToastLength.Long).Show ();	
+			}
 		}
 
 		void GetDBPath ()
@@ -218,6 +229,30 @@ namespace wincom.mobile.erp
 					}
 				});
 
+
+				var list4 = db.Table<SaleOrder> ().Where (x => x.isUploaded == true).ToList<SaleOrder> ();
+				db.RunInTransaction (() => {
+					foreach (var item in list4) {
+						var listitm = db.Table<SaleOrderDtls> ().Where (x => x.sono == item.sono).ToList<SaleOrderDtls> ();
+						foreach(var iitem in listitm){
+							db.Delete(iitem);
+						}
+						db.Delete(item);
+					}
+				});
+
+				var list5 = db.Table<DelOrder> ().Where (x => x.isUploaded == true).ToList<DelOrder> ();
+				db.RunInTransaction (() => {
+					foreach (var item in list5) {
+						var listitm = db.Table<DelOrderDtls> ().Where (x => x.dono == item.dono).ToList<DelOrderDtls> ();
+						foreach(var iitem in listitm){
+							db.Delete(iitem);
+						}
+						db.Delete(item);
+					}
+				});
+
+
 				Toast.MakeText (this, "Transaction clear...", ToastLength.Long).Show ();	
 			}
 		}
@@ -236,10 +271,25 @@ namespace wincom.mobile.erp
 			string filename = Path.Combine (sdcard,"erplite"+ DateTime.Now.ToString("yyMMddHHmm") +".db");
 			if (File.Exists (pathToDatabase)) {
 				File.Copy (pathToDatabase, filename, true);
+				UploadToErpHostForSupport (filename);
 			}
 		}
 
-	
+		private void UploadToErpHostForSupport(string filename)
+		{
+			WebClient myWebClient = new WebClient();
+			try{
+
+				myWebClient.QueryString["COMP"] = COMPCODE;
+				myWebClient.QueryString["BRAN"] = BRANCODE;
+				myWebClient.QueryString["USER"] = USERID;
+				byte[] responseArray = myWebClient.UploadFile( WCFHelper.GeUploadDBUrl(),filename);
+				//Console.WriteLine("\nResponse Received.The contents of the file uploaded are:\n{0}",
+				//	System.Text.Encoding.ASCII.GetString(responseArray));
+			}catch {
+
+			}
+		}
 
 		void butBackUpDb(object sender,EventArgs e)
 		{

@@ -111,7 +111,10 @@ namespace wincom.mobile.erp
 		{
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
-				var list2 = db.Table<Invoice>().Where(x=>x.isUploaded==true).ToList<Invoice>();
+				var list2 = db.Table<Invoice>()
+					.Where(x=>x.isUploaded==true)
+					.OrderByDescending (x => x.invno)
+					.ToList<Invoice>();
 				foreach(var item in list2)
 				{
 					list.Add(item);

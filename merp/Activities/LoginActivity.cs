@@ -18,7 +18,6 @@ namespace wincom.mobile.erp
 	[Activity (Label = "M-ERP", MainLauncher = true,NoHistory=true, Theme="@style/android:Theme.Holo.Light.NoActionBar" )]			
 	public class LoginActivity : Activity,IEventListener
 	{
-
 		private Service1Client _client;
 		string pathToDatabase;
 		static volatile bool _donwloadPro = false;
@@ -28,7 +27,6 @@ namespace wincom.mobile.erp
 			SetContentView (Resource.Layout.SignIn);
 			// Create your application here
 			EventManagerFacade.Instance.GetEventManager().AddListener(this);
-
 
 			//Button import = FindViewById<Button>(Resource.Id.logimport);
 
@@ -49,13 +47,7 @@ namespace wincom.mobile.erp
 			//SQLiteConnection...CreateFile(pathToDatabase);
 			if (!File.Exists (pathToDatabase)) {
 				createTable (pathToDatabase);
-			} else {
-				user = DataHelper.GetUser (pathToDatabase);
-				UpdateDatbase ();
-				if (user !=null)
-					BeforeReLoginToCloud (user);
 			}
-
 			user = DataHelper.GetUser (pathToDatabase);
 //			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
 //				var list2 = db.Table<AdUser> ().ToList<AdUser> ();

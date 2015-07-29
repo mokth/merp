@@ -16,6 +16,17 @@ namespace wincom.mobile.erp
 
 		}
 
+		public static string GetDownloadDBUrl()
+		{
+			return "http://www.wincomcloud.com/wfcv2/dbfiles/";
+		}
+
+		public static string GeUploadDBUrl()
+		{
+			return "http://www.wincomcloud.com/UploadDb/uploadDb.aspx";
+		}
+
+
 		public  Service1Client GetServiceClient()
 		{
 			InitializeServiceClient ();
@@ -38,11 +49,13 @@ namespace wincom.mobile.erp
 				Name = "basicHttpBinding",
 				MaxBufferSize = 2147483647,
 				MaxReceivedMessageSize = 2147483647
+					//MaxBufferPoolSize=2147483647
 			};
-			TimeSpan timeout = new TimeSpan(0, 0, 30);
+			TimeSpan timeout = new TimeSpan(0, 1, 0);
 			binding.SendTimeout = timeout;
 			binding.OpenTimeout = timeout;
 			binding.ReceiveTimeout = timeout;
+
 			return binding;
 		}
 	}

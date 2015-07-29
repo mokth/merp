@@ -2,6 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/mmenu_downcompinfo"
            android:title="Download Settings" />    
+    <item android:id="@+id/mmenu_downdb"
+           android:title="Download Database" />  
    <item android:id="@+id/mmenu_back"
           android:title="Backup Database" />    
    <item android:id="@+id/mmenu_clear"

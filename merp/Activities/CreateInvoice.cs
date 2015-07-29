@@ -185,16 +185,6 @@ namespace wincom.mobile.erp
 				return;
 			
 			using (var db = new SQLite.SQLiteConnection (pathToDatabase)) {
-//				var invrec =db.Table<Invoice> ().Where (x => x.invdate>= invdate && x.invdate < tmr).OrderByDescending(x=>x.invno).ToList();
-//				string invno = "";
-//				if (invrec.Count == 0) {
-//					invno = prefix + invdate.ToString("yyMMdd") + "1".PadLeft (4, '0');
-//				} else {
-//					string tmp = invrec [0].invno;
-//					string runno= tmp.Substring (tmp.Length - 4, 4);
-//					int no = Convert.ToInt32 (runno)+1;
-//					invno =prefix + invdate.ToString("yyMMdd") + no.ToString().PadLeft (4, '0');
-//				}
 				string invno = "";
 				int runno = adNum.RunNo + 1;
 				int currentRunNo =DataHelper.GetLastInvRunNo (pathToDatabase, invdate);

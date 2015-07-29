@@ -20,6 +20,12 @@ namespace wincom.mobile.erp
 		public string CNPrefix{ get; set;}
 		public string DOPrefix{ get; set;}
 		public string SOPrefix{ get; set;}
+
+		public string InvTitle{ get; set;}
+		public string CNTitle{ get; set;}
+		public string DOTitle{ get; set;}
+		public string SOTitle{ get; set;}
+
 	}
 
 	public class AdNumDate

@@ -23,5 +23,11 @@
             android:text="@string/app_credits"
             android:autoLink="web"
             android:textColor="?android:attr/textColorPrimaryInverse" />
+        <TextView
+            android:id="@+id/about_ver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="?android:attr/textColorPrimaryInverse" />
     </LinearLayout>
 </ScrollView>
