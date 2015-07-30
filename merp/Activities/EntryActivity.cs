@@ -303,16 +303,10 @@ namespace wincom.mobile.erp
 			string []codedesc = spinner.GetItemAtPosition (e.Position).ToString().Split (new char[]{ '|' });
 			string icode = codedesc[0].Trim();
 			Item item =items.Where (x => x.ICode == icode).FirstOrDefault ();
-
-			//string toast = string.Format ("The planet is {0}", spinner.GetItemAtPosition (e.Position));
-			//Toast.MakeText (this, toast, ToastLength.Long).Show ();
-			//TextView desc =  FindViewById<TextView> (Resource.Id.txtdesc);
 			TextView tax =  FindViewById<TextView> (Resource.Id.txttax);
 			EditText price = FindViewById<EditText> (Resource.Id.txtprice);
-			//EditText taxper = FindViewById<EditText> (Resource.Id.txtinvtaxper);
-			//CheckBox isincl = FindViewById<CheckBox> (Resource.Id.txtinvisincl);
 			EditText qty = FindViewById<EditText> (Resource.Id.txtqty);
-		//	desc.Text = item.IDesc;
+
 			if (FIRSTLOAD=="")
 				price.Text = item.Price.ToString ();
 			else FIRSTLOAD="";

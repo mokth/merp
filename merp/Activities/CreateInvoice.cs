@@ -24,7 +24,7 @@ namespace wincom.mobile.erp
 		DateTime _date ;
 		AdPara apara = null;
 		Spinner spinner;
-
+		CompanyInfo comp;
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -57,6 +57,7 @@ namespace wincom.mobile.erp
 
 			pathToDatabase = ((GlobalvarsApp)this.Application).DATABASE_PATH;
 			apara =  DataHelper.GetAdPara (pathToDatabase);
+			comp = DataHelper.GetCompany (pathToDatabase);
 			//SqliteConnection.CreateFile(pathToDatabase);
 			using (var db = new SQLite.SQLiteConnection(pathToDatabase))
 			{
@@ -128,11 +129,13 @@ namespace wincom.mobile.erp
 						pos = dataAdapter2.GetPosition ("INVOICE");
 					}
 				}
-
-//				if (pos > -1) {
-//					spinnerType.SetSelection (pos);
-//					spinnerType.Enabled = false;
-//				}else spinnerType.Enabled = true;
+				if (!comp.AlloEditTrxType) {
+					if (pos > -1) {
+						spinnerType.SetSelection (pos);
+						spinnerType.Enabled = false;
+					} else
+						spinnerType.Enabled = true;
+				}
 
 			}
 

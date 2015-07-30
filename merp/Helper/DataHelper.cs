@@ -279,6 +279,7 @@ namespace wincom.mobile.erp
 				cprof.ShowTime = pro.ShowPrintTime;
 				cprof.AllowClrTrxHis = pro.AllowClrTrxHis;
 				cprof.NotEditAfterPrint = pro.NoEditAfterPrint;
+				cprof.AlloEditTrxType = pro.EditTrxType;
 
 				cprof.Tel = pro.Tel;
 				if (list2.Count==0)

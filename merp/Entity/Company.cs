@@ -25,6 +25,7 @@ namespace wincom.mobile.erp
 		public string SupportContat { get; set;}
 		public bool  NotEditAfterPrint { get; set;}
 		public bool  AllowClrTrxHis { get; set;}
+		public bool  AlloEditTrxType { get; set;}
 
 	}
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.wincom.merpdemo" android:versionName="2.6" android:versionCode="11">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.wincom.merpdemo" android:versionName="2.7" android:versionCode="12">
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="21" />
 	<application android:icon="@drawable/icon" android:label="M-ERP DEMO" android:name="GlobalvarsApp"></application>
 	<uses-permission android:name="android.permission.BLUETOOTH" />
